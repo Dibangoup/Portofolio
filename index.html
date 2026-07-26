@@ -1,0 +1,997 @@
+<!doctype html>
+<!-- 
+     PORTFOLIO ÉTUDIANT INTERACTIF - FICHIER STRUCTUREL PRINCIPAL (HTML)
+     ==========================================================================
+     Ce fichier index.html contient la structure et le balisage de votre site.
+     Il est conçu pour être facilement éditable afin que vous puissiez personnaliser
+     chaque élément textuel, photo ou lien selon votre propre profil.
+     
+     CONSEIL DE CONFIGURATION :
+     - La classe 'light' sur la balise <html> force le site en mode clair.
+     - La classe 'scroll-smooth' active un défilement fluide lors des clics sur les ancres.
+-->
+<html class="light scroll-smooth" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <!-- 
+         ==========================================================================
+         A. OPTIMISATION SEO & MÉTA-DONNÉES (À MODIFIER AVEC VOS INFOS)
+         ==========================================================================
+         Ces informations sont lues par les moteurs de recherche (Google, Bing) et
+         les réseaux sociaux. Modifiez-les pour booster votre visibilité en ligne !
+    -->
+    <title>D.J.Portfolio | Portfolio Étudiant De Jordan</title>
+    <meta
+      name="description"
+      content="Découvrez le portfolio moderne et évolutif de Jordan, étudiant en développement logiciel et UI design. Explorez des projets full-stack, des interfaces ergonomiques et des compétences avancées."
+    />
+    <meta
+      name="keywords"
+      content="Portfolio, Jordan, Développeur Web, UI Designer, React, Node.js, Étudiant, Stage, Alternance"
+    />
+    <meta name="author" content="Jordan" />
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+
+    <!-- Balises Open Graph (Pour un affichage premium lors du partage sur LinkedIn, WhatsApp, etc.) -->
+    <meta property="og:title" content="Jordan | Portfolio Étudiant Moderne" />
+    <meta
+      property="og:description"
+      content="Développeur logiciel & designer d'interfaces passionné. Découvrez mes réalisations web et mobiles."
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Importation des polices typographiques depuis Google Fonts (Inter & Plus Jakarta Sans) -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    
+    <!-- Importation de la bibliothèque d'icônes Google Material Symbols Outlined -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+         ==========================================================================
+         B. CONFIGURATION DU THÈME DE COULEURS TAILWIND (DESIGN TOKENS)
+         ==========================================================================
+         Tailwind est maintenant compilé au build (voir tailwind.config.js à la
+         racine + `npm run build:css`), plus de compilation à la volée par CDN.
+
+         MODIFICATIONS UTILES :
+         - 'primary' (#3525cd) : La couleur violette dominante du site.
+         - 'secondary' (#006591) : La couleur bleue d'accent secondaire.
+         - 'background' (#f9f9ff) : Le fond clair du site.
+         Après toute modification de tailwind.config.js, relancez `npm run build:css`.
+    -->
+    <link rel="stylesheet" href="css/tailwind-build.css" />
+
+    <!-- Liaison avec le point d'entrée CSS (importe tous les modules : glass, animations, layout, etc.) -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Chargement des données centralisées -->
+    <script src="js/portfolio-data.js"></script>
+  </head>
+  <body
+    class="bg-background text-on-background font-body-md text-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-white"
+  >
+    <!-- 
+         ==========================================================================
+         1. BARRE DE NAVIGATION (NAVBAR STICKY GLASSMORPHIC)
+         ==========================================================================
+         Reste fixée en haut lors du défilement.
+         - 'id="navbar"' est utilisé en JS pour appliquer l'effet de rétrécissement (shrink).
+         - Le bouton 'id="cv-btn"' ouvre automatiquement le CV interactif.
+    -->
+    <nav
+      class="docked full-width top-0 sticky z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm transition-all duration-300 h-20"
+      id="navbar"
+    >
+      <div
+        class="flex justify-between items-center w-full px-gutter md:px-lg max-w-container-max mx-auto h-full"
+      >
+        <!-- Logo / Nom principal du site -->
+        <a
+          class="font-display-lg text-headline-md font-extrabold text-primary dark:text-primary-fixed-dim tracking-tight"
+          href="#hero"
+          id="nav-logo"
+        >
+          D.J Portfolio<span
+            class="w-2 h-2 rounded-full bg-secondary inline-block ml-1"
+          ></span>
+        </a>
+
+        <!-- Liens de navigation pour les ordinateurs (Desktop Menu) -->
+        <ul class="hidden md:flex items-center gap-lg">
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
+              href="#about"
+              >À Propos</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
+              href="#skills"
+              >Compétences</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
+              href="#projects"
+              >Projets</a
+            >
+          </li>
+          <!-- 
+               DESACTIVÉ : Lien vers la section Parcours. 
+               Pour le réactiver, supprimez simplement les balises de début et de fin de commentaire ci-dessous.
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
+              href="#experience"
+              >Parcours</a
+            >
+          </li>
+          -->
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
+              href="#contact"
+              >Contact</a
+            >
+          </li>
+        </ul>
+
+        <!-- Zone d'action de droite (Bouton CV & Menu Mobile) -->
+        <div class="nav-actions flex items-center gap-4">
+          <!-- IMPORTANT : Conservez id="cv-btn" pour que le clic déclenche le CV popup dans app.js -->
+          <a
+            class="hidden md:inline-flex bg-primary hover:bg-primary-container text-white px-md py-xs rounded-full font-label-sm text-label-sm transition-all duration-200 hover:scale-[1.05] active:scale-95 btn-shimmer cursor-pointer"
+            id="cv-btn"
+            >Mon CV</a
+          >
+
+          <!-- Bouton Menu Burger - Visible uniquement sur smartphones et tablettes -->
+          <button
+            class="md:hidden text-on-surface w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center"
+            id="menu-toggle"
+            aria-label="Menu Mobile"
+          >
+            <span class="material-symbols-outlined text-2xl">menu</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Ligne de progression de lecture (gérée en JS) -->
+      <div class="scroll-progress-bar" id="scroll-progress"></div>
+    </nav>
+
+    <!-- 
+         ==========================================================================
+         MENU MOBILE PLEIN ÉCRAN (OVERLAY)
+         ==========================================================================
+         S'affiche en plein écran lors du clic sur le menu burger (mobile).
+         - 'id="mobile-nav-overlay"' est requis pour les écouteurs d'événements JS.
+    -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+      <ul class="flex flex-col gap-6 items-center text-center">
+        <li>
+          <a
+            class="mobile-nav-link text-xl font-bold font-display-lg"
+            href="#about"
+            >À Propos</a
+          >
+        </li>
+        <li>
+          <a
+            class="mobile-nav-link text-xl font-bold font-display-lg"
+            href="#skills"
+            >Compétences</a
+          >
+        </li>
+        <li>
+          <a
+            class="mobile-nav-link text-xl font-bold font-display-lg"
+            href="#projects"
+            >Projets</a
+          >
+        </li>
+        <!-- 
+             DESACTIVÉ : Lien vers la section Parcours. 
+             Pour le réactiver, supprimez simplement les balises de début et de fin de commentaire ci-dessous.
+        <li>
+          <a
+            class="mobile-nav-link text-xl font-bold font-display-lg"
+            href="#experience"
+            >Parcours</a
+          >
+        </li>
+        -->
+        <li>
+          <a
+            class="mobile-nav-link text-xl font-bold font-display-lg"
+            href="#contact"
+            >Contact</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <main>
+      <!-- 
+           ==========================================================================
+           2. SECTION D'ACCUEIL (HERO SECTION)
+           ==========================================================================
+           Cette zone d'entrée premium capte l'attention dès le chargement du site.
+           
+           COMPOSANTS CLÉS À MODIFIER :
+           - Lueur de souris interactive ('id="mouse-glow"') : suit le curseur.
+           - Titres et accroches en texte.
+           - Image de profil : modifiez l'attribut 'src' de l'image ligne 369.
+      -->
+      <section
+        class="relative min-h-[921px] flex items-center justify-center pt-xl px-gutter max-w-container-max mx-auto overflow-hidden"
+        id="hero"
+      >
+        <!-- Rond de lumière interactive (Mouse Glow) -->
+        <div class="mouse-glow" id="mouse-glow"></div>
+        
+        <!-- Bulles colorées floues d'arrière-plan avec déplacement parallaxe au scroll -->
+        <div
+          class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2 parallax-bg"
+          data-speed="0.2"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-3xl -z-10 -translate-x-1/2 translate-y-1/2 parallax-bg-bottom"
+          data-speed="-0.15"
+        ></div>
+        
+        <!-- Grille : Texte à gauche, Image à droite -->
+        <div class="grid md:grid-cols-2 gap-xl items-center w-full z-10">
+          <!-- Colonne de gauche : Textes & Appels à l'action (CTA) -->
+          <div class="order-2 md:order-1 flex flex-col gap-md reveal">
+            <!-- Badge de disponibilité de recherche -->
+            <div
+              class="inline-flex items-center gap-xs bg-surface-container-high dark:bg-surface-variant px-sm py-xs rounded-full w-fit"
+            >
+              <span
+                class="w-2 h-2 rounded-full bg-primary animate-pulse"
+              ></span>
+              <span
+                class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-surface"
+                id="hero-availability"
+                >Disponible pour un stage</span
+              >
+            </div>
+            
+            <!-- Grand titre d'accroche visuelle -->
+            <h1
+              class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface"
+              id="hero-title"
+            >
+              Concevoir l'Avenir,<br />
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary"
+                >Une Ligne de Code à la Fois.</span
+              >
+            </h1>
+            
+            <!-- Description courte de présentation -->
+            <p
+              class="font-body-lg text-body-lg text-on-surface-variant dark:text-on-surface/80 max-w-lg"
+              id="hero-description"
+            >
+              Étudiant passionné en Génie Informatique, IA et Data-science
+              . Je combine logique technique et créativité
+              pour créer des expériences marquantes.
+            </p>
+            
+            <!-- Liens d'actions rapides (CTA) -->
+            <div class="flex flex-wrap gap-sm mt-sm">
+              <a
+                class="inline-flex items-center justify-center bg-primary hover:bg-primary-container text-white px-lg py-sm rounded-lg font-label-sm text-label-sm transition-all duration-300 hover:scale-[1.05] shadow-[0_4px_14px_rgba(53,37,205,0.39)] btn-shimmer"
+                href="#projects"
+                >Mes Projets</a
+              >
+              <a
+                class="inline-flex items-center justify-center border border-primary text-primary hover:bg-primary/5 px-lg py-sm rounded-lg font-label-sm text-label-sm transition-all duration-300 hover:scale-[1.05]"
+                href="#contact"
+                >Contact</a
+              >
+            </div>
+          </div>
+          
+          <!-- Colonne de droite : Cadre photo premium et badges flottants -->
+          <div
+            class="order-1 md:order-2 flex justify-center md:justify-end reveal delay-200"
+          >
+            <!-- Bulle de flottaison contenant le portrait -->
+            <div
+              class="relative w-64 h-64 md:w-96 md:h-96 rounded-full p-2 bg-gradient-to-tr from-primary/20 to-secondary/20 floating"
+            >
+              <!-- Portrait principal de l'étudiant (remplacez le 'src' par votre propre photo) -->
+              <div
+                class="w-full h-full rounded-full overflow-hidden border-4 border-surface dark:border-surface-variant glass-card relative"
+              >
+                <img
+                  alt="Portrait de l'étudiant"
+                  class="w-full h-full object-cover"
+                  id="hero-img"
+                  src="images/jordan-portrait.jpg"
+                />
+              </div>
+              
+              <!-- Badges flottants interactifs (Modifiables selon vos spécialités) -->
+              <!-- Badge flottant gauche (Développeur) -->
+              <div
+                class="absolute top-10 -left-6 glass-card px-4 py-2 rounded-xl flex items-center gap-2 animate-[bounce-y_4s_infinite]"
+              >
+                <span class="material-symbols-outlined text-primary fill-icon"
+                  >code</span
+                >
+                <span class="font-label-sm text-label-sm" id="hero-badge-1">Développeur Web</span>
+              </div>
+              <!-- Badge flottant droit (Développeur Mobile) -->
+              <div
+                class="absolute bottom-10 -right-6 glass-card px-4 py-2 rounded-xl flex items-center gap-2 animate-[bounce-y_5s_infinite_reverse]"
+              >
+                <span class="material-symbols-outlined text-secondary fill-icon"
+                >mobile</span
+                >
+                <span class="font-label-sm text-label-sm" id="hero-badge-2"
+                  >Développeur Mobile</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 
+           ==========================================================================
+           3. SECTION À PROPOS (ABOUT)
+           ==========================================================================
+           Présentation de l'étudiant à deux volets.
+           - Colonne gauche : Récit écrit.
+           - Colonne droite : Onglets interactifs gérés en JavaScript.
+           
+           FONCTIONNEMENT DES ONGLETS :
+           Les boutons possèdent l'attribut 'data-tab="nom_onglet"'. 
+           Le JS masque tous les blocs et affiche uniquement le div avec l'id 'tab-nom_onglet'.
+      -->
+      <section class="py-xl px-gutter max-w-container-max mx-auto" id="about">
+        <div class="flex flex-col items-center text-center mb-lg reveal">
+          <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
+            À Propos de Moi
+          </h2>
+          <p
+            class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
+          >
+            Découvrez mon parcours, mes passions et ma vision de l'ingénierie
+            logicielle.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md items-start">
+          <!-- Volet Gauche : Votre histoire professionnelle -->
+          <div class="flex flex-col gap-6 reveal">
+            <h3
+              class="font-headline-md text-xl font-bold text-primary dark:text-primary-fixed-dim"
+              id="about-story-title"
+            >
+              Créer avec Code & Innovation.
+            </h3>
+            <div id="about-paragraphs" class="flex flex-col gap-6">
+              <p class="font-body-lg text-body-md text-on-surface-variant">
+                Actuellement étudiant en informatique plus précisément en Génie Logiciel, j'ai développé une passion
+                profonde pour le développement web full-stack, l'intelligence artificielle et la data science.
+              </p>
+              <p class="font-body-lg text-body-md text-on-surface-variant">
+                Je m'attache à réduire le fossé entre la rigueur de l'ingénierie logicielle et l'élégance d'un design visuel moderne et soigné.
+                Pour moi, le code doit être aussi fluide, intuitif et harmonieux que le monde qui nous entoure.
+                En combinant mes compétences techniques à la puissance des outils d'intelligence artificielle, je souhaite concevoir des applications innovantes, performantes et centrées sur l'expérience utilisateur.
+              </p>
+            </div>
+            <div class="mt-2">
+              <a
+                class="inline-flex bg-primary hover:bg-primary-container text-white px-md py-xs rounded-lg font-label-sm text-label-sm transition-all duration-300"
+                href="#skills"
+                >Découvrir mes compétences</a
+              >
+            </div>
+          </div>
+
+          <!-- Volet Droit : Onglets d'informations détaillées -->
+          <div class="glass-card rounded-xl p-6 reveal delay-200">
+            <!-- Boutons de sélection d'onglets (Bouton actif = 'class="... active bg-surface-..."') -->
+            <div
+              class="flex gap-4 border-b border-outline-variant/30 pb-4 mb-4"
+            >
+              <!-- Onglet Histoire -->
+              <button
+                class="tab-btn active px-4 py-2 font-label-sm text-label-sm font-semibold rounded-lg text-on-surface-variant bg-surface-container-high dark:bg-surface-variant"
+                data-tab="journey"
+              >
+                Mon Histoire
+              </button>
+              <!-- Onglet Études -->
+              <button
+                class="tab-btn px-4 py-2 font-label-sm text-label-sm font-semibold rounded-lg text-on-surface-variant"
+                data-tab="edu"
+              >
+                Études
+              </button>
+              <!-- Onglet Valeurs -->
+              <button
+                class="tab-btn px-4 py-2 font-label-sm text-label-sm font-semibold rounded-lg text-on-surface-variant"
+                data-tab="core"
+              >
+                Valeurs
+              </button>
+            </div>
+
+            <!-- CONTENU DE L'ONGLET 1 : Histoire (Actif par défaut) -->
+            <div class="tab-content active" id="tab-journey">
+              <p
+                class="font-body-md text-sm text-on-surface-variant leading-relaxed mb-4"
+                id="about-journey-1"
+              >
+                Passionné de nouvelles technologies depuis mon plus jeune âge,
+                j'ai démarré le codage de petites applications avant de plonger
+                dans l'écosystème web moderne avec React et Node.js.
+              </p>
+              <p
+                class="font-body-md text-sm text-on-surface-variant leading-relaxed"
+                id="about-journey-2"
+              >
+                Aujourd'hui, je crée des produits soignés en m'assurant que
+                chaque animation et interaction apporte une réelle plus-value à
+                l'expérience de l'utilisateur final.
+              </p>
+            </div>
+
+            <!-- CONTENU DE L'ONGLET 2 : Études académiques -->
+            <div class="tab-content" id="tab-edu">
+              <div class="flex flex-col gap-4" id="about-education-container">
+                <!-- Rempli dynamiquement -->
+              </div>
+            </div>
+
+            <!-- CONTENU DE L'ONGLET 3 : Valeurs personnelles -->
+            <div class="tab-content" id="tab-core">
+              <ul class="flex flex-col gap-3 text-sm text-on-surface-variant" id="about-values-container">
+                <!-- Rempli dynamiquement -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 
+           ==========================================================================
+           4. SECTION COMPÉTENCES TECHNIQUES (SKILLS)
+           ==========================================================================
+           Présente des barres de progression animées au scroll.
+           
+           AJOUT OU MODIFICATION DE COMPÉTENCE :
+           1. Modifiez le nom textuel (ex: React & Next.js).
+           2. Changez le pourcentage affiché en texte (ex: 90%).
+           3. Mettez à jour 'data-percent="XX"' sur le conteneur interne pour que
+              l'animation JavaScript remplisse la jauge précisément à cette valeur.
+      -->
+      <section
+        class="py-xl bg-surface-container-low dark:bg-surface-container/30 transition-colors duration-500"
+        id="skills"
+      >
+        <div class="container max-w-container-max mx-auto px-gutter">
+          <div class="flex flex-col items-center text-center mb-lg reveal">
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
+              Compétences Techniques
+            </h2>
+            <p
+              class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
+            >
+              Un aperçu de mon expertise technologique dans le développement et
+              l'architecture web.
+            </p>
+          </div>
+
+          <!-- Grille des 3 catégories de compétences -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-md" id="skills-categories-container">
+            <!-- Rempli dynamiquement -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 
+           ==========================================================================
+           5. SECTION PROJETS RÉCENTS (BENTO GRID STYLE & FILTRE DYNAMIQUE)
+           ==========================================================================
+           Section affichant vos réalisations de manière asymétrique (Bento Grid).
+           Elle est gérée par un système de filtrage et d'ouverture de modales.
+           
+           RÈGLES D'INTEGRATION DE PROJETS :
+           Chaque carte possède deux attributs indispensables pour l'interactivité :
+           1. 'data-category="nom_categorie"' : Filtre le projet (valeurs : 'web' ou 'mobile').
+           2. 'data-project-id="identifiant"' : Associe la carte à sa fiche descriptive enrichie
+              définie dans la variable PROJECTS_DATA de 'js/app.js' (ex: "analytique", "ecommerce").
+              
+           CORRECTION DU BUG DE FILTRAGE :
+           Pour préserver la mise en page Bento, l'affichage est modifié en 'display: block' 
+           en JavaScript au lieu de 'flex', évitant ainsi toute déformation des vignettes.
+      -->
+      <section
+        class="py-xl px-gutter max-w-container-max mx-auto"
+        id="projects"
+      >
+        <div class="flex flex-col items-center text-center mb-lg reveal">
+          <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
+            Mes Projets Récents
+          </h2>
+          <p
+            class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
+          >
+            Une sélection de mes travaux académiques et personnels, démontrant
+            mes compétences en développement full-stack et en conception
+            d'interfaces.
+          </p>
+        </div>
+
+        <!-- Boutons de filtrage dynamiques (Chaque bouton possède un attribut 'data-filter') -->
+        <div class="flex justify-center gap-xs mb-lg flex-wrap reveal">
+          <button
+            class="filter-btn active bg-primary text-white border border-primary px-sm py-2 rounded-full font-label-sm text-label-sm"
+            data-filter="all"
+          >
+            Tout
+          </button>
+          <button
+            class="filter-btn border border-outline-variant/30 hover:border-primary hover:text-primary transition-all duration-300 px-sm py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant dark:text-on-surface"
+            data-filter="web"
+          >
+            Web Advanced
+          </button>
+          <button
+            class="filter-btn border border-outline-variant/30 hover:border-primary hover:text-primary transition-all duration-300 px-sm py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant dark:text-on-surface"
+            data-filter="mobile"
+          >
+            Applications Mobiles
+          </button>
+        </div>
+
+        <!-- Grille Bento de Projets -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md"
+          id="projects-grid"
+        >
+          <!-- Les cartes de projets seront injectées dynamiquement par JS -->
+        </div>
+      </section>
+
+      <!-- 
+           ==========================================================================
+           6. SECTION MON PARCOURS (FRISE CHRONOLOGIQUE - TIMELINE)
+           ==========================================================================
+           Une frise élégante alternant entre la gauche et la droite.
+           
+           CONSTRUCTION DU BALISAGE :
+           - Utilisez la classe 'timeline-left' pour aligner la carte d'expérience à gauche.
+           - Utilisez la classe 'timeline-right' pour aligner la carte d'expérience à droite.
+           - Sur mobile, ces classes s'annulent proprement via CSS Media Queries pour 
+             garantir un empilement vertical fluide.
+      -->
+      <!-- 
+           DESACTIVÉ : Section Parcours (Timeline).
+           Pour la réactiver, supprimez simplement les balises de début et de fin de commentaire ci-dessous.
+           Note : Les commentaires internes ont été convertis en format crochets [] pour éviter tout conflit de syntaxe HTML.
+      <section
+        class="py-xl bg-surface-container-low dark:bg-surface-container/30 transition-colors duration-500"
+        id="experience"
+      >
+        <div class="container max-w-container-max mx-auto px-gutter">
+          <div class="flex flex-col items-center text-center mb-lg reveal">
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
+              Mon Parcours
+            </h2>
+            <p
+              class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
+            >
+              Un historique chronologique de mes stages, expériences
+              professionnelles et projets académiques.
+            </p>
+          </div>
+
+          [Conteneur général de la frise (Timeline)]
+          <div class="timeline">
+            [CARTE 1 : Alignée à Gauche (timeline-left)]
+            <div class="timeline-container timeline-left reveal">
+              <div
+                class="glass-card rounded-xl p-6 timeline-card flex flex-col gap-2"
+              >
+                <span
+                  class="text-xs font-bold text-primary dark:text-primary-fixed-dim"
+                  >Avril 2024 - Présent</span
+                >
+                <h3 class="text-lg font-bold text-on-surface font-headline-md">
+                  Stage Développeur Full-Stack
+                </h3>
+                <h4 class="text-sm font-semibold text-on-surface-variant">
+                  TechCorp Solutions
+                </h4>
+                <p class="text-sm text-on-surface-variant">
+                  Conception d'APIs scalables en Node.js et intégration
+                  d'interfaces React hautement dynamiques au sein d'une équipe
+                  agile.
+                </p>
+              </div>
+            </div>
+
+            [CARTE 2 : Alignée à Droite (timeline-right)]
+            <div class="timeline-container timeline-right reveal delay-100">
+              <div
+                class="glass-card rounded-xl p-6 timeline-card flex flex-col gap-2"
+              >
+                <span
+                  class="text-xs font-bold text-primary dark:text-primary-fixed-dim"
+                  >Octobre 2023 - Mars 2024</span
+                >
+                <h3 class="text-lg font-bold text-on-surface font-headline-md">
+                  Développeur Indépendant (Freelance)
+                </h3>
+                <h4 class="text-sm font-semibold text-on-surface-variant">
+                  Projets Freelance
+                </h4>
+                <p class="text-sm text-on-surface-variant">
+                  Création d'outils d'administration sur mesure pour des
+                  commerçants locaux. Accent mis sur le SEO et l'optimisation
+                  des performances.
+                </p>
+              </div>
+            </div>
+
+            [CARTE 3 : Alignée à Gauche (timeline-left)]
+            <div class="timeline-container timeline-left reveal delay-200">
+              <div
+                class="glass-card rounded-xl p-6 timeline-card flex flex-col gap-2"
+              >
+                <span
+                  class="text-xs font-bold text-primary dark:text-primary-fixed-dim"
+                  >Septembre 2022 - Juin 2023</span
+                >
+                <h3 class="text-lg font-bold text-on-surface font-headline-md">
+                  Projet Académique Majeur
+                </h3>
+                <h4 class="text-sm font-semibold text-on-surface-variant">
+                  Projet Fin de Licence
+                </h4>
+                <p class="text-sm text-on-surface-variant">
+                  Conception d'un tableau de bord analytique micro-services
+                  primé pour sa rigueur et ses performances d'affichage.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      -->
+
+      <!-- 
+           ==========================================================================
+           7. SECTION CONTACT (FORMULAIRE & LIENS DE CONTACT)
+           ==========================================================================
+           Permet aux visiteurs de vous contacter facilement.
+           
+           À MODIFIER :
+           - Votre email principal ligne 1105.
+           - Votre localisation géographique ligne 1129.
+           - Vos réseaux sociaux (GitHub, LinkedIn) ligne 1144 et 1152.
+           
+           FONCTIONNEMENT DU FORMULAIRE :
+           Le formulaire de soumission possède 'id="contact-form"'. JavaScript intercepte
+           la validation côté client pour s'assurer que les champs ne sont pas vides
+           et que le mail est valide. Il simule ensuite un envoi réseau et affiche
+           un toast flottant de succès.
+      -->
+      <section class="py-xl px-gutter max-w-container-max mx-auto" id="contact">
+        <div class="flex flex-col items-center text-center mb-lg reveal">
+          <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
+            Me Contacter
+          </h2>
+          <p
+            class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
+          >
+            Une idée de projet, une offre de stage ou simplement une question ?
+            Discutons-en ensemble !
+          </p>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-12 gap-md items-start max-w-5xl mx-auto"
+        >
+          <!-- Bloc de gauche : Informations textuelles et Réseaux (5 colonnes) -->
+          <div class="md:col-span-5 flex flex-col gap-6 reveal">
+            <!-- Carte d'adresse e-mail -->
+            <div class="glass-card rounded-xl p-6 flex items-center gap-4">
+              <div
+                class="w-12 h-12 bg-surface-container-high dark:bg-surface-variant rounded-lg flex items-center justify-center text-primary"
+              >
+                <span class="material-symbols-outlined text-2xl">mail</span>
+              </div>
+              <div>
+                <div
+                  class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider"
+                >
+                  Email
+                </div>
+                <!-- Remplacez cette adresse par la vôtre -->
+                <div class="text-sm font-bold text-on-surface">
+                  <a
+                    href="mailto: jdibangoup5@gmail.com"
+                    class="hover:text-primary transition-all"
+                    id="contact-email-link"
+                    >jdibangoup5@gmail.com</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Carte de localisation géographique -->
+            <div class="glass-card rounded-xl p-6 flex items-center gap-4">
+              <div
+                class="w-12 h-12 bg-surface-container-high dark:bg-surface-variant rounded-lg flex items-center justify-center text-primary"
+              >
+                <span class="material-symbols-outlined text-2xl"
+                  >location_on</span
+                >
+              </div>
+              <div>
+                <div
+                  class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider"
+                >
+                  Localisation
+                </div>
+                  <!-- Remplacez cette ville par la vôtre -->
+                  <div class="text-sm font-bold text-on-surface" id="contact-location-text">
+                    Abidjan, Côte d'Ivoire
+                  </div>
+              </div>
+            </div>
+
+            <!-- Section des liens vers vos profils sociaux -->
+            <div class="flex flex-col gap-3 px-2">
+              <div
+                class="text-xs font-bold text-on-surface-variant uppercase tracking-wider"
+              >
+                Me suivre
+              </div>
+              <div class="flex gap-3">
+                <!-- Lien GitHub -->
+                <a
+                  class="w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-primary hover:border-primary transition-all duration-300"
+                  href="#"
+                  id="contact-github-link"
+                  aria-label="GitHub"
+                  ><span class="material-symbols-outlined fill-icon"
+                    >code</span
+                  ></a
+                >
+                <!-- Lien LinkedIn -->
+                <a
+                  class="w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-primary hover:border-primary transition-all duration-300"
+                  href="#"
+                  id="contact-linkedin-link"
+                  aria-label="LinkedIn"
+                  ><span class="material-symbols-outlined fill-icon"
+                    >share</span
+                  ></a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloc de droite : Formulaire de contact sécurisé (7 colonnes) -->
+          <div class="md:col-span-7 glass-card rounded-xl p-6 reveal delay-200">
+            <!-- IMPORTANT : Conservez les id sur les inputs, ils sont ciblés en JavaScript dans app.js -->
+            <form class="flex flex-col gap-4" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+              <input type="hidden" name="access_key" value="1e96af0c-37e9-4900-95ab-3413ff598fd2">
+              <!-- Champ Nom -->
+              <div class="flex flex-col gap-1">
+                <label
+                  for="form-name"
+                  class="text-xs font-semibold text-on-surface-variant"
+                  >Nom complet *</label
+                >
+                <input
+                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none form-input"
+                  type="text"
+                  id="form-name"
+                  name="name"
+                  placeholder="Votre nom"
+                  required
+                />
+              </div>
+              <!-- Champ Email -->
+              <div class="flex flex-col gap-1">
+                <label
+                  for="form-email"
+                  class="text-xs font-semibold text-on-surface-variant"
+                  >Adresse e-mail *</label
+                >
+                <input
+                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none form-input"
+                  type="email"
+                  id="form-email"
+                  name="email"
+                  placeholder="votre.email@exemple.com"
+                  required
+                />
+              </div>
+              <!-- Champ Sujet -->
+              <div class="flex flex-col gap-1">
+                <label
+                  for="form-subject"
+                  class="text-xs font-semibold text-on-surface-variant"
+                  >Sujet *</label
+                >
+                <input
+                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none form-input"
+                  type="text"
+                  id="form-subject"
+                  name="subject"
+                  placeholder="Sujet de votre message"
+                  required
+                />
+              </div>
+              <!-- Champ Message -->
+              <div class="flex flex-col gap-1">
+                <label
+                  for="form-message-text"
+                  class="text-xs font-semibold text-on-surface-variant"
+                  >Votre message *</label
+                >
+                <textarea
+                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none min-h-[120px] resize-y form-input"
+                  id="form-message-text"
+                  name="message"
+                  placeholder="Dites-m'en plus sur votre projet..."
+                  required
+                ></textarea>
+              </div>
+
+              <!-- Bouton de soumission (Désactivé dynamiquement en JS pendant le chargement d'envoi) -->
+              <button
+                class="bg-primary hover:bg-primary-container text-white px-md py-3 rounded-lg font-label-sm text-label-sm font-semibold transition-all duration-300 w-full flex items-center justify-center gap-2 hover:scale-[1.01] btn-shimmer"
+                type="submit"
+              >
+                <span class="material-symbols-outlined text-base fill-icon"
+                  >send</span
+                >
+                Envoyer le message
+              </button>
+
+              <div class="hidden mt-2" id="form-message"></div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 
+         ==========================================================================
+         8. PIED DE PAGE COMMUN (FOOTER)
+         ==========================================================================
+         Affichage des crédits et de la marque du site en bas de page.
+    -->
+    <footer
+      class="full-width py-lg mt-xl border-t border-outline-variant/20 bg-surface dark:bg-surface-container-lowest"
+    >
+      <div
+        class="flex flex-col md:flex-row justify-between items-center px-gutter max-w-container-max mx-auto gap-md"
+      >
+        <div
+          class="font-display-lg text-body-lg font-bold text-on-surface dark:text-on-surface-variant"
+          id="footer-logo"
+        >
+          DevPortfolio
+        </div>
+        <!-- Liens secondaires rapides du bas de page -->
+        <ul class="flex flex-wrap justify-center gap-md">
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
+              href="#about"
+              >À Propos</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
+              href="#skills"
+              >Compétences</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
+              href="#projects"
+              >Projets</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
+              href="#contact"
+              >Contact</a
+            >
+          </li>
+        </ul>
+        <div
+          class="font-body-md text-sm text-on-surface-variant/70 text-center md:text-right"
+          id="footer-copyright"
+        >
+          © 2026 Jordan Portfolio. Conçu avec Précision & Clarté.
+        </div>
+      </div>
+    </footer>
+
+    <!--
+         ==========================================================================
+         9. SYSTÈMES ET STRUCTURES INTERACTIFS DYNAMIQUES (MODALES & TOASTS)
+         ==========================================================================
+         Ces conteneurs HTML sont initialement invisibles sur la page (grâce à 
+         l'opacité 0 et aux pointer-events: none dans css/style.css).
+         JavaScript les remplit dynamiquement et y applique la classe '.active' 
+         au clic utilisateur pour les faire surgir.
+    -->
+
+    <!-- MODALE 1 : Détails des Projets Bento -->
+    <div class="modal-overlay" id="project-modal" aria-hidden="true">
+      <div class="modal-container p-6 relative">
+        <!-- Bouton Fermer (X) -->
+        <button
+          class="absolute top-4 right-4 w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-on-surface hover:text-primary hover:border-primary transition-all duration-300 z-10"
+          id="close-project-modal"
+          aria-label="Fermer la modale"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <!-- Le contenu interne ci-dessous est injecté par app.js au clic sur un projet -->
+        <div id="project-modal-content">
+          <!-- Populé dynamiquement par JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODALE 2 : Visualisation Interactive du CV Papier -->
+    <div class="modal-overlay" id="cv-modal" aria-hidden="true">
+      <div class="modal-container p-gutter relative max-w-3xl">
+        <!-- Bouton Fermer (X) -->
+        <button
+          class="absolute top-4 right-4 w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-on-surface hover:text-primary hover:border-primary transition-all duration-300 z-10"
+          id="close-cv-modal"
+          aria-label="Fermer la modale"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <!-- Le contenu interne ci-dessous est injecté par app.js au clic sur le bouton CV -->
+        <div id="cv-modal-content" class="flex flex-col gap-6">
+          <!-- Populé dynamiquement par JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENEUR DES NOTIFICATIONS TOAST FLOATTANTES -->
+    <!-- JavaScript y crée et injecte des enfants dynamiquement lors des événements -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Chargement du fichier Javascript à la fin du document pour de meilleures performances -->
+    <script src="js/app.js"></script>
+  </body>
+</html>

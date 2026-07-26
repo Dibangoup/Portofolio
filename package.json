@@ -1,0 +1,23 @@
+{
+  "name": "portfolio-admin-dashboard",
+  "version": "1.0.0",
+  "description": "Portfolio étudiant interactif avec dashboard d'édition en temps réel",
+  "main": "server.js",
+  "scripts": {
+    "predev": "npm run build:css",
+    "dev": "node server.js",
+    "build:css": "tailwindcss -i ./css/tailwind-src.css -o ./css/tailwind-build.css --minify",
+    "watch:css": "tailwindcss -i ./css/tailwind-src.css -o ./css/tailwind-build.css --watch"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.11",
+    "tailwindcss": "^3.4.19"
+  },
+  "author": "Jordan",
+  "license": "ISC"
+}

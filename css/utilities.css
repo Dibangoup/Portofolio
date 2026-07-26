@@ -1,0 +1,57 @@
+/* ==========================================================================
+   UTILITIES.CSS — UTILITAIRES VISUELS GLOBAUX
+   ==========================================================================
+   Styles pour les éléments décoratifs et interactifs globaux :
+   la barre de progression de lecture et le halo lumineux de souris.
+*/
+
+
+/* ==========================================================================
+   1. BARRE DE PROGRESSION DE DÉFILEMENT (SCROLL PROGRESS)
+   ==========================================================================
+   Fine ligne fixée sous la navbar dont le remplissage horizontal indique le
+   niveau de lecture de l'utilisateur sur la page web.
+*/
+
+.scroll-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    /* Dégradé fluide de violet à bleu clair */
+    background: linear-gradient(90deg, #3525cd, #39b8fd);
+    transition: width 0.1s ease-out;
+    z-index: 100;
+}
+
+html.dark .scroll-progress-bar {
+    background: linear-gradient(90deg, #4f46e5, #89ceff);
+}
+
+
+/* ==========================================================================
+   2. HALO LUMINEUX DE SOURIS (MOUSE TRACKING GLOW)
+   ==========================================================================
+   Rond lumineux dégradé très doux qui suit précisément le curseur de la souris
+   dans la section Hero pour un effet de carte graphique interactive.
+*/
+
+.mouse-glow {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    /* Dégradé radial avec point de focalisation central translucide vers transparent */
+    background: radial-gradient(circle, rgba(53, 37, 205, 0.12) 0%, rgba(57, 184, 253, 0.04) 50%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none; /* Empêche de bloquer les clics sur les boutons sous-jacents */
+    z-index: 0;
+    transform: translate(-50%, -50%); /* Centre parfaitement le halo sous la pointe du curseur */
+    transition: opacity 0.5s ease;
+    opacity: 0;
+}
+
+/* Activé en JS lors de l'entrée de la souris dans la section Hero */
+.mouse-glow.active {
+    opacity: 1;
+}

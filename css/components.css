@@ -1,0 +1,109 @@
+/* ==========================================================================
+   COMPONENTS.CSS — COMPOSANTS UI INTERACTIFS
+   ==========================================================================
+   Styles des composants réutilisables : onglets "À Propos", jauges de
+   compétences, cartes de projets, champs de formulaire et icônes Material.
+*/
+
+
+/* ==========================================================================
+   1. BOUTONS D'ONGLETS DE LA SECTION "À PROPOS"
+   ==========================================================================
+   Gère l'état visuel actif et inactif des onglets d'histoire, d'études et de valeurs.
+*/
+
+.tab-btn {
+    /* Transition douce lors du changement d'onglet */
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Style de l'onglet actif (Light Mode) - Couleur violette primaire */
+.tab-btn.active {
+    background-color: #3525cd !important;
+    color: #ffffff !important;
+}
+
+/* Style de l'onglet actif (Dark Mode) */
+html.dark .tab-btn.active {
+    background-color: #4f46e5 !important;
+    color: #ffffff !important;
+}
+
+/* Structure par défaut d'un bloc de contenu d'onglet (masqué initialement) */
+.tab-content {
+    display: none;
+    /* Animation fluide d'apparition en fondu montant */
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Classe injectée par le JS pour afficher le bloc d'onglet actif */
+.tab-content.active {
+    display: block;
+}
+
+
+/* ==========================================================================
+   2. JAUGE DE COMPÉTENCES ANIMÉE (SKILLS SECTION)
+   ==========================================================================
+   Ces jauges démarrent à une largeur de 0% et se remplissent dynamiquement
+   en JavaScript jusqu'au pourcentage cible lorsque la section devient visible.
+*/
+
+.skill-bar-fill {
+    width: 0;
+    /* Transition longue et fluide (1.5s) avec un amorti de type 'ease-out' haut de gamme */
+    transition: width 1.5s cubic-bezier(0.1, 1, 0.1, 1);
+}
+
+
+/* ==========================================================================
+   3. CARTES DE PROJETS — EFFET DE SURVOL (ZOOM-HOVER)
+   ==========================================================================
+   Applique une légère élévation 3D et une ombre renforcée sur les cartes
+   de projets lorsqu'un utilisateur passe son curseur dessus.
+*/
+
+.project-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-card:hover {
+    /* Décale légèrement la carte vers le haut */
+    transform: translateY(-6px);
+}
+
+
+/* ==========================================================================
+   4. INPUTS DU FORMULAIRE DE CONTACT
+   ==========================================================================
+   Ajoute une transition d'éclairage et une ombre externe (halo) d'accentuation
+   lorsqu'un utilisateur sélectionne un champ de saisie du formulaire.
+*/
+
+.form-input {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-input:focus {
+    /* Bordure violette active */
+    border-color: #3525cd !important;
+    /* Halo d'ombre externe translucide */
+    box-shadow: 0 0 0 4px rgba(53, 37, 205, 0.1) !important;
+}
+
+html.dark .form-input:focus {
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2) !important;
+}
+
+
+/* ==========================================================================
+   5. ICÔNES MATERIAL SYMBOLS — REMPLISSAGE FORCÉ
+   ==========================================================================
+   Force le remplissage complet des icônes Google Material Symbols (remplissage
+   de l'icône au lieu de sa version filaire par défaut).
+*/
+
+.fill-icon {
+    font-variation-settings: 'FILL' 1 !important;
+}
