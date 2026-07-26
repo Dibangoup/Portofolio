@@ -1,0 +1,37 @@
+/* ==========================================================================
+   SCROLLBAR.CSS — BARRE DE DÉFILEMENT PERSONNALISÉE
+   ==========================================================================
+   Redéfinit la scrollbar par défaut du navigateur pour s'accorder parfaitement
+   avec la charte graphique moderne du site.
+*/
+
+/* Largeur totale de la scrollbar verticale */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Arrière-plan de la piste de défilement (Light Mode) */
+::-webkit-scrollbar-track {
+    background: #f0f3ff;
+}
+
+/* Arrière-plan de la piste de défilement (Dark Mode) */
+html.dark ::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+/* Poignée mobile de défilement (Light Mode) */
+::-webkit-scrollbar-thumb {
+    background: #c7c4d8;
+    border-radius: 9999px;
+}
+
+/* Poignée mobile de défilement (Dark Mode) */
+html.dark ::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+
+/* Changement de couleur de la poignée au survol de la souris */
+::-webkit-scrollbar-thumb:hover {
+    background: #777587;
+}

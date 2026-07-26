@@ -1,0 +1,40 @@
+/* ==========================================================================
+   GLASS.CSS — EFFETS DE VERRE (GLASSMORPHISM)
+   ==========================================================================
+   Définit les classes réutilisables pour les arrière-plans vitrés appliqués
+   à la navbar, aux cartes de projet, aux sections Bento, au CV, etc.
+*/
+
+/* Classe générale pour les arrière-plans vitrés (ex: barre de navigation) */
+.glass {
+    /* Fond de couleur claire translucide */
+    background-color: rgba(249, 249, 255, 0.8) !important;
+    /* Effet de flou de l'arrière-plan (support universel) */
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    /* Bordure fine blanche très transparente pour simuler le reflet du verre */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Version sombre de l'effet de verre (préservée si le mode sombre est réactivé plus tard) */
+html.dark .glass {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Classe spécifique pour les cartes de contenu (Bento, CV, Timeline, etc.) */
+.glass-card {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    /* Ombre portée douce teintée avec la couleur primaire pour donner du relief */
+    box-shadow: 0 4px 20px rgba(53, 37, 205, 0.04) !important;
+}
+
+/* Version sombre de la carte de verre */
+html.dark .glass-card {
+    background-color: rgba(30, 41, 59, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
