@@ -324,42 +324,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderAbout = () => {
         const a = PORTFOLIO_DATA.about;
         if (!a) return;
-        
+
         const titleEl = document.getElementById('about-story-title');
         if (titleEl) titleEl.textContent = a.title || '';
-        
+
         const paragraphsEl = document.getElementById('about-paragraphs');
         if (paragraphsEl && a.paragraphs) {
-            paragraphsEl.innerHTML = a.paragraphs.map(p => 
-                `<p class="font-body-lg text-body-md text-on-surface-variant">${p}</p>`
+            paragraphsEl.innerHTML = a.paragraphs.map(p =>
+                `<p class="flowing-text">${p}</p>`
             ).join('');
         }
-        
+
         const journey1 = document.getElementById('about-journey-1');
         if (journey1 && a.journey) journey1.textContent = a.journey.text1 || '';
-        
+
         const journey2 = document.getElementById('about-journey-2');
         if (journey2 && a.journey) journey2.textContent = a.journey.text2 || '';
-        
+
         const eduContainer = document.getElementById('about-education-container');
         if (eduContainer && a.education) {
             eduContainer.innerHTML = a.education.map(e => `
-                <div class="relative pl-6 border-l-2 border-primary/30">
-                  <div class="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-1"></div>
-                  <span class="text-xs font-bold text-primary dark:text-primary-fixed-dim">${e.dates}</span>
-                  <h4 class="text-sm font-bold text-on-surface">${e.degree}</h4>
-                  <p class="text-xs font-semibold text-on-surface-variant mb-1">${e.school}</p>
-                  <p class="text-xs text-on-surface-variant">${e.desc}</p>
+                <div class="tl-item">
+                  <span class="tl-date mono">${e.dates}</span>
+                  <div>
+                    <div class="tl-title">${e.degree}</div>
+                    <p class="tl-desc">${e.school}. ${e.desc}</p>
+                  </div>
                 </div>
             `).join('');
         }
-        
+
         const valuesContainer = document.getElementById('about-values-container');
         if (valuesContainer && a.values) {
             valuesContainer.innerHTML = a.values.map(v => `
-                <li>
-                  ${v.emoji || '🚀'} <strong>${v.title} :</strong> ${v.desc}
-                </li>
+                <div class="value-card">
+                  <span class="value-emoji muted-emoji">${v.emoji || '★'}</span>
+                  <div class="value-title">${v.title}</div>
+                  <p class="value-desc">${v.desc}</p>
+                </div>
             `).join('');
         }
     };
@@ -719,19 +721,17 @@ document.addEventListener('DOMContentLoaded', () => {
        Gère le basculement fluide entre les différents onglets de la section "À Propos"
        ("Mon Histoire", "Mes Études", "Mes Valeurs").
     */
-    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabButtons = document.querySelectorAll('.rubrique-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const tabName = button.getAttribute('data-tab');
 
-            // Désactive tous les boutons d'onglets et les contenus
-            tabButtons.forEach(btn => btn.classList.remove('active', 'bg-surface-container-high'));
+            tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
 
-            // Active uniquement l'onglet cliqué
-            button.classList.add('active', 'bg-surface-container-high');
+            button.classList.add('active');
             const targetContent = document.getElementById(`tab-${tabName}`);
             if (targetContent) targetContent.classList.add('active');
         });
