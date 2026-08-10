@@ -13,7 +13,7 @@
 - `js/portfolio-data.js` — schema never changes shape. Every task reads fields exactly as they exist today.
 - Full identifier contract (all `id`s `app.js` targets) must keep working — see the plan's spec, §7, for the authoritative list. No `id` is renamed.
 - Colors (from the spec, §3.1): `--bg:#0F1B2E`, `--bg-2:#16273D`, `--bg-3:#1D3049`, `--ink:#F3F1E8`, `--ink-70:rgba(243,241,232,.72)`, `--ink-45:rgba(243,241,232,.52)`, `--line:rgba(243,241,232,.14)`, `--accent:#E8A23C`, `--accent-ink:#F0B65E`.
-- One border-radius scale: `--radius:14px` on cards/panels, `999px` on pills/buttons/badges. No other radius value is introduced.
+- One border-radius scale, three steps, no other values: `6px` on elements nested inside a larger card (an inner image viewport, a small tag chip), `10px` on small standalone controls (icon buttons, form inputs, toasts), `var(--radius)` (`14px`) on cards/panels/main containers, `999px` on pills/buttons/badges. (Corrected from an earlier draft that stated only two steps; Tasks 1-2's actual CSS already consistently used this three-step pattern — this line just documents it accurately so later tasks and reviewers don't flag it as drift.)
 - No box-shadow, no `backdrop-filter`/glassmorphism anywhere (flat dark surfaces only).
 - `tailwind.config.js` is **not modified** by this plan — no component relies on its color-key utilities anymore; every touched element gets a bespoke class instead (this refines spec §8's wording, which described a Tailwind color-key remap; rewriting markup with dedicated classes is more precise and was chosen after reading the actual codebase during planning — behavior and visual outcome are unaffected).
 - Every animation gates on `prefers-reduced-motion` exactly as the existing `app.js` code already does (a single `prefersReducedMotion` const near the top of the `DOMContentLoaded` handler).
@@ -736,13 +736,6 @@ Append:
     background: var(--accent);
     flex: none;
 }
-@media (prefers-reduced-motion: no-preference) {
-    .hero-status-dot { animation: hero-pulse 2s ease-in-out infinite; }
-}
-@keyframes hero-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .35; }
-}
 .hero-title {
     font-family: 'Space Grotesk', -apple-system, sans-serif;
     font-weight: 700;
@@ -1320,7 +1313,7 @@ No `tailwind-build.css` rebuild needed.
 **Files:**
 - Modify: `index.html:489-511` (entire `<section id="skills">`)
 - Modify: `css/components.css` (skill-legend rules, appended)
-- Modify: `js/app.js:294-326` (`renderSkills()`)
+- Modify: `js/app.js:294-326` (`renderSkills()`), and `triggerSkillsAnimation()` (search for it, do not assume its original line numbers — Step 2b)
 
 **Interfaces:**
 - Consumes: `renderIcon()` (Task 1) for category icons (`palette`/`database`/`smartphone`/`star` fallback).
@@ -1363,7 +1356,7 @@ Replace lines 294-326 with:
                     <span class="skill-percent">${item.percent}%</span>
                   </div>
                   <div class="skill-fill-track">
-                    <div class="skill-bar-fill" style="width: 0%;" data-percent="${item.percent}"></div>
+                    <div class="skill-bar-fill" data-percent="${item.percent}"></div>
                   </div>
                 </div>
             `).join('');
@@ -1380,7 +1373,36 @@ Replace lines 294-326 with:
     };
 ```
 
-(`iconFor()` guards against a category `icon` value that isn't one of the 4 mapped icons — `PORTFOLIO_DATA.skills[].icon` today is always `"palette"`, `"database"`, or `"smartphone"`, all present in `ICONS`, but this keeps the renderer safe if the dashboard is ever used to set a different string.)
+(`iconFor()` guards against a category `icon` value that isn't one of the 4 mapped icons — `PORTFOLIO_DATA.skills[].icon` today is always `"palette"`, `"database"`, or `"smartphone"`, all present in `ICONS`, but this keeps the renderer safe if the dashboard is ever used to set a different string. The inline `style="width: 0%;"` the current codebase sets on this element is dropped — the fill now starts collapsed via a CSS default `transform: scaleX(0)`, see Step 3, and Step 2b below drives it by `transform` instead of `width` for performance.)
+
+- [ ] **Step 2b: Switch `triggerSkillsAnimation()` from animating `width` to animating `transform`**
+
+Animating `width` causes a layout recalculation on every frame; `transform: scaleX()` is compositor-only and does not. The visible result and the `data-percent` contract are identical — only the CSS property driving the fill changes. Replace the function (originally at lines 703-728, search for `function triggerSkillsAnimation()` since Tasks 1-4 may have shifted the exact line numbers):
+
+```js
+    function triggerSkillsAnimation() {
+        const skillBars = document.querySelectorAll('.skill-bar-fill');
+        const skillsSection = document.getElementById('skills');
+        const fillBar = (bar) => {
+            const targetPercent = parseFloat(bar.getAttribute('data-percent')) || 0;
+            bar.style.transform = `scaleX(${targetPercent / 100})`;
+        };
+        if (skillsSection && skillBars.length > 0 && !prefersReducedMotion) {
+            const skillsObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.skill-bar-fill').forEach(fillBar);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            skillsObserver.observe(skillsSection);
+        } else {
+            skillBars.forEach(fillBar);
+        }
+    }
+```
 
 - [ ] **Step 3: Add skill-legend CSS to `css/components.css`**
 
@@ -1446,23 +1468,25 @@ Append:
 }
 .skill-bar-fill {
     height: 100%;
+    width: 100%;
     background: var(--accent);
-    width: 0;
-    transition: width 1.5s cubic-bezier(0.1, 1, 0.1, 1);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1.5s cubic-bezier(0.1, 1, 0.1, 1);
 }
 @media (max-width: 900px) {
     .skill-legend { grid-template-columns: 1fr; }
 }
 ```
 
-(`.skill-bar-fill`'s `id`/behavior contract — `data-percent` read by `triggerSkillsAnimation()` — is untouched; only its visual rendering shrinks from a rounded gradient bar to a 2px flat fill, per spec §5.4.)
+(`.skill-bar-fill`'s `id`/behavior contract — `data-percent` read by `triggerSkillsAnimation()` — is untouched; its visual rendering shrinks from a rounded gradient bar to a 2px flat fill, per spec §5.4, and per Step 2b now fills via `transform: scaleX()` instead of `width` — same visible result, no layout-property animation.)
 
 - [ ] **Step 4: Visual check**
 
 Serve and open the site, scroll to "Compétences techniques". Confirm:
 - Three columns (Frontend & UI / Backend & APIs / Mobile & autres), each with an icon + category name heading.
 - Each skill row shows name + percent, with a thin line beneath.
-- Scrolling the section into view animates each thin line filling to its `data-percent` width (open DevTools, confirm `.skill-bar-fill` elements' inline `width` style updates from `0%` to their target once the section scrolls into view).
+- Scrolling the section into view animates each thin line filling to its `data-percent` width (open DevTools, confirm `.skill-bar-fill` elements' inline `transform` style updates from `scaleX(0)` to `scaleX(<percent/100>)` once the section scrolls into view).
 - No console errors.
 
 - [ ] **Step 5: Commit**
@@ -2494,7 +2518,6 @@ Replace lines 101-165 (the entire "3. SYSTÈME DE NOTIFICATIONS FLOTTANTES" sect
     max-width: 420px;
     background: var(--bg-2);
     border: 1px solid var(--line);
-    border-left: 3px solid var(--accent);
     border-radius: 10px;
     padding: 16px;
     display: flex;
@@ -2527,7 +2550,7 @@ Replace lines 101-165 (the entire "3. SYSTÈME DE NOTIFICATIONS FLOTTANTES" sect
 }
 ```
 
-(A single `border-left: var(--accent)` for all toast types keeps the design's one-accent-color law; only the icon itself tints red for `.toast.error` — a semantic-state color distinct from the page's decorative accent, acceptable per the spec's accessibility intent since it conveys real state, not decoration.)
+(No colored side border on the toast — a thick accent border on one edge of a card is a recognizable generic-AI-UI pattern, and it's redundant here anyway: the icon already carries the semantic state, gold for success/info, warm red for error, matching `.toast.error .toast-icon`'s color above. A plain neutral `border: 1px solid var(--line)` is enough structure; state lives in the icon, not decoration on the frame.)
 
 Then append:
 
@@ -2643,7 +2666,7 @@ Then append:
 
 Serve and open the site. Click "Mon CV" in the nav:
 - Confirm the CV sheet renders (identity header + download button, Contact/Compétences/Langues left column, Expériences/Formations right column), all on the dark palette.
-- Click "Télécharger le CV PDF": confirm the button shows a spinning sync icon + "Génération...", then after ~1.4s the modal closes and a success toast appears (gold left border, check icon, message).
+- Click "Télécharger le CV PDF": confirm the button shows a spinning sync icon + "Génération...", then after ~1.4s the modal closes and a success toast appears (gold check icon, message, neutral border).
 - Trigger an error toast by submitting the contact form with an invalid email (e.g. "test" with no `@`): confirm the toast shows with the error icon.
 - No console errors.
 
