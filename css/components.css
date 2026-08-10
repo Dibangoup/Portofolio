@@ -484,3 +484,71 @@ html.dark .form-input:focus {
 @media (max-width: 640px) {
     .value-grid { grid-template-columns: 1fr; }
 }
+
+/* ==========================================================================
+   2. TABLEAU DE COMPÉTENCES (Compétences techniques)
+   ========================================================================== */
+.skill-legend {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.skill-legend-col {
+    background: var(--bg-2);
+    padding: 24px 22px;
+}
+.skill-legend-col h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 18px;
+}
+.skill-legend-col h3 .icon {
+    width: 15px;
+    height: 15px;
+}
+.skill-row {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+}
+.skill-row:last-child {
+    border-bottom: none;
+}
+.skill-row-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+.skill-percent {
+    font-weight: 700;
+    color: var(--accent-ink);
+    font-variant-numeric: tabular-nums;
+}
+.skill-fill-track {
+    width: 100%;
+    height: 2px;
+    background: var(--line);
+    overflow: hidden;
+}
+.skill-bar-fill {
+    height: 100%;
+    width: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1.5s cubic-bezier(0.1, 1, 0.1, 1);
+}
+@media (max-width: 900px) {
+    .skill-legend { grid-template-columns: 1fr; }
+}
