@@ -1,40 +1,40 @@
 /* ==========================================================================
-   GLASS.CSS — EFFETS DE VERRE (GLASSMORPHISM)
+   GLASS.CSS — DESIGN TOKENS ("Carte Céleste")
    ==========================================================================
-   Définit les classes réutilisables pour les arrière-plans vitrés appliqués
-   à la navbar, aux cartes de projet, aux sections Bento, au CV, etc.
+   Despite the filename (kept to avoid touching style.css's import list),
+   this file now defines the global CSS custom properties for the dark
+   navy / gold "night sky" identity, replacing the old Material-You
+   glassmorphism rules. No .glass/.glass-card rules remain — nothing in
+   the redesigned markup depends on them.
 */
 
-/* Classe générale pour les arrière-plans vitrés (ex: barre de navigation) */
-.glass {
-    /* Fond de couleur claire translucide */
-    background-color: rgba(249, 249, 255, 0.8) !important;
-    /* Effet de flou de l'arrière-plan (support universel) */
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    /* Bordure fine blanche très transparente pour simuler le reflet du verre */
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+:root {
+    --bg: #0F1B2E;
+    --bg-2: #16273D;
+    --bg-3: #1D3049;
+    --ink: #F3F1E8;
+    --ink-70: rgba(243, 241, 232, .72);
+    --ink-45: rgba(243, 241, 232, .52);
+    --line: rgba(243, 241, 232, .14);
+    --accent: #E8A23C;
+    --accent-ink: #F0B65E;
+    --radius: 14px;
 }
 
-/* Version sombre de l'effet de verre (préservée si le mode sombre est réactivé plus tard) */
-html.dark .glass {
-    background-color: rgba(30, 41, 59, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+html, body {
+    background: var(--bg);
+    color: var(--ink);
 }
 
-/* Classe spécifique pour les cartes de contenu (Bento, CV, Timeline, etc.) */
-.glass-card {
-    background-color: rgba(255, 255, 255, 0.6) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    /* Ombre portée douce teintée avec la couleur primaire pour donner du relief */
-    box-shadow: 0 4px 20px rgba(53, 37, 205, 0.04) !important;
+.icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: -0.125em;
+    flex: none;
 }
 
-/* Version sombre de la carte de verre */
-html.dark .glass-card {
-    background-color: rgba(30, 41, 59, 0.6) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+h1, h2, h3, .nav-brand, .nav-cta, .btn {
+    font-family: 'Space Grotesk', -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
 }

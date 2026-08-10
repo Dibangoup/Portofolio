@@ -71,13 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ==========================================================================
-       3. FORÇAGE DU MODE CLAIR UNIQUEMENT (DESACTIVATION DU MODE SOMBRE)
-       ========================================================================== 
-       Cette section assure que le site s'exécute toujours avec le thème clair d'origine.
-       Elle nettoie également les anciennes préférences enregistrées pour éviter les conflits.
+       3. THÈME UNIQUE (aucune bascule clair/sombre)
+       ==========================================================================
+       Le site n'a qu'un seul thème (nuit/or, défini par les tokens CSS de
+       glass.css) : aucune classe 'light'/'dark' n'est nécessaire sur <html>.
+       Nettoie toute ancienne préférence enregistrée par une version antérieure.
     */
-    document.documentElement.classList.remove('dark');
-    document.documentElement.classList.add('light');
     localStorage.removeItem('theme');
 
     /* ==========================================================================
