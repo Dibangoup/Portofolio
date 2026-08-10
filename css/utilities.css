@@ -17,16 +17,11 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 3px;
+    height: 2px;
     width: 0%;
-    /* Dégradé fluide de violet à bleu clair */
-    background: linear-gradient(90deg, #3525cd, #39b8fd);
+    background: var(--accent);
     transition: width 0.1s ease-out;
     z-index: 100;
-}
-
-html.dark .scroll-progress-bar {
-    background: linear-gradient(90deg, #4f46e5, #89ceff);
 }
 
 

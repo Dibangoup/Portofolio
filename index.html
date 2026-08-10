@@ -75,88 +75,24 @@
          - 'id="navbar"' est utilisé en JS pour appliquer l'effet de rétrécissement (shrink).
          - Le bouton 'id="cv-btn"' ouvre automatiquement le CV interactif.
     -->
-    <nav
-      class="docked full-width top-0 sticky z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm transition-all duration-300 h-20"
-      id="navbar"
-    >
-      <div
-        class="flex justify-between items-center w-full px-gutter md:px-lg max-w-container-max mx-auto h-full"
-      >
-        <!-- Logo / Nom principal du site -->
-        <a
-          class="font-display-lg text-headline-md font-extrabold text-primary dark:text-primary-fixed-dim tracking-tight"
-          href="#hero"
-          id="nav-logo"
-        >
-          D.J Portfolio<span
-            class="w-2 h-2 rounded-full bg-secondary inline-block ml-1"
-          ></span>
-        </a>
+    <nav class="nav-masthead" id="navbar">
+      <div class="nav-inner">
+        <a class="nav-brand" href="#hero" id="nav-logo"></a>
 
-        <!-- Liens de navigation pour les ordinateurs (Desktop Menu) -->
-        <ul class="hidden md:flex items-center gap-lg">
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
-              href="#about"
-              >À Propos</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
-              href="#skills"
-              >Compétences</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
-              href="#projects"
-              >Projets</a
-            >
-          </li>
-          <!-- 
-               DESACTIVÉ : Lien vers la section Parcours. 
-               Pour le réactiver, supprimez simplement les balises de début et de fin de commentaire ci-dessous.
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
-              href="#experience"
-              >Parcours</a
-            >
-          </li>
-          -->
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 nav-link"
-              href="#contact"
-              >Contact</a
-            >
-          </li>
+        <ul class="nav-links hidden md:flex">
+          <li><a class="nav-link" href="#about">À Propos</a></li>
+          <li><a class="nav-link" href="#skills">Compétences</a></li>
+          <li><a class="nav-link" href="#projects">Projets</a></li>
+          <li><a class="nav-link" href="#contact">Contact</a></li>
         </ul>
 
-        <!-- Zone d'action de droite (Bouton CV & Menu Mobile) -->
         <div class="nav-actions flex items-center gap-4">
-          <!-- IMPORTANT : Conservez id="cv-btn" pour que le clic déclenche le CV popup dans app.js -->
-          <a
-            class="hidden md:inline-flex bg-primary hover:bg-primary-container text-white px-md py-xs rounded-full font-label-sm text-label-sm transition-all duration-200 hover:scale-[1.05] active:scale-95 btn-shimmer cursor-pointer"
-            id="cv-btn"
-            >Mon CV</a
-          >
-
-          <!-- Bouton Menu Burger - Visible uniquement sur smartphones et tablettes -->
-          <button
-            class="md:hidden text-on-surface w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center"
-            id="menu-toggle"
-            aria-label="Menu Mobile"
-          >
-            <span class="material-symbols-outlined text-2xl">menu</span>
+          <a class="nav-cta hidden md:inline-flex" id="cv-btn">Mon CV</a>
+          <button class="nav-menu-toggle md:hidden" id="menu-toggle" aria-label="Menu Mobile">
+            <span id="menu-toggle-icon"></span>
           </button>
         </div>
       </div>
-      
-      <!-- Ligne de progression de lecture (gérée en JS) -->
       <div class="scroll-progress-bar" id="scroll-progress"></div>
     </nav>
 
@@ -169,45 +105,10 @@
     -->
     <div class="mobile-nav-overlay" id="mobile-nav-overlay">
       <ul class="flex flex-col gap-6 items-center text-center">
-        <li>
-          <a
-            class="mobile-nav-link text-xl font-bold font-display-lg"
-            href="#about"
-            >À Propos</a
-          >
-        </li>
-        <li>
-          <a
-            class="mobile-nav-link text-xl font-bold font-display-lg"
-            href="#skills"
-            >Compétences</a
-          >
-        </li>
-        <li>
-          <a
-            class="mobile-nav-link text-xl font-bold font-display-lg"
-            href="#projects"
-            >Projets</a
-          >
-        </li>
-        <!-- 
-             DESACTIVÉ : Lien vers la section Parcours. 
-             Pour le réactiver, supprimez simplement les balises de début et de fin de commentaire ci-dessous.
-        <li>
-          <a
-            class="mobile-nav-link text-xl font-bold font-display-lg"
-            href="#experience"
-            >Parcours</a
-          >
-        </li>
-        -->
-        <li>
-          <a
-            class="mobile-nav-link text-xl font-bold font-display-lg"
-            href="#contact"
-            >Contact</a
-          >
-        </li>
+        <li><a class="mobile-nav-link" href="#about">À Propos</a></li>
+        <li><a class="mobile-nav-link" href="#skills">Compétences</a></li>
+        <li><a class="mobile-nav-link" href="#projects">Projets</a></li>
+        <li><a class="mobile-nav-link" href="#contact">Contact</a></li>
       </ul>
     </div>
 
