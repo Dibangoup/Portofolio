@@ -34,6 +34,8 @@
 }
 
 .mobile-nav-link {
+    display: inline-block;
+    padding: 8px 4px;
     font-size: 22px;
     font-weight: 700;
     font-family: 'Space Grotesk', -apple-system, sans-serif;
@@ -89,8 +91,8 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border: 1px solid var(--line);
     border-radius: 10px;
     background: var(--bg);

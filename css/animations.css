@@ -36,33 +36,6 @@
 
 
 /* ==========================================================================
-   2. ANIMATIONS DE FLOTTAISON (MICRO-MOUVEMENTS)
-   ==========================================================================
-   Ajoute de la vie à l'interface en faisant flotter doucement certains éléments
-   comme le portrait principal ou les badges décoratifs.
-*/
-
-/* Animation de flottaison lente verticale (amplitude de 15px) */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
-}
-
-/* Animation de sautillement très doux pour les petits badges (amplitude de 8px) */
-@keyframes bounce-y {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-    100% { transform: translateY(0px); }
-}
-
-/* Applique l'effet de flottaison lente continue */
-.floating {
-    animation: float 6s ease-in-out infinite;
-}
-
-
-/* ==========================================================================
    3. ANIMATION D'APPARITION D'ONGLET (FADE-IN)
    ==========================================================================
    Utilisée conjointement avec les onglets de la section "À Propos".
@@ -106,9 +79,10 @@
         transform: none !important;
         opacity: 1 !important;
     }
-    .floating {
-        animation: none !important;
-    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tab-content { animation: none; }
 }
 
 /* ==========================================================================
