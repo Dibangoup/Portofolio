@@ -397,183 +397,58 @@
            et que le mail est valide. Il simule ensuite un envoi réseau et affiche
            un toast flottant de succès.
       -->
-      <section class="py-xl px-gutter max-w-container-max mx-auto" id="contact">
-        <div class="flex flex-col items-center text-center mb-lg reveal">
-          <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
-            Me Contacter
-          </h2>
-          <p
-            class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
-          >
-            Une idée de projet, une offre de stage ou simplement une question ?
-            Discutons-en ensemble !
-          </p>
-        </div>
+      <section class="section" id="contact">
+        <div class="section-inner">
+          <span class="eyebrow">Contact</span>
+          <h2 class="section-title">Prochaine destination</h2>
+          <p class="section-sub">Un projet, un stage, une question ? Je réponds à tous les messages.</p>
 
-        <div
-          class="grid grid-cols-1 md:grid-cols-12 gap-md items-start max-w-5xl mx-auto"
-        >
-          <!-- Bloc de gauche : Informations textuelles et Réseaux (5 colonnes) -->
-          <div class="md:col-span-5 flex flex-col gap-6 reveal">
-            <!-- Carte d'adresse e-mail -->
-            <div class="glass-card rounded-xl p-6 flex items-center gap-4">
-              <div
-                class="w-12 h-12 bg-surface-container-high dark:bg-surface-variant rounded-lg flex items-center justify-center text-primary"
-              >
-                <span class="material-symbols-outlined text-2xl">mail</span>
-              </div>
-              <div>
-                <div
-                  class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider"
-                >
-                  Email
+          <div class="dest-grid">
+            <div>
+              <div class="compass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11l4.5-2.5Z"/></svg></div>
+              <div class="field-list">
+                <div class="field-row">
+                  <span class="field-key mono">Email</span>
+                  <span class="field-val"><a href="mailto:jdibangoup5@gmail.com" id="contact-email-link">jdibangoup5@gmail.com</a></span>
                 </div>
-                <!-- Remplacez cette adresse par la vôtre -->
-                <div class="text-sm font-bold text-on-surface">
-                  <a
-                    href="mailto: jdibangoup5@gmail.com"
-                    class="hover:text-primary transition-all"
-                    id="contact-email-link"
-                    >jdibangoup5@gmail.com</a
-                  >
+                <div class="field-row">
+                  <span class="field-key mono">Lieu</span>
+                  <span class="field-val" id="contact-location-text">Abidjan, Côte d'Ivoire</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-key mono">GitHub</span>
+                  <span class="field-val"><a href="#" id="contact-github-link" aria-label="GitHub">Profil GitHub</a></span>
+                </div>
+                <div class="field-row">
+                  <span class="field-key mono">LinkedIn</span>
+                  <span class="field-val"><a href="#" id="contact-linkedin-link" aria-label="LinkedIn">Profil LinkedIn</a></span>
                 </div>
               </div>
             </div>
 
-            <!-- Carte de localisation géographique -->
-            <div class="glass-card rounded-xl p-6 flex items-center gap-4">
-              <div
-                class="w-12 h-12 bg-surface-container-high dark:bg-surface-variant rounded-lg flex items-center justify-center text-primary"
-              >
-                <span class="material-symbols-outlined text-2xl"
-                  >location_on</span
-                >
-              </div>
-              <div>
-                <div
-                  class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider"
-                >
-                  Localisation
-                </div>
-                  <!-- Remplacez cette ville par la vôtre -->
-                  <div class="text-sm font-bold text-on-surface" id="contact-location-text">
-                    Abidjan, Côte d'Ivoire
-                  </div>
-              </div>
-            </div>
-
-            <!-- Section des liens vers vos profils sociaux -->
-            <div class="flex flex-col gap-3 px-2">
-              <div
-                class="text-xs font-bold text-on-surface-variant uppercase tracking-wider"
-              >
-                Me suivre
-              </div>
-              <div class="flex gap-3">
-                <!-- Lien GitHub -->
-                <a
-                  class="w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-primary hover:border-primary transition-all duration-300"
-                  href="#"
-                  id="contact-github-link"
-                  aria-label="GitHub"
-                  ><span class="material-symbols-outlined fill-icon"
-                    >code</span
-                  ></a
-                >
-                <!-- Lien LinkedIn -->
-                <a
-                  class="w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-primary hover:border-primary transition-all duration-300"
-                  href="#"
-                  id="contact-linkedin-link"
-                  aria-label="LinkedIn"
-                  ><span class="material-symbols-outlined fill-icon"
-                    >share</span
-                  ></a
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Bloc de droite : Formulaire de contact sécurisé (7 colonnes) -->
-          <div class="md:col-span-7 glass-card rounded-xl p-6 reveal delay-200">
-            <!-- IMPORTANT : Conservez les id sur les inputs, ils sont ciblés en JavaScript dans app.js -->
-            <form class="flex flex-col gap-4" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
               <input type="hidden" name="access_key" value="1e96af0c-37e9-4900-95ab-3413ff598fd2">
-              <!-- Champ Nom -->
-              <div class="flex flex-col gap-1">
-                <label
-                  for="form-name"
-                  class="text-xs font-semibold text-on-surface-variant"
-                  >Nom complet *</label
-                >
-                <input
-                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none form-input"
-                  type="text"
-                  id="form-name"
-                  name="name"
-                  placeholder="Votre nom"
-                  required
-                />
+              <div class="form-row-2">
+                <div>
+                  <label for="form-name">Nom complet *</label>
+                  <input class="form-input" type="text" id="form-name" name="name" placeholder="Votre nom" required />
+                </div>
+                <div>
+                  <label for="form-email">Adresse e-mail *</label>
+                  <input class="form-input" type="email" id="form-email" name="email" placeholder="votre.email@exemple.com" required />
+                </div>
               </div>
-              <!-- Champ Email -->
-              <div class="flex flex-col gap-1">
-                <label
-                  for="form-email"
-                  class="text-xs font-semibold text-on-surface-variant"
-                  >Adresse e-mail *</label
-                >
-                <input
-                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none form-input"
-                  type="email"
-                  id="form-email"
-                  name="email"
-                  placeholder="votre.email@exemple.com"
-                  required
-                />
+              <div>
+                <label for="form-subject">Sujet *</label>
+                <input class="form-input" type="text" id="form-subject" name="subject" placeholder="Sujet de votre message" required />
               </div>
-              <!-- Champ Sujet -->
-              <div class="flex flex-col gap-1">
-                <label
-                  for="form-subject"
-                  class="text-xs font-semibold text-on-surface-variant"
-                  >Sujet *</label
-                >
-                <input
-                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none form-input"
-                  type="text"
-                  id="form-subject"
-                  name="subject"
-                  placeholder="Sujet de votre message"
-                  required
-                />
+              <div>
+                <label for="form-message-text">Votre message *</label>
+                <textarea class="form-input" id="form-message-text" name="message" placeholder="Dites-m'en plus sur votre projet..." required></textarea>
               </div>
-              <!-- Champ Message -->
-              <div class="flex flex-col gap-1">
-                <label
-                  for="form-message-text"
-                  class="text-xs font-semibold text-on-surface-variant"
-                  >Votre message *</label
-                >
-                <textarea
-                  class="w-full p-3 text-sm bg-background border border-outline-variant/30 rounded-lg text-on-background outline-none min-h-[120px] resize-y form-input"
-                  id="form-message-text"
-                  name="message"
-                  placeholder="Dites-m'en plus sur votre projet..."
-                  required
-                ></textarea>
-              </div>
-
-              <!-- Bouton de soumission (Désactivé dynamiquement en JS pendant le chargement d'envoi) -->
-              <button
-                class="bg-primary hover:bg-primary-container text-white px-md py-3 rounded-lg font-label-sm text-label-sm font-semibold transition-all duration-300 w-full flex items-center justify-center gap-2 hover:scale-[1.01] btn-shimmer"
-                type="submit"
-              >
-                <span class="material-symbols-outlined text-base fill-icon"
-                  >send</span
-                >
-                Envoyer le message
+              <button class="btn btn-primary" type="submit" id="contact-submit-btn">
+                <span id="contact-submit-icon"></span> Envoyer le message
               </button>
-
               <div class="hidden mt-2" id="form-message"></div>
             </form>
           </div>
@@ -587,55 +462,16 @@
          ==========================================================================
          Affichage des crédits et de la marque du site en bas de page.
     -->
-    <footer
-      class="full-width py-lg mt-xl border-t border-outline-variant/20 bg-surface dark:bg-surface-container-lowest"
-    >
-      <div
-        class="flex flex-col md:flex-row justify-between items-center px-gutter max-w-container-max mx-auto gap-md"
-      >
-        <div
-          class="font-display-lg text-body-lg font-bold text-on-surface dark:text-on-surface-variant"
-          id="footer-logo"
-        >
-          DevPortfolio
-        </div>
-        <!-- Liens secondaires rapides du bas de page -->
-        <ul class="flex flex-wrap justify-center gap-md">
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
-              href="#about"
-              >À Propos</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
-              href="#skills"
-              >Compétences</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
-              href="#projects"
-              >Projets</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 hover:opacity-100 duration-300"
-              href="#contact"
-              >Contact</a
-            >
-          </li>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand" id="footer-logo">DevPortfolio</div>
+        <ul class="footer-links">
+          <li><a href="#about">À Propos</a></li>
+          <li><a href="#skills">Compétences</a></li>
+          <li><a href="#projects">Projets</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
-        <div
-          class="font-body-md text-sm text-on-surface-variant/70 text-center md:text-right"
-          id="footer-copyright"
-        >
-          © 2026 Jordan Portfolio. Conçu avec Précision & Clarté.
-        </div>
+        <div class="footer-copy" id="footer-copyright">© 2026 Jordan Portfolio. Conçu avec Précision &amp; Clarté.</div>
       </div>
     </footer>
 
