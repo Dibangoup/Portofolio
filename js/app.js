@@ -659,13 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.getElementById('navbar');
     if (navbar) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 40) {
-                navbar.classList.add('shadow-md', 'h-16');
-                navbar.classList.remove('h-20');
-            } else {
-                navbar.classList.remove('shadow-md', 'h-16');
-                navbar.classList.add('h-20');
-            }
+            navbar.classList.toggle('h-16', window.scrollY > 40);
         });
     }
 
@@ -774,26 +768,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ==========================================================================
        14. COMPORTEMENT DU MENU MOBILE OVERLAY
-       ========================================================================== 
+       ==========================================================================
        Gère l'affichage plein écran réactif du menu de navigation pour les smartphones.
     */
     const menuToggleBtn = document.getElementById('menu-toggle');
+    const menuToggleIcon = document.getElementById('menu-toggle-icon');
     const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
-    
+
     if (menuToggleBtn && mobileNavOverlay) {
-        const toggleIcon = menuToggleBtn.querySelector('.material-symbols-outlined');
+        if (menuToggleIcon) menuToggleIcon.innerHTML = renderIcon('menu');
 
         const toggleMobileNav = () => {
             const isOpened = mobileNavOverlay.classList.toggle('active');
-            // Change l'icône de burger à fermer (X)
-            if (toggleIcon) toggleIcon.textContent = isOpened ? 'close' : 'menu';
-            // Empêche le défilement de l'arrière-plan lorsque le menu mobile est visible
+            if (menuToggleIcon) menuToggleIcon.innerHTML = renderIcon(isOpened ? 'close' : 'menu');
             document.body.style.overflow = isOpened ? 'hidden' : 'auto';
         };
 
         menuToggleBtn.addEventListener('click', toggleMobileNav);
-        
-        // Ferme automatiquement le menu mobile lorsqu'un utilisateur sélectionne une ancre
+
         document.querySelectorAll('.mobile-nav-link').forEach(link => {
             link.addEventListener('click', toggleMobileNav);
         });

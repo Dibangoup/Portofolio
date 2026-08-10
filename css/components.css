@@ -107,3 +107,88 @@ html.dark .form-input:focus {
 .fill-icon {
     font-variation-settings: 'FILL' 1 !important;
 }
+
+/* ==========================================================================
+   6. MASTHEAD DE NAVIGATION ("Carte Céleste")
+   ========================================================================== */
+.nav-masthead {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    background: rgba(15, 27, 46, .88);
+    backdrop-filter: none;
+    border-bottom: 1px solid var(--line);
+    transition: height 0.3s ease;
+}
+.nav-masthead.h-16 {
+    height: 64px;
+}
+.nav-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: 100%;
+}
+.nav-brand {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.nav-links {
+    align-items: center;
+    gap: 28px;
+    font-size: 13.5px;
+    font-weight: 600;
+}
+.nav-link {
+    color: var(--ink-70);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color .2s, border-color .2s;
+}
+.nav-link:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+}
+.nav-cta {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 18px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--bg);
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .2s;
+}
+.nav-cta:hover {
+    background: var(--accent-ink);
+}
+.nav-menu-toggle {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    background: none;
+    cursor: pointer;
+}
+.nav-menu-toggle .icon {
+    width: 20px;
+    height: 20px;
+}
