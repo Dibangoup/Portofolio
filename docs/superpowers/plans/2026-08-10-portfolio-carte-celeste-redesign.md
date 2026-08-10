@@ -2712,7 +2712,7 @@ grep -rn "mouse-glow\|parallax-bg\|material-symbols" index.html js/app.js css/*.
 
 Expected: no output. Any hit is a leftover from Tasks 1-3 that must be removed.
 
-- [ ] **Step 2b: Clean up three small items flagged during Task 3's review**
+- [ ] **Step 2b: Clean up four small items flagged during Tasks 3-4's review**
 
 1. **Dead CSS in `css/animations.css`**: Task 3 removed the only markup that used `.floating`, `@keyframes float`, and `@keyframes bounce-y` (the old floating portrait wrapper and bouncing hero badges). Confirm with `grep -rn "floating\|bounce-y" index.html js/app.js css/*.css` that only `css/animations.css` itself defines them and nothing references them anymore, then delete all three rules from `css/animations.css`.
 2. **Stale comment in `css/utilities.css:4-5`**: the file header still says "...le halo lumineux de souris" (the mouse-glow effect Task 3 replaced with the star canvas). Update it to describe the current contents (scroll progress bar + star canvas positioning).
@@ -2731,6 +2731,13 @@ Expected: no output. Any hit is a leftover from Tasks 1-3 that must be removed.
 ```
 
 This draws one fresh frame after every resize regardless of motion preference — harmless for non-reduced-motion users (the rAF loop keeps redrawing over it immediately after) and closes the gap for reduced-motion users (who now get a correct static frame after resize instead of a blank canvas). Note `drawFrame` is declared as a function inside the same `initHeroCanvas()` closure, after `resize`'s current definition — moving `resize`'s call site doesn't require reordering the function declarations themselves (function declarations are hoisted within the closure).
+4. **Ungated `.tab-content` fade-in animation**: `css/components.css`'s `.tab-content { animation: fadeIn 0.4s ease-out forwards; }` (a real translateY+opacity motion, predates Task 4, carried forward unchanged) has no `prefers-reduced-motion` guard, unlike `.reveal`/`.floating`/`.icon-spin` elsewhere. Add a guard next to the existing reduced-motion blocks in `css/animations.css`:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+    .tab-content { animation: none; }
+}
+```
 
 - [ ] **Step 3: Contrast spot-check**
 
