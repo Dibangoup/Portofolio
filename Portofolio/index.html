@@ -255,51 +255,21 @@
            Pour préserver la mise en page Bento, l'affichage est modifié en 'display: block' 
            en JavaScript au lieu de 'flex', évitant ainsi toute déformation des vignettes.
       -->
-      <section
-        class="py-xl px-gutter max-w-container-max mx-auto"
-        id="projects"
-      >
-        <div class="flex flex-col items-center text-center mb-lg reveal">
-          <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
-            Mes Projets Récents
-          </h2>
-          <p
-            class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
-          >
-            Une sélection de mes travaux académiques et personnels, démontrant
-            mes compétences en développement full-stack et en conception
-            d'interfaces.
-          </p>
-        </div>
+      <section class="section" id="projects">
+        <div class="section-inner">
+          <span class="eyebrow">Réalisations</span>
+          <h2 class="section-title">Étapes du parcours</h2>
+          <p class="section-sub">Une sélection de mes travaux académiques et personnels, du développement web aux applications mobiles.</p>
 
-        <!-- Boutons de filtrage dynamiques (Chaque bouton possède un attribut 'data-filter') -->
-        <div class="flex justify-center gap-xs mb-lg flex-wrap reveal">
-          <button
-            class="filter-btn active bg-primary text-white border border-primary px-sm py-2 rounded-full font-label-sm text-label-sm"
-            data-filter="all"
-          >
-            Tout
-          </button>
-          <button
-            class="filter-btn border border-outline-variant/30 hover:border-primary hover:text-primary transition-all duration-300 px-sm py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant dark:text-on-surface"
-            data-filter="web"
-          >
-            Web Advanced
-          </button>
-          <button
-            class="filter-btn border border-outline-variant/30 hover:border-primary hover:text-primary transition-all duration-300 px-sm py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant dark:text-on-surface"
-            data-filter="mobile"
-          >
-            Applications Mobiles
-          </button>
-        </div>
+          <div class="filter-row">
+            <button class="filter-btn active" data-filter="all">Tout</button>
+            <button class="filter-btn" data-filter="web">Web Advanced</button>
+            <button class="filter-btn" data-filter="mobile">Applications Mobiles</button>
+          </div>
 
-        <!-- Grille Bento de Projets -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md"
-          id="projects-grid"
-        >
-          <!-- Les cartes de projets seront injectées dynamiquement par JS -->
+          <div class="stops" id="projects-grid">
+            <!-- Les cartes de projets seront injectées dynamiquement par JS -->
+          </div>
         </div>
       </section>
 
