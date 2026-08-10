@@ -369,34 +369,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderSkills = () => {
         const container = document.getElementById('skills-categories-container');
         if (!container || !PORTFOLIO_DATA.skills) return;
-        
-        container.innerHTML = PORTFOLIO_DATA.skills.map((cat, catIdx) => {
+
+        const iconFor = (name) => (ICONS[name] ? name : 'star');
+
+        container.innerHTML = PORTFOLIO_DATA.skills.map(cat => {
             const skillItemsHtml = cat.items.map(item => `
-                <div class="flex flex-col gap-1">
-                  <div class="flex justify-between text-xs font-semibold text-on-surface-variant">
+                <div class="skill-row">
+                  <div class="skill-row-top">
                     <span>${item.name}</span>
-                    <span>${item.percent}%</span>
+                    <span class="skill-percent">${item.percent}%</span>
                   </div>
-                  <div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-                    <div class="h-full bg-gradient-to-r from-primary to-secondary rounded-full skill-bar-fill" style="width: 0%;" data-percent="${item.percent}"></div>
+                  <div class="skill-fill-track">
+                    <div class="skill-bar-fill" data-percent="${item.percent}"></div>
                   </div>
                 </div>
             `).join('');
-            
+
             return `
-                <div class="glass-card rounded-xl p-6 reveal delay-${catIdx * 100} flex flex-col gap-6">
-                  <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary text-2xl">${cat.icon || 'star'}</span>
-                    <h3 class="text-lg font-bold text-on-surface font-headline-md">${cat.category}</h3>
-                  </div>
-                  <div class="flex flex-col gap-4">
-                    ${skillItemsHtml}
-                  </div>
+                <div class="skill-legend-col">
+                  <h3>${renderIcon(iconFor(cat.icon))} ${cat.category}</h3>
+                  ${skillItemsHtml}
                 </div>
             `;
         }).join('');
-        
-        // Animation des jauges
+
         triggerSkillsAnimation();
     };
 
@@ -746,27 +742,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function triggerSkillsAnimation() {
         const skillBars = document.querySelectorAll('.skill-bar-fill');
         const skillsSection = document.getElementById('skills');
+        const fillBar = (bar) => {
+            const targetPercent = parseFloat(bar.getAttribute('data-percent')) || 0;
+            bar.style.transform = `scaleX(${targetPercent / 100})`;
+        };
         if (skillsSection && skillBars.length > 0 && !prefersReducedMotion) {
             const skillsObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const activeSkillBars = document.querySelectorAll('.skill-bar-fill');
-                        activeSkillBars.forEach(bar => {
-                            const targetWidth = bar.getAttribute('data-percent') || '0';
-                            bar.style.width = `${targetWidth}%`;
-                        });
-                        observer.unobserve(entry.target); // Supprime l'écouteur après l'animation
+                        document.querySelectorAll('.skill-bar-fill').forEach(fillBar);
+                        observer.unobserve(entry.target);
                     }
                 });
             }, { threshold: 0.15 });
 
             skillsObserver.observe(skillsSection);
         } else {
-            // En cas d'animations réduites, remplit directement les jauges sans attente
-            skillBars.forEach(bar => {
-                const targetWidth = bar.getAttribute('data-percent') || '0';
-                bar.style.width = `${targetWidth}%`;
-            });
+            skillBars.forEach(fillBar);
         }
     }
 
