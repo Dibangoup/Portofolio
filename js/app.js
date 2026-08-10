@@ -187,13 +187,26 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        let rafId;
+        function loop() { drawFrame(); rafId = requestAnimationFrame(loop); }
+
         resize();
         window.addEventListener('resize', resize);
 
         if (prefersReducedMotion) {
             drawFrame();
         } else {
-            (function loop() { drawFrame(); requestAnimationFrame(loop); })();
+            let heroVisible = true;
+            const heroIO = new IntersectionObserver((entries) => {
+                heroVisible = entries[0].isIntersecting;
+                if (heroVisible && !prefersReducedMotion) {
+                    loop();
+                } else if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+            });
+            heroIO.observe(heroEl);
         }
     }
     initHeroCanvas();
@@ -287,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const logoEl = document.getElementById('nav-logo');
         if (logoEl) {
-            logoEl.innerHTML = `${h.name} Portfolio<span class="w-2 h-2 rounded-full bg-secondary inline-block ml-1"></span>`;
+            logoEl.innerHTML = `${h.name} Portfolio<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:4px;"></span>`;
         }
         
         // Mettre à jour aussi le titre du document
@@ -385,10 +398,12 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="tech-row">
                 ${proj.tech.slice(0, 3).map(t => `<span class="tech-pill">${t}</span>`).join('')}
               </div>
+              ${(proj.demo !== '#' || proj.source !== '#') ? `
               <div class="stop-links">
                 ${proj.demo !== '#' ? `<a href="${proj.demo}" target="_blank" rel="noopener" class="external-link">${renderIcon('link')} Démo</a>` : ''}
                 ${proj.source !== '#' ? `<a href="${proj.source}" target="_blank" rel="noopener" class="external-link">${renderIcon('code')} Code</a>` : ''}
               </div>
+              ` : ''}
             </div>
           </article>
         `).join('');
@@ -406,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cardObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach((entry, idx) => {
                     if (entry.isIntersecting) {
-                        const delay = Array.prototype.indexOf.call(revealCards, entry.target) * 70;
+                        const delay = prefersReducedMotion ? 0 : Array.prototype.indexOf.call(revealCards, entry.target) * 70;
                         setTimeout(() => entry.target.classList.add('in'), delay);
                         observer.unobserve(entry.target);
                     }

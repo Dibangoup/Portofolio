@@ -19,6 +19,9 @@
     --accent: #E8A23C;
     --accent-ink: #F0B65E;
     --radius: 14px;
+    --bg-rgb: 15, 27, 46;
+    --accent-rgb: 232, 162, 60;
+    --danger: #e0745e;
 }
 
 html, body {

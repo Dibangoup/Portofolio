@@ -28,13 +28,6 @@
     transform: translateY(0);
 }
 
-/* Décalages d'apparition pour créer un effet de cascade visuelle (les éléments apparaissent les uns après les autres) */
-.delay-100 { transition-delay: 100ms; }
-.delay-200 { transition-delay: 200ms; }
-.delay-300 { transition-delay: 300ms; }
-.delay-400 { transition-delay: 400ms; }
-
-
 /* ==========================================================================
    3. ANIMATION D'APPARITION D'ONGLET (FADE-IN)
    ==========================================================================
@@ -44,24 +37,6 @@
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
-}
-
-
-/* ==========================================================================
-   4. SPINNER DE CHARGEMENT ANIMÉ (LOADING SPINNER)
-   ==========================================================================
-   Rotation infinie à 360° pour les boutons lors de la simulation
-   d'envoi de formulaire ou de génération de CV PDF.
-*/
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.animate-spin {
-    display: inline-block;
-    animation: spin 1s linear infinite;
 }
 
 
@@ -83,6 +58,18 @@
 
 @media (prefers-reduced-motion: reduce) {
     .tab-content { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* !important requis : .stop-card est (re)défini avec opacity/transform
+       dans components.css, importé après animations.css dans style.css —
+       sans !important cette règle perdrait la cascade (même spécificité,
+       mais source plus tardive côté components.css). */
+    .stop-card {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
 
 /* ==========================================================================

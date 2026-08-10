@@ -251,8 +251,10 @@
     color: var(--ink-45);
 }
 .form-input:focus {
-    outline: none;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
     border-color: var(--accent);
+    box-shadow: none;
 }
 textarea.form-input {
     resize: vertical;
@@ -264,17 +266,6 @@ textarea.form-input {
 
 
 /* ==========================================================================
-   5. ICÔNES MATERIAL SYMBOLS — REMPLISSAGE FORCÉ
-   ==========================================================================
-   Force le remplissage complet des icônes Google Material Symbols (remplissage
-   de l'icône au lieu de sa version filaire par défaut).
-*/
-
-.fill-icon {
-    font-variation-settings: 'FILL' 1 !important;
-}
-
-/* ==========================================================================
    6. MASTHEAD DE NAVIGATION ("Carte Céleste")
    ========================================================================== */
 .nav-masthead {
@@ -284,7 +275,7 @@ textarea.form-input {
     height: 80px;
     display: flex;
     align-items: center;
-    background: rgba(15, 27, 46, .88);
+    background: rgba(var(--bg-rgb), .88);
     backdrop-filter: none;
     border-bottom: 1px solid var(--line);
     transition: height 0.3s ease;
@@ -399,8 +390,8 @@ textarea.form-input {
     font-size: 12.5px;
     font-weight: 700;
     color: var(--accent-ink);
-    background: rgba(232, 162, 60, .09);
-    border: 1px solid rgba(232, 162, 60, .26);
+    background: rgba(var(--accent-rgb), .09);
+    border: 1px solid rgba(var(--accent-rgb), .26);
     padding: 7px 13px;
     border-radius: 999px;
 }
