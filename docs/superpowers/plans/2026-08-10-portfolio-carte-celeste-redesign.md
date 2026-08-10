@@ -1939,7 +1939,7 @@ Then append the article-sheet rules:
 }
 .article-image {
     aspect-ratio: 16/9;
-    border-radius: 10px;
+    border-radius: 6px;
     overflow: hidden;
     background: var(--bg-3);
     margin-bottom: 12px;
@@ -1964,7 +1964,7 @@ Then append the article-sheet rules:
 }
 .article-brief {
     border: 1px solid var(--line);
-    border-radius: 10px;
+    border-radius: 6px;
     padding: 18px 20px;
     margin-bottom: 20px;
 }
