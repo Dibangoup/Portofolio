@@ -114,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             canvas.style.width = `${rect.width}px`;
             canvas.style.height = `${rect.height}px`;
             initStars();
+            drawFrame();
         }
 
         function initStars() {
