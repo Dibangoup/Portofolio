@@ -773,6 +773,8 @@ document.addEventListener('DOMContentLoaded', () => {
        avec retour d'information par le biais du système de toasts personnalisés.
     */
     const contactForm = document.getElementById('contact-form');
+    const contactSubmitIcon = document.getElementById('contact-submit-icon');
+    if (contactSubmitIcon) contactSubmitIcon.innerHTML = renderIcon('send');
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -801,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalBtnText = submitBtn.innerHTML;
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="margin-right: 6px;">sync</span> Envoi en cours...';
+            submitBtn.innerHTML = `${renderIcon('sync', 'icon-spin')} Envoi en cours...`;
 
            // 5. Préparation des données (inclut automatiquement la clé access_key cachée en HTML)
             const formData = new FormData(contactForm);
