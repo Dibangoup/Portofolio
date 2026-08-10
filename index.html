@@ -178,109 +178,37 @@
            Les boutons possèdent l'attribut 'data-tab="nom_onglet"'. 
            Le JS masque tous les blocs et affiche uniquement le div avec l'id 'tab-nom_onglet'.
       -->
-      <section class="py-xl px-gutter max-w-container-max mx-auto" id="about">
-        <div class="flex flex-col items-center text-center mb-lg reveal">
-          <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
-            À Propos de Moi
-          </h2>
-          <p
-            class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
-          >
-            Découvrez mon parcours, mes passions et ma vision de l'ingénierie
-            logicielle.
-          </p>
-        </div>
+      <section class="section" id="about">
+        <div class="section-inner">
+          <span class="eyebrow">À propos</span>
+          <h2 class="section-title">Le chemin parcouru</h2>
+          <p class="section-sub">Du baccalauréat scientifique à la licence en Génie Logiciel, les grandes étapes de ma formation.</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-md items-start">
-          <!-- Volet Gauche : Votre histoire professionnelle -->
-          <div class="flex flex-col gap-6 reveal">
-            <h3
-              class="font-headline-md text-xl font-bold text-primary dark:text-primary-fixed-dim"
-              id="about-story-title"
-            >
-              Créer avec Code & Innovation.
-            </h3>
-            <div id="about-paragraphs" class="flex flex-col gap-6">
-              <p class="font-body-lg text-body-md text-on-surface-variant">
-                Actuellement étudiant en informatique plus précisément en Génie Logiciel, j'ai développé une passion
-                profonde pour le développement web full-stack, l'intelligence artificielle et la data science.
-              </p>
-              <p class="font-body-lg text-body-md text-on-surface-variant">
-                Je m'attache à réduire le fossé entre la rigueur de l'ingénierie logicielle et l'élégance d'un design visuel moderne et soigné.
-                Pour moi, le code doit être aussi fluide, intuitif et harmonieux que le monde qui nous entoure.
-                En combinant mes compétences techniques à la puissance des outils d'intelligence artificielle, je souhaite concevoir des applications innovantes, performantes et centrées sur l'expérience utilisateur.
-              </p>
-            </div>
-            <div class="mt-2">
-              <a
-                class="inline-flex bg-primary hover:bg-primary-container text-white px-md py-xs rounded-lg font-label-sm text-label-sm transition-all duration-300"
-                href="#skills"
-                >Découvrir mes compétences</a
-              >
+          <h3 class="about-story-title" id="about-story-title">Créer avec Code &amp; Innovation.</h3>
+          <div id="about-paragraphs" class="about-paragraphs">
+            <!-- Rempli dynamiquement par renderAbout() -->
+          </div>
+
+          <div class="rubriques">
+            <button class="rubrique-btn active" data-tab="journey">Mon Histoire</button>
+            <button class="rubrique-btn" data-tab="edu">Études</button>
+            <button class="rubrique-btn" data-tab="core">Valeurs</button>
+          </div>
+
+          <div class="tab-content active" id="tab-journey">
+            <p class="flowing-text" id="about-journey-1"></p>
+            <p class="flowing-text" id="about-journey-2"></p>
+          </div>
+
+          <div class="tab-content" id="tab-edu">
+            <div class="timeline" id="about-education-container">
+              <!-- Rempli dynamiquement -->
             </div>
           </div>
 
-          <!-- Volet Droit : Onglets d'informations détaillées -->
-          <div class="glass-card rounded-xl p-6 reveal delay-200">
-            <!-- Boutons de sélection d'onglets (Bouton actif = 'class="... active bg-surface-..."') -->
-            <div
-              class="flex gap-4 border-b border-outline-variant/30 pb-4 mb-4"
-            >
-              <!-- Onglet Histoire -->
-              <button
-                class="tab-btn active px-4 py-2 font-label-sm text-label-sm font-semibold rounded-lg text-on-surface-variant bg-surface-container-high dark:bg-surface-variant"
-                data-tab="journey"
-              >
-                Mon Histoire
-              </button>
-              <!-- Onglet Études -->
-              <button
-                class="tab-btn px-4 py-2 font-label-sm text-label-sm font-semibold rounded-lg text-on-surface-variant"
-                data-tab="edu"
-              >
-                Études
-              </button>
-              <!-- Onglet Valeurs -->
-              <button
-                class="tab-btn px-4 py-2 font-label-sm text-label-sm font-semibold rounded-lg text-on-surface-variant"
-                data-tab="core"
-              >
-                Valeurs
-              </button>
-            </div>
-
-            <!-- CONTENU DE L'ONGLET 1 : Histoire (Actif par défaut) -->
-            <div class="tab-content active" id="tab-journey">
-              <p
-                class="font-body-md text-sm text-on-surface-variant leading-relaxed mb-4"
-                id="about-journey-1"
-              >
-                Passionné de nouvelles technologies depuis mon plus jeune âge,
-                j'ai démarré le codage de petites applications avant de plonger
-                dans l'écosystème web moderne avec React et Node.js.
-              </p>
-              <p
-                class="font-body-md text-sm text-on-surface-variant leading-relaxed"
-                id="about-journey-2"
-              >
-                Aujourd'hui, je crée des produits soignés en m'assurant que
-                chaque animation et interaction apporte une réelle plus-value à
-                l'expérience de l'utilisateur final.
-              </p>
-            </div>
-
-            <!-- CONTENU DE L'ONGLET 2 : Études académiques -->
-            <div class="tab-content" id="tab-edu">
-              <div class="flex flex-col gap-4" id="about-education-container">
-                <!-- Rempli dynamiquement -->
-              </div>
-            </div>
-
-            <!-- CONTENU DE L'ONGLET 3 : Valeurs personnelles -->
-            <div class="tab-content" id="tab-core">
-              <ul class="flex flex-col gap-3 text-sm text-on-surface-variant" id="about-values-container">
-                <!-- Rempli dynamiquement -->
-              </ul>
+          <div class="tab-content" id="tab-core">
+            <div class="value-grid" id="about-values-container">
+              <!-- Rempli dynamiquement -->
             </div>
           </div>
         </div>
