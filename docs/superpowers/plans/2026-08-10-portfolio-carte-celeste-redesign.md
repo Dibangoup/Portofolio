@@ -2712,6 +2712,26 @@ grep -rn "mouse-glow\|parallax-bg\|material-symbols" index.html js/app.js css/*.
 
 Expected: no output. Any hit is a leftover from Tasks 1-3 that must be removed.
 
+- [ ] **Step 2b: Clean up three small items flagged during Task 3's review**
+
+1. **Dead CSS in `css/animations.css`**: Task 3 removed the only markup that used `.floating`, `@keyframes float`, and `@keyframes bounce-y` (the old floating portrait wrapper and bouncing hero badges). Confirm with `grep -rn "floating\|bounce-y" index.html js/app.js css/*.css` that only `css/animations.css` itself defines them and nothing references them anymore, then delete all three rules from `css/animations.css`.
+2. **Stale comment in `css/utilities.css:4-5`**: the file header still says "...le halo lumineux de souris" (the mouse-glow effect Task 3 replaced with the star canvas). Update it to describe the current contents (scroll progress bar + star canvas positioning).
+3. **Reduced-motion canvas blanks on resize**: in `js/app.js`'s `initHeroCanvas()`, the `resize()` function calls `initStars()` but never repaints, so a reduced-motion user who resizes the window after load sees a blank hero canvas until (never, since the rAF loop never started) it's redrawn. Find `function resize(){ ... initStars(); }` inside `initHeroCanvas()` and add a call to `drawFrame()` at the end of `resize()`:
+
+```js
+        function resize() {
+            const rect = heroEl.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            canvas.style.width = `${rect.width}px`;
+            canvas.style.height = `${rect.height}px`;
+            initStars();
+            drawFrame();
+        }
+```
+
+This draws one fresh frame after every resize regardless of motion preference — harmless for non-reduced-motion users (the rAF loop keeps redrawing over it immediately after) and closes the gap for reduced-motion users (who now get a correct static frame after resize instead of a blank canvas). Note `drawFrame` is declared as a function inside the same `initHeroCanvas()` closure, after `resize`'s current definition — moving `resize`'s call site doesn't require reordering the function declarations themselves (function declarations are hoisted within the closure).
+
 - [ ] **Step 3: Contrast spot-check**
 
 Using the values from spec §3.1 (already computed and documented there — `--ink` on `--bg` ≈15.3:1, `--ink-70` ≈8.4:1, `--ink-45` ≈4.98:1, `--accent` ≈8:1), visually confirm in a browser with DevTools' contrast checker (right-click an element with `--ink-45` text, e.g. `.field-key` or `.footer-copy`, inspect computed color, use the browser's built-in contrast ratio display) that the smallest/lightest text (`.field-key`, `.footer-copy`, `.tl-date`) is still legible against its `var(--bg)`/`var(--bg-2)` background. If any spot-check reads below 4.5:1, stop and report the discrepancy rather than adjusting blindly (it would mean a computed value in the spec doesn't match what actually shipped — re-check the CSS custom property value first, since a typo there is more likely than the spec's math being wrong).
