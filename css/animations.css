@@ -110,3 +110,16 @@
         animation: none !important;
     }
 }
+
+/* ==========================================================================
+   ICÔNES EN ROTATION (spinner de chargement, remplace animate-spin Tailwind)
+   ========================================================================== */
+@keyframes icon-spin {
+    to { transform: rotate(360deg); }
+}
+.icon-spin {
+    animation: icon-spin 0.9s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .icon-spin { animation: none; }
+}
