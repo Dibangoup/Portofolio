@@ -1611,14 +1611,14 @@ Replace lines 66-73 (the entire "3. CARTES DE PROJETS" section) with:
     cursor: pointer;
     opacity: 0;
     transform: translateY(18px);
-    transition: opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1), box-shadow .3s;
+    transition: opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1), border-color .3s;
 }
 .stop-card.in {
     opacity: 1;
     transform: none;
 }
 .stop-card:hover {
-    box-shadow: 0 20px 40px -24px rgba(0,0,0,.5);
+    border-color: var(--accent);
 }
 .stop-viewport {
     aspect-ratio: 16/10;
