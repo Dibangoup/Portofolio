@@ -216,59 +216,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeProjectBtn = document.getElementById('close-project-modal');
     const projectModalContent = document.getElementById('project-modal-content');
     
-    // Fonction d'ouverture de la modale pour un projet spécifique
     const openProjectModal = (projectId) => {
         const data = PROJECTS_DATA[projectId];
         if (!data || !projectModal || !projectModalContent) return;
-        
-        // Génération dynamique des badges des technologies utilisées
-        const techBadges = data.tech.map(t => 
-            `<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-3 py-1 rounded-full font-label-sm text-[12px] font-semibold">${t}</span>`
-        ).join(' ');
-        
-        // Génération dynamique de la liste des fonctionnalités clés
-        const featuresList = data.features.map(f => 
-            `<li class="flex items-start gap-2 text-sm text-on-surface-variant">
-                <span class="material-symbols-outlined text-primary text-lg fill-icon mt-0.5">check_circle</span>
-                <span>${f}</span>
-            </li>`
-        ).join('');
-        
-        // Injection de la structure HTML complète du projet dans la modale
-        projectModalContent.innerHTML = `
-            <div class="flex flex-col gap-6">
-                <!-- Zone d'image du projet -->
-                <div class="h-48 md:h-64 rounded-xl overflow-hidden relative">
-                    <img src="${data.image}" alt="${data.title}" class="w-full h-full object-cover">
-                    <div class="absolute top-4 left-4 bg-primary text-white font-label-sm text-xs px-3 py-1 rounded-full">${data.category}</div>
-                </div>
-                <!-- Titre et badges technologiques -->
-                <div class="flex flex-col gap-2">
-                    <h2 class="font-headline-md text-xl md:text-headline-md text-on-surface font-extrabold">${data.title}</h2>
-                    <div class="flex flex-wrap gap-2">${techBadges}</div>
-                </div>
-                <!-- Description complète -->
-                <div class="flex flex-col gap-3">
-                    <h4 class="text-xs font-bold text-primary uppercase tracking-wider">Description du projet</h4>
-                    <p class="font-body-md text-sm text-on-surface-variant leading-relaxed">${data.description}</p>
-                </div>
-                <!-- Liste des fonctionnalités -->
-                <div class="flex flex-col gap-3">
-                    <h4 class="text-xs font-bold text-primary uppercase tracking-wider">Fonctionnalités clés</h4>
-                    <ul class="flex flex-col gap-2">${featuresList}</ul>
-                </div>
-                <!-- Liens d'actions (Démo / Github) -->
-                <div class="flex gap-4 border-t border-outline-variant/20 pt-4 mt-2">
-                    ${data.demo !== '#' ? `<a href="${data.demo}" target="_blank" class="flex-1 inline-flex items-center justify-center bg-primary hover:bg-primary-container text-white py-3 rounded-lg font-label-sm text-sm font-semibold transition-all duration-300 gap-2"><span class="material-symbols-outlined text-base">link</span> Visiter le site</a>` : ''}
-                    ${data.source !== '#' ? `<a href="${data.source}" target="_blank" class="flex-1 inline-flex items-center justify-center border border-primary text-primary hover:bg-primary/5 py-3 rounded-lg font-label-sm text-sm font-semibold transition-all duration-300 gap-2"><span class="material-symbols-outlined text-base">code</span> Code source</a>` : ''}
-                </div>
-            </div>
+
+        const techBadges = data.tech.map(t => `<span class="tech-pill">${t}</span>`).join('');
+
+        const featuresList = data.features.map(f => `
+            <li>${renderIcon('check')}<span>${f}</span></li>
+        `).join('');
+
+        const links = `
+            ${data.demo !== '#' ? `<a href="${data.demo}" target="_blank" rel="noopener" class="btn btn-primary">${renderIcon('link')} Voir la démo</a>` : ''}
+            ${data.source !== '#' ? `<a href="${data.source}" target="_blank" rel="noopener" class="btn btn-ghost">${renderIcon('code')} Code source</a>` : ''}
         `;
-        
-        // Activation visuelle de la modale (CSS transition opacity)
+
+        projectModalContent.innerHTML = `
+            <article class="article-sheet">
+                <div class="article-image">
+                    <img src="${data.image}" alt="${data.title}">
+                </div>
+                <span class="stop-cat">${data.categoryLabel}</span>
+                <h2 class="article-title">${data.title}</h2>
+                <div class="tech-row">${techBadges}</div>
+                <p class="article-desc">${data.description}</p>
+                <div class="article-brief">
+                    <h4>En bref</h4>
+                    <ul>${featuresList}</ul>
+                </div>
+                ${(data.demo !== '#' || data.source !== '#') ? `<div class="article-links">${links}</div>` : ''}
+            </article>
+        `;
+
         projectModal.classList.add('active');
         projectModal.setAttribute('aria-hidden', 'false');
-        // Verrouille le défilement de la page arrière-plan pour améliorer l'expérience utilisateur (UX)
         document.body.style.overflow = 'hidden';
     };
     
