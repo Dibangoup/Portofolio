@@ -2712,7 +2712,7 @@ grep -rn "mouse-glow\|parallax-bg\|material-symbols" index.html js/app.js css/*.
 
 Expected: no output. Any hit is a leftover from Tasks 1-3 that must be removed.
 
-- [ ] **Step 2b: Clean up four small items flagged during Tasks 3-4's review**
+- [ ] **Step 2b: Clean up five small items flagged during Tasks 3-5's review**
 
 1. **Dead CSS in `css/animations.css`**: Task 3 removed the only markup that used `.floating`, `@keyframes float`, and `@keyframes bounce-y` (the old floating portrait wrapper and bouncing hero badges). Confirm with `grep -rn "floating\|bounce-y" index.html js/app.js css/*.css` that only `css/animations.css` itself defines them and nothing references them anymore, then delete all three rules from `css/animations.css`.
 2. **Stale comment in `css/utilities.css:4-5`**: the file header still says "...le halo lumineux de souris" (the mouse-glow effect Task 3 replaced with the star canvas). Update it to describe the current contents (scroll progress bar + star canvas positioning).
@@ -2738,6 +2738,7 @@ This draws one fresh frame after every resize regardless of motion preference �
     .tab-content { animation: none; }
 }
 ```
+5. **Dead, conflicting `.skill-bar-fill` rule in `css/components.css`**: Task 5 appended the new numeric skill legend as a `2. TABLEAU DE COMPÉTENCES` section at the end of the file, but the file already had an old, now-orphaned `2. JAUGE DE COMPÉTENCES ANIMÉE (SKILLS SECTION)` block near the top (`.skill-bar-fill { width: 0; transition: width 1.5s ...; }`, header comment "Ces jauges démarrent à une largeur de 0%..."), left over from before this redesign plan. Both rules target the same `.skill-bar-fill` class with equal specificity — the new rule currently wins on the shared `width`/`transition` properties only because it comes later in source order, which is fragile (any future reordering silently reverts the fill to a layout-thrashing `width` animation) and leaves two sections both numbered "2." in the file's own comment index. Confirm with `grep -n "skill-bar-fill\|JAUGE DE COMPÉTENCES" css/components.css` that the old block is exactly the dead one described here (a single rule + its 4-line section header/comment, no other selectors), then delete that entire old section (header comment through the closing `}` of its `.skill-bar-fill` rule) — the new `.skill-legend` section's own `.skill-bar-fill` rule (transform-based) is the sole surviving definition afterward.
 
 - [ ] **Step 3: Contrast spot-check**
 
