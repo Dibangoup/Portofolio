@@ -7,36 +7,84 @@
 
 
 /* ==========================================================================
-   1. BOUTONS D'ONGLETS DE LA SECTION "À PROPOS"
-   ==========================================================================
-   Gère l'état visuel actif et inactif des onglets d'histoire, d'études et de valeurs.
-*/
-
-.tab-btn {
-    /* Transition douce lors du changement d'onglet */
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+   1. RUBRIQUES (onglets À propos) + SECTIONS GÉNÉRIQUES DE LA COLONNE
+   ========================================================================== */
+.section {
+    border-top: 1px solid var(--line);
 }
-
-/* Style de l'onglet actif (Light Mode) - Couleur violette primaire */
-.tab-btn.active {
-    background-color: #3525cd !important;
-    color: #ffffff !important;
+.section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px;
 }
-
-/* Style de l'onglet actif (Dark Mode) */
-html.dark .tab-btn.active {
-    background-color: #4f46e5 !important;
-    color: #ffffff !important;
+.eyebrow {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 12px;
+    display: block;
 }
-
-/* Structure par défaut d'un bloc de contenu d'onglet (masqué initialement) */
+.section-title {
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+    letter-spacing: -.01em;
+    color: var(--ink);
+}
+.section-sub {
+    margin: 12px 0 36px;
+    max-width: 58ch;
+    color: var(--ink-70);
+    font-size: 1.02rem;
+}
+.about-story-title {
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--ink);
+    margin-bottom: 16px;
+}
+.about-paragraphs {
+    margin-bottom: 32px;
+}
+.flowing-text {
+    color: var(--ink-70);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+.rubriques {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+}
+.rubrique-btn {
+    background: none;
+    border: none;
+    padding: 0 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: var(--ink-45);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+    margin-bottom: -1px;
+}
+.rubrique-btn.active {
+    color: var(--accent-ink);
+    border-color: var(--accent);
+}
+.rubrique-btn:hover {
+    color: var(--ink);
+}
 .tab-content {
     display: none;
-    /* Animation fluide d'apparition en fondu montant */
     animation: fadeIn 0.4s ease-out forwards;
 }
-
-/* Classe injectée par le JS pour afficher le bloc d'onglet actif */
 .tab-content.active {
     display: block;
 }
@@ -359,4 +407,80 @@ html.dark .form-input:focus {
 }
 .mono {
     font-family: ui-monospace, "SF Mono", Consolas, monospace;
+}
+
+/* ==========================================================================
+   8. FRISE (formations) + CARTES DE VALEURS
+   ========================================================================== */
+.timeline {
+    display: flex;
+    flex-direction: column;
+}
+.tl-item {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+}
+.tl-item:first-child { padding-top: 0; }
+.tl-item:last-child { border-bottom: none; }
+.tl-date {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 5px 9px;
+    align-self: start;
+    text-align: center;
+}
+.tl-title {
+    font-weight: 700;
+    font-size: 1.02rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+.tl-desc {
+    color: var(--ink-70);
+    font-size: 14.5px;
+    line-height: 1.6;
+    max-width: 60ch;
+}
+@media (max-width: 640px) {
+    .tl-item { grid-template-columns: 1fr; gap: 8px; }
+}
+
+.value-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+.value-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-2);
+    padding: 20px;
+}
+.value-emoji {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 10px;
+}
+.muted-emoji {
+    filter: grayscale(1) opacity(.85);
+}
+.value-title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+.value-desc {
+    color: var(--ink-70);
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+@media (max-width: 640px) {
+    .value-grid { grid-template-columns: 1fr; }
 }
