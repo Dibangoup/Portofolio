@@ -399,75 +399,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderProjects = () => {
         const grid = document.getElementById('projects-grid');
         if (!grid || !PORTFOLIO_DATA.projects) return;
-        
-        grid.innerHTML = PORTFOLIO_DATA.projects.map((proj, projIdx) => `
-          <div
-            class="group glass-card rounded-xl overflow-hidden hover:shadow-[0_20px_40px_rgba(53,37,205,0.15)] project-card reveal delay-${(projIdx % 3) * 100} cursor-pointer"
-            data-category="${proj.category}"
-            data-project-id="${proj.id}"
-          >
-            <!-- Conteneur Image et boutons de liens rapides -->
-            <div class="h-48 overflow-hidden relative bg-surface-container-high">
-              <img
-                alt="${proj.cardTitle}"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                src="${proj.image}"
-              />
-              <!-- Survol tactile/souris : affiche des accès externes rapides -->
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-surface/95 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-md"
-              >
-                <div class="flex gap-xs">
-                  ${proj.demo !== '#' ? `
-                  <a
-                    class="bg-white text-primary p-2 rounded-full hover:bg-primary hover:text-white transition-colors hover:scale-110 flex items-center justify-center w-8 h-8 external-link"
-                    href="${proj.demo}"
-                    target="_blank"
-                    aria-label="Lien externe"
-                    ><span class="material-symbols-outlined text-sm">link</span></a
-                  >` : ''}
-                  ${proj.source !== '#' ? `
-                  <a
-                    class="bg-white text-on-surface p-2 rounded-full hover:bg-on-surface hover:text-white transition-colors hover:scale-110 flex items-center justify-center w-8 h-8 external-link"
-                    href="${proj.source}"
-                    target="_blank"
-                    aria-label="Code Source"
-                    ><span class="material-symbols-outlined text-sm">code</span></a
-                  >` : ''}
-                </div>
+
+        grid.innerHTML = PORTFOLIO_DATA.projects.map(proj => `
+          <article class="stop-card" data-category="${proj.category}" data-project-id="${proj.id}">
+            <div class="stop-viewport">
+              <img alt="${proj.cardTitle}" src="${proj.image}" />
+            </div>
+            <div class="stop-body">
+              <span class="stop-cat">${proj.categoryLabel}</span>
+              <h3 class="project-title">${proj.cardTitle}</h3>
+              <p>${proj.shortDescription}</p>
+              <div class="tech-row">
+                ${proj.tech.slice(0, 3).map(t => `<span class="tech-pill">${t}</span>`).join('')}
+              </div>
+              <div class="stop-links">
+                ${proj.demo !== '#' ? `<a href="${proj.demo}" target="_blank" rel="noopener" class="external-link">${renderIcon('link')} Démo</a>` : ''}
+                ${proj.source !== '#' ? `<a href="${proj.source}" target="_blank" rel="noopener" class="external-link">${renderIcon('code')} Code</a>` : ''}
               </div>
             </div>
-            
-            <!-- Informations écrites rapides de la vignette -->
-            <div class="p-md flex flex-col gap-2">
-              <h3
-                class="font-headline-md text-body-lg font-bold text-on-surface mb-xs group-hover:text-primary transition-colors duration-300 project-title"
-              >
-                ${proj.cardTitle}
-              </h3>
-              <p
-                class="font-body-md text-sm text-on-surface-variant mb-sm line-clamp-2"
-              >
-                ${proj.shortDescription}
-              </p>
-              <!-- Badges de technologies utilisés -->
-              <div class="flex flex-wrap gap-2 mt-auto">
-                ${proj.tech.slice(0, 3).map(t => `
-                  <span class="bg-secondary-fixed text-on-secondary-fixed-variant px-2 py-1 rounded-full font-label-sm text-[12px]">${t}</span>
-                `).join('')}
-              </div>
-            </div>
-          </div>
+          </article>
         `).join('');
 
-        // Attache les événements de clic sur les nouvelles vignettes de projets
-        document.querySelectorAll('#projects-grid .project-card').forEach(card => {
+        document.querySelectorAll('#projects-grid .stop-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                if (e.target.closest('.external-link')) return; 
+                if (e.target.closest('.external-link')) return;
                 const projectId = card.getAttribute('data-project-id');
                 if (projectId) openProjectModal(projectId);
             });
         });
+
+        const revealCards = document.querySelectorAll('#projects-grid .stop-card');
+        if ('IntersectionObserver' in window) {
+            const cardObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry, idx) => {
+                    if (entry.isIntersecting) {
+                        const delay = Array.prototype.indexOf.call(revealCards, entry.target) * 70;
+                        setTimeout(() => entry.target.classList.add('in'), delay);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            revealCards.forEach(card => cardObserver.observe(card));
+        } else {
+            revealCards.forEach(card => card.classList.add('in'));
+        }
     };
 
     const renderContact = () => {
@@ -763,47 +738,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       13. FILTRAGE DE LA GRILLE Bento DE PROJETS
-       ========================================================================== 
-       Filtre dynamiquement les projets affichés à l'écran sans recharger la page
-       grâce à des transitions d'échelle et d'opacité fluides.
+       13. FILTRAGE DES CARTES "ÉTAPE"
+       ==========================================================================
+       Filtre dynamiquement les projets affichés à l'écran ; les cartes non
+       concernées sont simplement masquées (display:none), pas de mise en scène
+       d'échelle/translation ici — .stop-card garde son entrée .in existante.
     */
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const projectCardsGrid = document.querySelectorAll('.project-card');
 
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             const filterValue = button.getAttribute('data-filter');
 
-            // Réinitialise l'état actif de tous les boutons de filtrage
-            filterButtons.forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('text-on-surface-variant');
-            });
-            
-            // Active visuellement le bouton cliqué
-            button.classList.add('active', 'bg-primary', 'text-white');
-            button.classList.remove('text-on-surface-variant');
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
 
-            // Parcourt chaque carte de projet de la grille
-            projectCardsGrid.forEach(card => {
+            document.querySelectorAll('#projects-grid .stop-card').forEach(card => {
                 const category = card.getAttribute('data-category');
-
-                if (filterValue === 'all' || category === filterValue) {
-                    // Affiche l'élément sous forme de bloc pour conserver l'empilement vertical corrigé
-                    card.style.display = 'block';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0) scale(1)';
-                    }, 50);
-                } else {
-                    // Réduit et masque l'élément progressivement avant de le masquer du flux
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(15px) scale(0.96)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 350);
-                }
+                card.style.display = (filterValue === 'all' || category === filterValue) ? '' : 'none';
             });
         });
     });

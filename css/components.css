@@ -105,19 +105,128 @@
 
 
 /* ==========================================================================
-   3. CARTES DE PROJETS — EFFET DE SURVOL (ZOOM-HOVER)
-   ==========================================================================
-   Applique une légère élévation 3D et une ombre renforcée sur les cartes
-   de projets lorsqu'un utilisateur passe son curseur dessus.
-*/
-
-.project-card {
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+   3. CARTES "ÉTAPE" (Projets)
+   ========================================================================== */
+.filter-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
 }
-
-.project-card:hover {
-    /* Décale légèrement la carte vers le haut */
-    transform: translateY(-6px);
+.filter-btn {
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--ink);
+    color: var(--ink-70);
+    background: none;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+.filter-btn.active,
+.filter-btn:hover {
+    background: var(--ink);
+    color: var(--bg);
+}
+.stops {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+.stop-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-2);
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1), border-color .3s;
+}
+.stop-card.in {
+    opacity: 1;
+    transform: none;
+}
+.stop-card:hover {
+    border-color: var(--accent);
+}
+.stop-viewport {
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    background: var(--bg-3);
+}
+.stop-viewport img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s ease;
+}
+.stop-card:hover .stop-viewport img {
+    transform: scale(1.05);
+}
+.stop-body {
+    padding: 22px;
+}
+.stop-cat {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+}
+.stop-body h3 {
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 8px 0;
+}
+.stop-body p {
+    font-size: 13.8px;
+    color: var(--ink-70);
+    line-height: 1.55;
+}
+.tech-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 15px;
+}
+.tech-pill {
+    font-size: 10.8px;
+    font-weight: 600;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 10px;
+    color: var(--ink-70);
+}
+.stop-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+}
+.stop-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    font-size: 12.5px;
+    text-decoration: none;
+    color: var(--accent-ink);
+    border-bottom: 1.5px solid var(--accent);
+    padding-bottom: 2px;
+}
+.stop-links a:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+}
+.stop-links .icon {
+    width: 13px;
+    height: 13px;
+}
+@media (max-width: 820px) {
+    .stops { grid-template-columns: 1fr; }
 }
 
 
