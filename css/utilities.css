@@ -26,27 +26,16 @@
 
 
 /* ==========================================================================
-   2. HALO LUMINEUX DE SOURIS (MOUSE TRACKING GLOW)
+   2. CANVAS D'ÉTOILES DU HERO
    ==========================================================================
-   Rond lumineux dégradé très doux qui suit précisément le curseur de la souris
-   dans la section Hero pour un effet de carte graphique interactive.
+   Positionnement uniquement — le dessin est géré par js/app.js (fonction
+   initHeroCanvas). Le canvas est purement décoratif (aria-hidden="true"
+   dans le HTML) et n'encode aucune information.
 */
-
-.mouse-glow {
+#hero-canvas {
     position: absolute;
-    width: 350px;
-    height: 350px;
-    /* Dégradé radial avec point de focalisation central translucide vers transparent */
-    background: radial-gradient(circle, rgba(53, 37, 205, 0.12) 0%, rgba(57, 184, 253, 0.04) 50%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none; /* Empêche de bloquer les clics sur les boutons sous-jacents */
+    inset: 0;
+    width: 100%;
+    height: 100%;
     z-index: 0;
-    transform: translate(-50%, -50%); /* Centre parfaitement le halo sous la pointe du curseur */
-    transition: opacity 0.5s ease;
-    opacity: 0;
-}
-
-/* Activé en JS lors de l'entrée de la souris dans la section Hero */
-.mouse-glow.active {
-    opacity: 1;
 }

@@ -100,37 +100,111 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       5. HALO LUMINEUX DE SOURIS (MOUSE GLOW)
-       ========================================================================== 
-       Fait suivre une lueur dégradée douce derrière le curseur de la souris dans 
-       la section Hero principale, créant un effet d'éclairage interactif haut de gamme.
+       5. CHAMP D'ÉTOILES INTERACTIF DU HERO
+       ==========================================================================
+       Dessine un champ de points animés dans le canvas #hero-canvas ; les
+       points proches sont reliés par des filets, et se relient au curseur
+       en survol. Remplace le halo de souris + les bulles de parallaxe.
     */
-    const heroSection = document.getElementById('hero');
-    const mouseGlow = document.getElementById('mouse-glow');
-    
-    // N'exécute l'effet que sur les ordinateurs et si l'utilisateur n'a pas désactivé les animations
-    if (heroSection && mouseGlow && !prefersReducedMotion) {
-        // Affiche la lueur lorsque la souris entre dans la zone Hero
-        heroSection.addEventListener('mouseenter', () => {
-            mouseGlow.classList.add('active');
+    function initHeroCanvas() {
+        const canvas = document.getElementById('hero-canvas');
+        const heroEl = document.getElementById('hero');
+        if (!canvas || !heroEl) return;
+
+        const ctx = canvas.getContext('2d');
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let stars = [];
+        const mouse = { x: null, y: null };
+
+        function resize() {
+            const rect = heroEl.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            canvas.style.width = `${rect.width}px`;
+            canvas.style.height = `${rect.height}px`;
+            initStars();
+        }
+
+        function initStars() {
+            const area = canvas.width * canvas.height;
+            const count = Math.min(90, Math.max(30, Math.floor(area / 26000)));
+            stars = [];
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.28 * dpr,
+                    vy: (Math.random() - 0.5) * 0.28 * dpr,
+                    r: (Math.random() * 1.1 + 0.6) * dpr
+                });
+            }
+        }
+
+        heroEl.addEventListener('pointermove', (e) => {
+            const rect = heroEl.getBoundingClientRect();
+            mouse.x = (e.clientX - rect.left) * dpr;
+            mouse.y = (e.clientY - rect.top) * dpr;
         });
-        
-        // Masque la lueur lorsque la souris sort de la zone Hero
-        heroSection.addEventListener('mouseleave', () => {
-            mouseGlow.classList.remove('active');
-        });
-        
-        // Calcule et déplace la lueur en coordonnées relatives dans la zone
-        heroSection.addEventListener('mousemove', (e) => {
-            const rect = heroSection.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Accélération matérielle via propriétés top/left (positionnement absolu)
-            mouseGlow.style.left = `${x}px`;
-            mouseGlow.style.top = `${y}px`;
-        });
+        heroEl.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; });
+
+        const linkDist = 120 * dpr;
+        const mouseDist = 170 * dpr;
+
+        function drawFrame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            });
+
+            for (let i = 0; i < stars.length; i++) {
+                for (let j = i + 1; j < stars.length; j++) {
+                    const a = stars[i], b = stars[j];
+                    const dx = a.x - b.x, dy = a.y - b.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < linkDist) {
+                        ctx.strokeStyle = `rgba(232,162,60,${0.16 * (1 - dist / linkDist)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.stroke();
+                    }
+                }
+                if (mouse.x !== null) {
+                    const mdx = stars[i].x - mouse.x, mdy = stars[i].y - mouse.y;
+                    const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                    if (mdist < mouseDist) {
+                        ctx.strokeStyle = `rgba(240,182,94,${0.55 * (1 - mdist / mouseDist)})`;
+                        ctx.lineWidth = 1.2;
+                        ctx.beginPath();
+                        ctx.moveTo(stars[i].x, stars[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            stars.forEach(p => {
+                ctx.fillStyle = 'rgba(243,241,232,.75)';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        if (prefersReducedMotion) {
+            drawFrame();
+        } else {
+            (function loop() { drawFrame(); requestAnimationFrame(loop); })();
+        }
     }
+    initHeroCanvas();
 
     /* ==========================================================================
        6. MODALE INTERACTIVE DES DÉTAILS DE PROJET
@@ -624,30 +698,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         // Si l'utilisateur préfère réduire les animations, on active directement tous les éléments
         document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-    }
-
-    /* ==========================================================================
-       9. EFFET DE PARALLAXE DOUX (HERO BACKDROP)
-       ========================================================================== 
-       Fait glisser les bulles décoratives floues en arrière-plan à des vitesses 
-       différentes lors du scroll pour donner une sensation de profondeur (3D).
-    */
-    if (!prefersReducedMotion) {
-        window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY;
-            
-            // Bulle supérieure droite
-            document.querySelectorAll('.parallax-bg').forEach(bg => {
-                const speed = parseFloat(bg.getAttribute('data-speed')) || 0.2;
-                bg.style.transform = `translate(50%, calc(-50% + ${scrolled * speed}px))`;
-            });
-            
-            // Bulle inférieure gauche
-            document.querySelectorAll('.parallax-bg-bottom').forEach(bg => {
-                const speed = parseFloat(bg.getAttribute('data-speed')) || -0.15;
-                bg.style.transform = `translate(-50%, calc(50% + ${scrolled * speed}px))`;
-            });
-        });
     }
 
     /* ==========================================================================
