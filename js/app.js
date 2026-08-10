@@ -36,36 +36,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const toastContainer = document.getElementById('toast-container');
     const showToast = (message, type = 'info') => {
         if (!toastContainer) return;
-        
-        // Création de la carte de notification HTML
+
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        
-        // Sélection de l'icône Google Material appropriée
-        let iconName = 'info';
-        if (type === 'success') iconName = 'check_circle';
-        if (type === 'error') iconName = 'error';
-        
-        // Structure interne de la notification toast
+
+        const iconName = type === 'success' ? 'check' : type === 'error' ? 'error' : 'info';
+
         toast.innerHTML = `
-            <span class="material-symbols-outlined fill-icon ${
-                type === 'success' ? 'text-green-500' : type === 'error' ? 'text-red-500' : 'text-primary'
-            }">${iconName}</span>
-            <div class="text-sm font-semibold text-on-surface">${message}</div>
+            ${renderIcon(iconName, 'toast-icon')}
+            <div class="toast-message">${message}</div>
         `;
-        
+
         toastContainer.appendChild(toast);
-        
-        // Déclenche l'animation d'apparition en CSS avec un léger décalage
+
         setTimeout(() => {
             toast.classList.add('show');
         }, 50);
-        
-        // Auto-destruction propre après 4 secondes
+
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => {
-                toast.remove(); // Supprime l'élément du DOM après la transition de sortie
+                toast.remove();
             }, 400);
         }, 4000);
     };
@@ -485,124 +476,83 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ouvre la modale de CV et y injecte votre structure de CV complète
     const openCvModal = () => {
         if (!cvModal || !cvModalContent) return;
-        
+
         const cv = PORTFOLIO_DATA.cv;
         if (!cv) return;
-        
-        const skillsBadges = cv.skills.map(s => 
-            `<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold">${s}</span>`
-        ).join(' ');
-        
-        const languagesList = cv.languages.map(l => 
-            `<li>${l}</li>`
-        ).join('');
-        
+
+        const skillsBadges = cv.skills.map(s => `<span class="tech-pill">${s}</span>`).join('');
+        const languagesList = cv.languages.map(l => `<li>${l}</li>`).join('');
+
         const experiencesList = cv.experiences.map(exp => `
-            <div class="flex flex-col gap-1">
-                <div class="flex justify-between items-baseline gap-2">
-                    <h5 class="font-bold text-on-surface text-sm">${exp.role}</h5>
-                    <span class="text-primary text-xs font-bold shrink-0">${exp.dates}</span>
+            <div class="cv-entry">
+                <div class="cv-entry-top">
+                    <h5>${exp.role}</h5>
+                    <span class="mono">${exp.dates}</span>
                 </div>
-                <span class="text-xs text-on-surface-variant italic">${exp.company}</span>
-                <p class="text-xs text-on-surface-variant leading-relaxed mt-1">${exp.description}</p>
+                <span class="cv-entry-org">${exp.company}</span>
+                <p>${exp.description}</p>
             </div>
         `).join('');
-        
+
         const formationsList = cv.formations.map(f => `
-            <div class="flex flex-col gap-1">
-                <div class="flex justify-between items-baseline gap-2">
-                    <h5 class="font-bold text-on-surface text-sm">${f.degree}</h5>
-                    <span class="text-primary text-xs font-bold shrink-0">${f.dates}</span>
+            <div class="cv-entry">
+                <div class="cv-entry-top">
+                    <h5>${f.degree}</h5>
+                    <span class="mono">${f.dates}</span>
                 </div>
-                <span class="text-xs text-on-surface-variant">${f.school}</span>
+                <span class="cv-entry-org">${f.school}</span>
             </div>
         `).join('');
 
         cvModalContent.innerHTML = `
-            <div class="flex flex-col gap-5">
-                <!-- En-tête du CV (Identité et objectif) -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-outline-variant/20 pb-4">
+            <div class="cv-sheet">
+                <div class="cv-header">
                     <div>
-                        <h2 class="font-headline-md text-headline-md text-primary font-extrabold">${cv.identity.name}</h2>
-                        <p class="text-sm font-semibold text-on-surface">${cv.identity.role}</p>
-                        <p class="text-xs text-on-surface-variant">${cv.identity.availability}</p>
+                        <h2>${cv.identity.name}</h2>
+                        <p class="cv-role">${cv.identity.role}</p>
+                        <p class="cv-availability">${cv.identity.availability}</p>
                     </div>
-                    <!-- Bouton de téléchargement simulé -->
-                    <button class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-lg font-label-sm text-xs font-semibold flex items-center gap-2 transition-all duration-300 hover:scale-[1.05] active:scale-95 shadow-md btn-shimmer" id="download-pdf-btn">
-                        <span class="material-symbols-outlined text-sm">download</span>
-                        Télécharger le CV PDF
-                    </button>
+                    <button class="btn btn-primary" id="download-pdf-btn">${renderIcon('download')} Télécharger le CV PDF</button>
                 </div>
-                
-                <!-- Grille principale du CV -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
-                    <!-- Colonne Gauche (Infos contact, compétences d'onglets, langues) -->
-                    <div class="md:col-span-1 flex flex-col gap-6 bg-surface-container p-4 rounded-xl">
-                        <!-- Contact -->
-                        <div class="flex flex-col gap-2">
-                            <h4 class="text-xs font-bold text-primary uppercase tracking-wider">Contact</h4>
-                            <ul class="flex flex-col gap-1.5 text-xs text-on-surface-variant">
-                                <li class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">mail</span> ${cv.contact.email}</li>
-                                <li class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">phone</span> ${cv.contact.phone}</li>
-                                <li class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">location_on</span> ${cv.contact.location}</li>
-                            </ul>
-                        </div>
-                        <!-- Compétences du CV -->
-                        <div class="flex flex-col gap-2">
-                            <h4 class="text-xs font-bold text-primary uppercase tracking-wider">Compétences clés</h4>
-                            <div class="flex flex-wrap gap-1.5">
-                                ${skillsBadges}
-                            </div>
-                        </div>
-                        <!-- Langues -->
-                        <div class="flex flex-col gap-2">
-                            <h4 class="text-xs font-bold text-primary uppercase tracking-wider">Langues</h4>
-                            <ul class="flex flex-col gap-1 text-xs text-on-surface-variant">
-                                ${languagesList}
-                            </ul>
-                        </div>
+
+                <div class="cv-grid">
+                    <div class="cv-col">
+                        <h4>Contact</h4>
+                        <ul class="cv-contact-list">
+                            <li>${renderIcon('mail')} ${cv.contact.email}</li>
+                            <li>${renderIcon('phone')} ${cv.contact.phone}</li>
+                            <li>${renderIcon('location')} ${cv.contact.location}</li>
+                        </ul>
+                        <h4>Compétences clés</h4>
+                        <div class="tech-row">${skillsBadges}</div>
+                        <h4>Langues</h4>
+                        <ul class="cv-lang-list">${languagesList}</ul>
                     </div>
-                    
-                    <!-- Colonne Droite (Expériences & Études détaillées) -->
-                    <div class="md:col-span-2 flex flex-col gap-5">
-                        <!-- Expériences -->
-                        <div class="flex flex-col gap-3">
-                            <h4 class="text-sm font-bold text-on-surface uppercase tracking-wider border-b border-outline-variant/20 pb-1">Expériences Professionnelles</h4>
-                            <div class="flex flex-col gap-4">
-                                ${experiencesList}
-                            </div>
-                        </div>
-                        
-                        <!-- Formations -->
-                        <div class="flex flex-col gap-3">
-                            <h4 class="text-sm font-bold text-on-surface uppercase tracking-wider border-b border-outline-variant/20 pb-1">Formations</h4>
-                            <div class="flex flex-col gap-3">
-                                ${formationsList}
-                            </div>
-                        </div>
+                    <div class="cv-col cv-col-wide">
+                        <h4>Expériences professionnelles</h4>
+                        <div class="cv-entries">${experiencesList}</div>
+                        <h4>Formations</h4>
+                        <div class="cv-entries">${formationsList}</div>
                     </div>
                 </div>
             </div>
         `;
 
-        // Affiche la modale de CV
         cvModal.classList.add('active');
         cvModal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        
-        // Simulation d'une attente de génération PDF réaliste (1.4s) lors du clic sur le téléchargement
+
         const downloadPdfBtn = document.getElementById('download-pdf-btn');
         if (downloadPdfBtn) {
             downloadPdfBtn.addEventListener('click', () => {
                 downloadPdfBtn.disabled = true;
-                downloadPdfBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="margin-right: 6px;">sync</span> Génération...';
-                
+                downloadPdfBtn.innerHTML = `${renderIcon('sync', 'icon-spin')} Génération...`;
+
                 setTimeout(() => {
-                    // Restaure le bouton, ferme la modale et affiche une notification de succès
                     downloadPdfBtn.disabled = false;
-                    downloadPdfBtn.innerHTML = '<span class="material-symbols-outlined text-sm">download</span> Télécharger le CV PDF';
+                    downloadPdfBtn.innerHTML = `${renderIcon('download')} Télécharger le CV PDF`;
                     closeCvModal();
-                    showToast("Génération du CV réussie ! Téléchargement démarré. 📄", "success");
+                    showToast("Génération du CV réussie ! Téléchargement démarré.", "success");
                 }, 1400);
             });
         }

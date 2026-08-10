@@ -496,17 +496,9 @@
 
     <!-- MODALE 2 : Visualisation Interactive du CV Papier -->
     <div class="modal-overlay" id="cv-modal" aria-hidden="true">
-      <div class="modal-container p-gutter relative max-w-3xl">
-        <!-- Bouton Fermer (X) -->
-        <button
-          class="absolute top-4 right-4 w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-on-surface hover:text-primary hover:border-primary transition-all duration-300 z-10"
-          id="close-cv-modal"
-          aria-label="Fermer la modale"
-        >
-          <span class="material-symbols-outlined">close</span>
-        </button>
-        <!-- Le contenu interne ci-dessous est injecté par app.js au clic sur le bouton CV -->
-        <div id="cv-modal-content" class="flex flex-col gap-6">
+      <div class="modal-container p-6 relative max-w-3xl">
+        <button class="modal-close" id="close-cv-modal" aria-label="Fermer la modale"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+        <div id="cv-modal-content">
           <!-- Populé dynamiquement par JavaScript -->
         </div>
       </div>
