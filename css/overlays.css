@@ -108,13 +108,8 @@
 
 
 /* ==========================================================================
-   3. SYSTÈME DE NOTIFICATIONS FLOTTANTES (TOASTS)
-   ==========================================================================
-   Gère la disposition et le style des alertes de succès ou d'erreur en bas
-   à droite de l'écran.
-*/
-
-/* Conteneur fixe dans le coin inférieur droit de la fenêtre */
+   3. NOTIFICATIONS FLOTTANTES (TOASTS)
+   ========================================================================== */
 .toast-container {
     position: fixed;
     bottom: 24px;
@@ -123,54 +118,44 @@
     flex-direction: column;
     gap: 12px;
     z-index: 200;
-    pointer-events: none; /* Laisse passer les clics généraux */
+    pointer-events: none;
 }
 
-/* Carte de notification individuelle */
 .toast {
-    pointer-events: auto; /* Rend la notification individuellement cliquable/fermable */
+    pointer-events: auto;
     min-width: 320px;
     max-width: 420px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 10px 25px -5px rgba(53, 37, 205, 0.1), 0 8px 10px -6px rgba(53, 37, 205, 0.1);
-    border-radius: 16px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
     padding: 16px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    /* Démarre décalé vers le bas et transparent */
-    transform: translateY(40px) scale(0.9);
+    gap: 14px;
+    color: var(--ink);
+    transform: translateY(40px) scale(0.96);
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-html.dark .toast {
-    background: rgba(30, 41, 59, 0.85);
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-}
-
-/* Affichage déclenché en JS */
 .toast.show {
     transform: translateY(0) scale(1);
     opacity: 1;
 }
 
-/* Liseré gauche coloré selon le type de notification (Succès = Vert, Erreur = Rouge, Info = Violet) */
-.toast.success {
-    border-left: 4px solid #10b981;
+.toast-icon {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    color: var(--accent);
 }
-.toast.error {
-    border-left: 4px solid #ef4444;
+.toast.error .toast-icon {
+    color: #e0745e;
 }
-.toast.info {
-    border-left: 4px solid #3525cd;
-}
-html.dark .toast.info {
-    border-left: 4px solid #4f46e5;
+.toast-message {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
 }
 
 /* ==========================================================================
@@ -244,4 +229,109 @@ html.dark .toast.info {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   5. FICHE DE CV (modale CV)
+   ========================================================================== */
+.cv-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.cv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 20px;
+}
+.cv-header h2 {
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+}
+.cv-role {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 4px;
+}
+.cv-availability {
+    font-size: 12px;
+    color: var(--accent-ink);
+    margin-top: 2px;
+}
+.cv-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 28px;
+}
+.cv-col h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin: 20px 0 10px;
+}
+.cv-col h4:first-child {
+    margin-top: 0;
+}
+.cv-contact-list, .cv-lang-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--ink-70);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.cv-contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.cv-contact-list .icon {
+    width: 13px;
+    height: 13px;
+    color: var(--accent);
+}
+.cv-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.cv-entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+}
+.cv-entry h5 {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+}
+.cv-entry-top .mono {
+    font-size: 11.5px;
+    color: var(--accent-ink);
+    white-space: nowrap;
+}
+.cv-entry-org {
+    font-size: 12px;
+    color: var(--ink-70);
+    font-style: italic;
+}
+.cv-entry p {
+    font-size: 12.5px;
+    color: var(--ink-70);
+    line-height: 1.55;
+    margin-top: 4px;
+}
+@media (max-width: 700px) {
+    .cv-grid { grid-template-columns: 1fr; }
 }
