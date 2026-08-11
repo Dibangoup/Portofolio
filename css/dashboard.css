@@ -670,7 +670,7 @@ body.dashboard-body {
 .mock-title {
   font-family: 'Space Grotesk', -apple-system, sans-serif;
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.25;
   margin: 0 0 8px;
   color: var(--cc-ink);
