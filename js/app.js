@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (url === '#') return '#';
         try {
             const parsed = new URL(url, window.location.origin);
-            return (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? url : '#';
+            return (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? parsed.href : '#';
         } catch {
             return '#';
         }
@@ -260,14 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
 
         const links = `
-            ${data.demo !== '#' ? `<a href="${safeUrl(data.demo)}" target="_blank" rel="noopener" class="btn btn-primary">${renderIcon('link')} Voir la démo</a>` : ''}
-            ${data.source !== '#' ? `<a href="${safeUrl(data.source)}" target="_blank" rel="noopener" class="btn btn-ghost">${renderIcon('code')} Code source</a>` : ''}
+            ${data.demo !== '#' ? `<a href="${escapeHtml(safeUrl(data.demo))}" target="_blank" rel="noopener" class="btn btn-primary">${renderIcon('link')} Voir la démo</a>` : ''}
+            ${data.source !== '#' ? `<a href="${escapeHtml(safeUrl(data.source))}" target="_blank" rel="noopener" class="btn btn-ghost">${renderIcon('code')} Code source</a>` : ''}
         `;
 
         projectModalContent.innerHTML = `
             <article class="article-sheet">
                 <div class="article-image">
-                    <img src="${safeUrl(data.image)}" alt="${escapeHtml(data.title)}">
+                    <img src="${escapeHtml(safeUrl(data.image))}" alt="${escapeHtml(data.title)}">
                 </div>
                 <span class="stop-cat">${escapeHtml(data.categoryLabel)}</span>
                 <h2 class="article-title">${escapeHtml(data.title)}</h2>
@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = PORTFOLIO_DATA.projects.map(proj => `
           <article class="stop-card" data-category="${escapeHtml(proj.category)}" data-project-id="${escapeHtml(proj.id)}">
             <div class="stop-viewport">
-              <img alt="${escapeHtml(proj.cardTitle)}" src="${safeUrl(proj.image)}" />
+              <img alt="${escapeHtml(proj.cardTitle)}" src="${escapeHtml(safeUrl(proj.image))}" />
             </div>
             <div class="stop-body">
               <span class="stop-cat">${escapeHtml(proj.categoryLabel)}</span>
@@ -435,8 +435,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               ${(proj.demo !== '#' || proj.source !== '#') ? `
               <div class="stop-links">
-                ${proj.demo !== '#' ? `<a href="${safeUrl(proj.demo)}" target="_blank" rel="noopener" class="external-link">${renderIcon('link')} Démo</a>` : ''}
-                ${proj.source !== '#' ? `<a href="${safeUrl(proj.source)}" target="_blank" rel="noopener" class="external-link">${renderIcon('code')} Code</a>` : ''}
+                ${proj.demo !== '#' ? `<a href="${escapeHtml(safeUrl(proj.demo))}" target="_blank" rel="noopener" class="external-link">${renderIcon('link')} Démo</a>` : ''}
+                ${proj.source !== '#' ? `<a href="${escapeHtml(safeUrl(proj.source))}" target="_blank" rel="noopener" class="external-link">${renderIcon('code')} Code</a>` : ''}
               </div>
               ` : ''}
             </div>
