@@ -253,26 +253,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = PROJECTS_DATA[projectId];
         if (!data || !projectModal || !projectModalContent) return;
 
-        const techBadges = data.tech.map(t => `<span class="tech-pill">${t}</span>`).join('');
+        const techBadges = data.tech.map(t => `<span class="tech-pill">${escapeHtml(t)}</span>`).join('');
 
         const featuresList = data.features.map(f => `
-            <li>${renderIcon('check')}<span>${f}</span></li>
+            <li>${renderIcon('check')}<span>${escapeHtml(f)}</span></li>
         `).join('');
 
         const links = `
-            ${data.demo !== '#' ? `<a href="${data.demo}" target="_blank" rel="noopener" class="btn btn-primary">${renderIcon('link')} Voir la démo</a>` : ''}
-            ${data.source !== '#' ? `<a href="${data.source}" target="_blank" rel="noopener" class="btn btn-ghost">${renderIcon('code')} Code source</a>` : ''}
+            ${data.demo !== '#' ? `<a href="${safeUrl(data.demo)}" target="_blank" rel="noopener" class="btn btn-primary">${renderIcon('link')} Voir la démo</a>` : ''}
+            ${data.source !== '#' ? `<a href="${safeUrl(data.source)}" target="_blank" rel="noopener" class="btn btn-ghost">${renderIcon('code')} Code source</a>` : ''}
         `;
 
         projectModalContent.innerHTML = `
             <article class="article-sheet">
                 <div class="article-image">
-                    <img src="${data.image}" alt="${data.title}">
+                    <img src="${safeUrl(data.image)}" alt="${escapeHtml(data.title)}">
                 </div>
-                <span class="stop-cat">${data.categoryLabel}</span>
-                <h2 class="article-title">${data.title}</h2>
+                <span class="stop-cat">${escapeHtml(data.categoryLabel)}</span>
+                <h2 class="article-title">${escapeHtml(data.title)}</h2>
                 <div class="tech-row">${techBadges}</div>
-                <p class="article-desc">${data.description}</p>
+                <p class="article-desc">${escapeHtml(data.description)}</p>
                 <div class="article-brief">
                     <h4>En bref</h4>
                     <ul>${featuresList}</ul>
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const paragraphsEl = document.getElementById('about-paragraphs');
         if (paragraphsEl && a.paragraphs) {
             paragraphsEl.innerHTML = a.paragraphs.map(p =>
-                `<p class="flowing-text">${p}</p>`
+                `<p class="flowing-text">${escapeHtml(p)}</p>`
             ).join('');
         }
 
@@ -366,10 +366,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (eduContainer && a.education) {
             eduContainer.innerHTML = a.education.map(e => `
                 <div class="tl-item">
-                  <span class="tl-date mono">${e.dates}</span>
+                  <span class="tl-date mono">${escapeHtml(e.dates)}</span>
                   <div>
-                    <div class="tl-title">${e.degree}</div>
-                    <p class="tl-desc">${e.school}. ${e.desc}</p>
+                    <div class="tl-title">${escapeHtml(e.degree)}</div>
+                    <p class="tl-desc">${escapeHtml(e.school)}. ${escapeHtml(e.desc)}</p>
                   </div>
                 </div>
             `).join('');
@@ -379,9 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (valuesContainer && a.values) {
             valuesContainer.innerHTML = a.values.map(v => `
                 <div class="value-card">
-                  <span class="value-emoji muted-emoji">${v.emoji || '★'}</span>
-                  <div class="value-title">${v.title}</div>
-                  <p class="value-desc">${v.desc}</p>
+                  <span class="value-emoji muted-emoji">${escapeHtml(v.emoji || '★')}</span>
+                  <div class="value-title">${escapeHtml(v.title)}</div>
+                  <p class="value-desc">${escapeHtml(v.desc)}</p>
                 </div>
             `).join('');
         }
@@ -397,18 +397,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const skillItemsHtml = cat.items.map(item => `
                 <div class="skill-row">
                   <div class="skill-row-top">
-                    <span>${item.name}</span>
-                    <span class="skill-percent">${item.percent}%</span>
+                    <span>${escapeHtml(item.name)}</span>
+                    <span class="skill-percent">${escapeHtml(String(item.percent))}%</span>
                   </div>
                   <div class="skill-fill-track">
-                    <div class="skill-bar-fill" data-percent="${item.percent}"></div>
+                    <div class="skill-bar-fill" data-percent="${escapeHtml(String(item.percent))}"></div>
                   </div>
                 </div>
             `).join('');
 
             return `
                 <div class="skill-legend-col">
-                  <h3>${renderIcon(iconFor(cat.icon))} ${cat.category}</h3>
+                  <h3>${renderIcon(iconFor(cat.icon))} ${escapeHtml(cat.category)}</h3>
                   ${skillItemsHtml}
                 </div>
             `;
@@ -422,21 +422,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!grid || !PORTFOLIO_DATA.projects) return;
 
         grid.innerHTML = PORTFOLIO_DATA.projects.map(proj => `
-          <article class="stop-card" data-category="${proj.category}" data-project-id="${proj.id}">
+          <article class="stop-card" data-category="${escapeHtml(proj.category)}" data-project-id="${escapeHtml(proj.id)}">
             <div class="stop-viewport">
-              <img alt="${proj.cardTitle}" src="${proj.image}" />
+              <img alt="${escapeHtml(proj.cardTitle)}" src="${safeUrl(proj.image)}" />
             </div>
             <div class="stop-body">
-              <span class="stop-cat">${proj.categoryLabel}</span>
-              <h3 class="project-title">${proj.cardTitle}</h3>
-              <p>${proj.shortDescription}</p>
+              <span class="stop-cat">${escapeHtml(proj.categoryLabel)}</span>
+              <h3 class="project-title">${escapeHtml(proj.cardTitle)}</h3>
+              <p>${escapeHtml(proj.shortDescription)}</p>
               <div class="tech-row">
-                ${proj.tech.slice(0, 3).map(t => `<span class="tech-pill">${t}</span>`).join('')}
+                ${proj.tech.slice(0, 3).map(t => `<span class="tech-pill">${escapeHtml(t)}</span>`).join('')}
               </div>
               ${(proj.demo !== '#' || proj.source !== '#') ? `
               <div class="stop-links">
-                ${proj.demo !== '#' ? `<a href="${proj.demo}" target="_blank" rel="noopener" class="external-link">${renderIcon('link')} Démo</a>` : ''}
-                ${proj.source !== '#' ? `<a href="${proj.source}" target="_blank" rel="noopener" class="external-link">${renderIcon('code')} Code</a>` : ''}
+                ${proj.demo !== '#' ? `<a href="${safeUrl(proj.demo)}" target="_blank" rel="noopener" class="external-link">${renderIcon('link')} Démo</a>` : ''}
+                ${proj.source !== '#' ? `<a href="${safeUrl(proj.source)}" target="_blank" rel="noopener" class="external-link">${renderIcon('code')} Code</a>` : ''}
               </div>
               ` : ''}
             </div>
@@ -531,27 +531,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const cv = PORTFOLIO_DATA.cv;
         if (!cv) return;
 
-        const skillsBadges = cv.skills.map(s => `<span class="tech-pill">${s}</span>`).join('');
-        const languagesList = cv.languages.map(l => `<li>${l}</li>`).join('');
+        const skillsBadges = cv.skills.map(s => `<span class="tech-pill">${escapeHtml(s)}</span>`).join('');
+        const languagesList = cv.languages.map(l => `<li>${escapeHtml(l)}</li>`).join('');
 
         const experiencesList = cv.experiences.map(exp => `
             <div class="cv-entry">
                 <div class="cv-entry-top">
-                    <h5>${exp.role}</h5>
-                    <span class="mono">${exp.dates}</span>
+                    <h5>${escapeHtml(exp.role)}</h5>
+                    <span class="mono">${escapeHtml(exp.dates)}</span>
                 </div>
-                <span class="cv-entry-org">${exp.company}</span>
-                <p>${exp.description}</p>
+                <span class="cv-entry-org">${escapeHtml(exp.company)}</span>
+                <p>${escapeHtml(exp.description)}</p>
             </div>
         `).join('');
 
         const formationsList = cv.formations.map(f => `
             <div class="cv-entry">
                 <div class="cv-entry-top">
-                    <h5>${f.degree}</h5>
-                    <span class="mono">${f.dates}</span>
+                    <h5>${escapeHtml(f.degree)}</h5>
+                    <span class="mono">${escapeHtml(f.dates)}</span>
                 </div>
-                <span class="cv-entry-org">${f.school}</span>
+                <span class="cv-entry-org">${escapeHtml(f.school)}</span>
             </div>
         `).join('');
 
@@ -559,9 +559,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="cv-sheet">
                 <div class="cv-header">
                     <div>
-                        <h2>${cv.identity.name}</h2>
-                        <p class="cv-role">${cv.identity.role}</p>
-                        <p class="cv-availability">${cv.identity.availability}</p>
+                        <h2>${escapeHtml(cv.identity.name)}</h2>
+                        <p class="cv-role">${escapeHtml(cv.identity.role)}</p>
+                        <p class="cv-availability">${escapeHtml(cv.identity.availability)}</p>
                     </div>
                     <button class="btn btn-primary" id="download-pdf-btn">${renderIcon('download')} Télécharger le CV PDF</button>
                 </div>
@@ -570,9 +570,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="cv-col">
                         <h4>Contact</h4>
                         <ul class="cv-contact-list">
-                            <li>${renderIcon('mail')} ${cv.contact.email}</li>
-                            <li>${renderIcon('phone')} ${cv.contact.phone}</li>
-                            <li>${renderIcon('location')} ${cv.contact.location}</li>
+                            <li>${renderIcon('mail')} ${escapeHtml(cv.contact.email)}</li>
+                            <li>${renderIcon('phone')} ${escapeHtml(cv.contact.phone)}</li>
+                            <li>${renderIcon('location')} ${escapeHtml(cv.contact.location)}</li>
                         </ul>
                         <h4>Compétences clés</h4>
                         <div class="tech-row">${skillsBadges}</div>
