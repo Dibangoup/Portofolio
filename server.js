@@ -180,19 +180,35 @@ app.use((req, res, next) => {
 // chemin encodé (ex. /%64ashboard.html) contournait donc à la fois
 // l'authentification du dashboard et le blocage de fichiers sensibles
 // ci-dessous, tout en évitant express-rate-limit et la CSP dédiée (la route
-// ne matchait jamais). On décode ici, en amont de tout le reste, pour que
-// toutes les routes et middlewares suivants voient le même chemin que
-// celui qu'express.static() résoudra de toute façon.
+// ne matchait jamais). Un simple décodage unique restait contournable par
+// double encodage (%2564... -> %64... après un seul passage, toujours pas
+// décodé au moment du blocklist/routage, mais decode() par send() une
+// deuxième fois) et par les backslashes Windows (%5c -> \, que send()
+// normalise ensuite comme un séparateur de chemin réel sur ce système). On
+// décode donc en boucle jusqu'à stabilité (borné pour éviter tout déni de
+// service via un chemin pathologique), on rejette tout chemin qui contient
+// encore un "%" après ça (encodage suspect/ambigu), et on normalise les
+// backslashes en slashs avant que quoi que ce soit d'autre ne voie ce
+// chemin — pour que toutes les routes et middlewares suivants (ainsi
+// qu'express.static() lui-même) voient exactement le même chemin canonique.
 app.use((req, res, next) => {
-  let decoded;
+  let decoded = req.path;
   try {
-    decoded = decodeURIComponent(req.path);
+    for (let i = 0; i < 5 && decoded.includes('%'); i++) {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    }
   } catch {
     return res.status(400).send('Requête invalide');
   }
+  if (decoded.includes('%')) {
+    return res.status(400).send('Requête invalide');
+  }
+  decoded = decoded.split('\\').join('/').replace(/\/{2,}/g, '/');
   if (decoded !== req.path) {
     const queryString = req.url.slice(req.path.length);
-    req.url = decoded.replace(/\/{2,}/g, '/') + queryString;
+    req.url = decoded + queryString;
   }
   next();
 });
