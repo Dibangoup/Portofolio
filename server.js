@@ -175,44 +175,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Express calcule req.path/le routage sur le chemin NON décodé, mais
-// express.static() décode le chemin avant de le résoudre sur le disque. Un
-// chemin encodé (ex. /%64ashboard.html) contournait donc à la fois
-// l'authentification du dashboard et le blocage de fichiers sensibles
-// ci-dessous, tout en évitant express-rate-limit et la CSP dédiée (la route
-// ne matchait jamais). Un simple décodage unique restait contournable par
-// double encodage (%2564... -> %64... après un seul passage, toujours pas
-// décodé au moment du blocklist/routage, mais decode() par send() une
-// deuxième fois) et par les backslashes Windows (%5c -> \, que send()
-// normalise ensuite comme un séparateur de chemin réel sur ce système). On
-// décode donc en boucle jusqu'à stabilité (borné pour éviter tout déni de
-// service via un chemin pathologique), on rejette tout chemin qui contient
-// encore un "%" après ça (encodage suspect/ambigu), et on normalise les
-// backslashes en slashs avant que quoi que ce soit d'autre ne voie ce
-// chemin — pour que toutes les routes et middlewares suivants (ainsi
-// qu'express.static() lui-même) voient exactement le même chemin canonique.
-app.use((req, res, next) => {
-  let decoded = req.path;
-  try {
-    for (let i = 0; i < 5 && decoded.includes('%'); i++) {
-      const next = decodeURIComponent(decoded);
-      if (next === decoded) break;
-      decoded = next;
-    }
-  } catch {
-    return res.status(400).send('Requête invalide');
-  }
-  if (decoded.includes('%')) {
-    return res.status(400).send('Requête invalide');
-  }
-  decoded = decoded.split('\\').join('/').replace(/\/{2,}/g, '/');
-  if (decoded !== req.path) {
-    const queryString = req.url.slice(req.path.length);
-    req.url = decoded + queryString;
-  }
-  next();
-});
-
 // Le dashboard et la sauvegarde sont protégés par mot de passe (HTTP Basic Auth),
 // enregistrés AVANT express.static pour que ce dernier ne puisse jamais servir
 // dashboard.html directement sans passer par la vérification d'identifiants.
@@ -241,7 +203,7 @@ const DEFAULT_PORTFOLIO_DATA = ${JSON.stringify(cleanData, null, 2)};
 var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
 `;
 
-  const targetPath = path.join(__dirname, 'js', 'portfolio-data.js');
+  const targetPath = path.join(__dirname, 'public', 'js', 'portfolio-data.js');
 
   fs.writeFile(targetPath, fileContent, 'utf8', (err) => {
     if (err) {
@@ -253,21 +215,14 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
   });
 });
 
-// Empêche express.static de servir des fichiers internes au projet (code serveur,
-// dépendances, documentation de planification) qui ne sont jamais destinés à être publics.
-// .env lui-même est déjà bloqué par le comportement par défaut d'express.static pour les
-// fichiers pointés (dotfiles) — ce middleware couvre les fichiers non pointés.
-const BLOCKED_STATIC_PREFIXES = ['/server.js', '/package.json', '/package-lock.json', '/node_modules/', '/docs/', '/.superpowers/', '/.env', '/.git/'];
-app.use((req, res, next) => {
-    const lowerPath = req.path.toLowerCase();
-    if (BLOCKED_STATIC_PREFIXES.some(p => lowerPath === p || lowerPath.startsWith(p))) {
-        return res.status(404).send('Not found');
-    }
-    next();
-});
-
-// Servir les fichiers statiques du site (portfolio public + reste des assets du dashboard)
-app.use(express.static(__dirname));
+// Servir les fichiers statiques du site — UNIQUEMENT depuis public/, qui ne contient que
+// les fichiers réellement destinés à être publics (index.html, css/, js/, images/).
+// dashboard.html, server.js, package.json, node_modules/, docs/, etc. sont physiquement
+// absents de cette racine : aucune technique de contournement (encodage, alias Windows,
+// segments ./ ou ../) ne peut donc jamais les atteindre via ce middleware, quel que soit
+// le chemin demandé — la protection vient de la structure du système de fichiers, pas
+// d'une liste de blocage à maintenir.
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint pour vérifier si le serveur est en ligne (public, rien de sensible)
 app.get('/api/status', (req, res) => {
