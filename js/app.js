@@ -29,6 +29,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // en toute sécurité dès le premier rendu — voir l'assignation réelle plus bas, §8 ANIMATIONS AU SCROLL.
     let revealObserver = null;
 
+    // Échappe les caractères HTML spéciaux avant d'interpoler une donnée du dashboard
+    // (PORTFOLIO_DATA) dans un template innerHTML — empêche l'injection de balises actives.
+    const escapeHtml = (str) => String(str ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+
+    // Ne laisse passer que les URLs http(s) pour les attributs href/src — bloque les
+    // schémas dangereux (javascript:, data:, etc.) même si la chaîne est par ailleurs
+    // correctement échappée côté HTML.
+    // Une chaîne vide reste une chaîne vide (préserve le comportement "pas d'image" d'un
+    // <img src=""> existant, qui ne déclenche aucune requête) — seul "#" (le sentinel
+    // "pas de lien" déjà utilisé partout dans ce fichier) et les schémas dangereux sont
+    // normalisés vers "#".
+    const safeUrl = (url) => {
+        if (!url) return '';
+        if (url === '#') return '#';
+        try {
+            const parsed = new URL(url, window.location.origin);
+            return (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? url : '#';
+        } catch {
+            return '#';
+        }
+    };
+
     /* ==========================================================================
        2. SYSTÈME DE NOTIFICATIONS TOAST PREMIUM
        ========================================================================== 
@@ -283,30 +307,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderHero = () => {
         const h = PORTFOLIO_DATA.hero;
         if (!h) return;
-        
+
         const availabilityEl = document.getElementById('hero-availability');
         if (availabilityEl) availabilityEl.textContent = h.availability || '';
-        
+
         const titleEl = document.getElementById('hero-title');
-        if (titleEl) titleEl.innerHTML = h.title || '';
-        
+        if (titleEl) titleEl.textContent = h.title || '';
+
         const descEl = document.getElementById('hero-description');
         if (descEl) descEl.textContent = h.description || '';
-        
+
         const imgEl = document.getElementById('hero-img');
-        if (imgEl) imgEl.src = h.image || '';
-        
+        if (imgEl) imgEl.src = safeUrl(h.image || '');
+
         const badge1El = document.getElementById('hero-badge-1');
         if (badge1El && h.badges) badge1El.textContent = h.badges[0] || '';
-        
+
         const badge2El = document.getElementById('hero-badge-2');
         if (badge2El && h.badges) badge2El.textContent = h.badges[1] || '';
-        
+
         const logoEl = document.getElementById('nav-logo');
         if (logoEl) {
-            logoEl.innerHTML = `${h.name} Portfolio<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:4px;"></span>`;
+            logoEl.textContent = '';
+            const nameSpan = document.createElement('span');
+            nameSpan.id = 'nav-logo-name';
+            nameSpan.textContent = `${h.name} Portfolio`;
+            const dot = document.createElement('span');
+            dot.className = 'nav-logo-dot';
+            logoEl.appendChild(nameSpan);
+            logoEl.appendChild(dot);
         }
-        
+
         // Mettre à jour aussi le titre du document
         document.title = `${h.name} Portfolio | Portfolio Étudiant`;
     };
