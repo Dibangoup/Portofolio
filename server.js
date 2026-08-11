@@ -23,6 +23,18 @@ if (!DASHBOARD_PASSWORD) {
   );
 }
 
+// Un navigateur réattache automatiquement les identifiants Basic Auth mis en cache à
+// toute requête vers la même origine, même déclenchée par une page tierce (CSRF). Ce
+// header personnalisé ne peut pas être posé par un <form> ou un lien cross-site ; seul
+// du JavaScript same-origin le peut, sans déclencher de blocage CORS puisqu'aucune
+// configuration CORS n'autorise ce header en cross-origin.
+function requireCustomHeader(req, res, next) {
+  if (req.get('X-Dashboard-Request') !== '1') {
+    return res.status(403).json({ error: 'Requête refusée (en-tête manquant).' });
+  }
+  next();
+}
+
 // Comparaison à temps constant : on hash les deux valeurs avant de les comparer
 // pour éviter que crypto.timingSafeEqual() ne lève une erreur en cas de longueurs
 // différentes, tout en gardant une comparaison insensible au temps d'exécution.
@@ -116,7 +128,7 @@ app.get('/dashboard.html', authLimiter, requireDashboardAuth, (req, res) => {
 });
 
 // Endpoint pour sauvegarder les données du portfolio sur le disque
-app.post('/api/save', authLimiter, requireDashboardAuth, (req, res) => {
+app.post('/api/save', authLimiter, requireDashboardAuth, requireCustomHeader, (req, res) => {
   const portfolioData = req.body;
   if (!portfolioData) {
     return res.status(400).json({ error: 'Données manquantes' });
