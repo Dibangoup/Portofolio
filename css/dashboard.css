@@ -1151,3 +1151,32 @@ body.dashboard-body {
 .tl-restore:hover {
   text-decoration: underline;
 }
+
+.icon-picker {
+  display: flex;
+  gap: 8px;
+}
+.icon-picker-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.icon-picker-btn:hover {
+  color: var(--text-primary);
+}
+.icon-picker-btn.active {
+  border-color: var(--primary-container);
+  color: var(--primary-container);
+}
+.icon-picker-btn svg {
+  width: 18px;
+  height: 18px;
+}
