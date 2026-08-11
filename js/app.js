@@ -46,7 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!url) return '';
         if (url === '#') return '#';
         try {
-            const parsed = new URL(url, window.location.origin);
+            // document.baseURI (pas window.location.origin) : window.location.origin
+            // résout un chemin relatif contre la racine du domaine, ce qui casse une
+            // valeur comme "images/x.jpg" si le site est déployé sous un sous-chemin
+            // (ex. GitHub Pages project site). document.baseURI résout contre le
+            // répertoire du document actuel, comme le ferait le navigateur nativement.
+            const parsed = new URL(url, document.baseURI);
             return (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? parsed.href : '#';
         } catch {
             return '#';
@@ -72,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         toast.innerHTML = `
             ${renderIcon(iconName, 'toast-icon')}
-            <div class="toast-message">${message}</div>
+            <div class="toast-message">${escapeHtml(message)}</div>
         `;
 
         toastContainer.appendChild(toast);
