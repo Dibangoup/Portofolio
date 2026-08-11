@@ -95,11 +95,16 @@ function requireDashboardAuth(req, res, next) {
 app.use(express.json({ limit: '10mb' }));
 // Limite les tentatives d'authentification pour rendre le brute-force du mot de passe
 // du dashboard impraticable, sans gêner un usage légitime (un seul admin).
+// skipSuccessfulRequests: seules les requêtes échouées (mauvais mot de passe, requête
+// rejetée) comptent dans le quota — une session d'édition normale (rechargements +
+// sauvegardes répétées, toutes réussies) ne doit jamais épuiser le quota et bloquer
+// l'unique admin légitime hors de son propre dashboard.
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
+  skipSuccessfulRequests: true,
   message: 'Trop de tentatives, réessayez plus tard.',
 });
 
@@ -135,7 +140,9 @@ const dashboardCsp = helmet.contentSecurityPolicy({
     scriptSrcAttr: ["'unsafe-inline'"],
     styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
     fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-    imgSrc: ["'self'", 'data:'],
+    // 'https:' pour les mêmes raisons que strictCsp (voir son commentaire ci-dessus) :
+    // le dashboard affiche lui-même ces images (aperçu live, éditeur de projets).
+    imgSrc: ["'self'", 'data:', 'https:'],
     connectSrc: ["'self'"],
     frameAncestors: ["'none'"],
   },
@@ -165,6 +172,28 @@ app.use((req, res, next) => {
 // de toute route et du middleware static.
 app.use((req, res, next) => {
   req.url = req.url.replace(/\/{2,}/g, '/');
+  next();
+});
+
+// Express calcule req.path/le routage sur le chemin NON décodé, mais
+// express.static() décode le chemin avant de le résoudre sur le disque. Un
+// chemin encodé (ex. /%64ashboard.html) contournait donc à la fois
+// l'authentification du dashboard et le blocage de fichiers sensibles
+// ci-dessous, tout en évitant express-rate-limit et la CSP dédiée (la route
+// ne matchait jamais). On décode ici, en amont de tout le reste, pour que
+// toutes les routes et middlewares suivants voient le même chemin que
+// celui qu'express.static() résoudra de toute façon.
+app.use((req, res, next) => {
+  let decoded;
+  try {
+    decoded = decodeURIComponent(req.path);
+  } catch {
+    return res.status(400).send('Requête invalide');
+  }
+  if (decoded !== req.path) {
+    const queryString = req.url.slice(req.path.length);
+    req.url = decoded.replace(/\/{2,}/g, '/') + queryString;
+  }
   next();
 });
 
@@ -212,7 +241,7 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
 // dépendances, documentation de planification) qui ne sont jamais destinés à être publics.
 // .env lui-même est déjà bloqué par le comportement par défaut d'express.static pour les
 // fichiers pointés (dotfiles) — ce middleware couvre les fichiers non pointés.
-const BLOCKED_STATIC_PREFIXES = ['/server.js', '/package.json', '/package-lock.json', '/node_modules/', '/docs/', '/.superpowers/'];
+const BLOCKED_STATIC_PREFIXES = ['/server.js', '/package.json', '/package-lock.json', '/node_modules/', '/docs/', '/.superpowers/', '/.env', '/.git/'];
 app.use((req, res, next) => {
     const lowerPath = req.path.toLowerCase();
     if (BLOCKED_STATIC_PREFIXES.some(p => lowerPath === p || lowerPath.startsWith(p))) {
