@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -102,6 +103,53 @@ const authLimiter = rateLimit({
   message: 'Trop de tentatives, réessayez plus tard.',
 });
 
+// Deux Content-Security-Policy distinctes : le site public n'a aucun script/style inline
+// et peut donc être strict (défense réelle contre une XSS qui passerait malgré tout à
+// travers l'échappement) ; le dashboard a un unique <script> inline de tout son code
+// (~1300 lignes) et charge des polices Google Fonts, donc reste permissif pour continuer
+// à fonctionner — il est déjà protégé par l'authentification HTTP Basic.
+const strictCsp = helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'"],
+    styleSrc: ["'self'"],
+    fontSrc: ["'self'"],
+    // 'https:' (pas une allowlist d'hôtes précis) car le dashboard permet de définir une
+    // image de projet/portrait par URL externe (pas seulement par upload) — voir son champ
+    // "Lien URL". Toujours plus strict que l'absence de CSP : bloque tout schéma non-https
+    // (javascript:, etc.), juste pas restreint à un hébergeur d'images précis.
+    imgSrc: ["'self'", 'data:', 'https:'],
+    connectSrc: ["'self'", 'https://api.web3forms.com'],
+    formAction: ["'self'", 'https://api.web3forms.com'],
+    frameAncestors: ["'none'"],
+  },
+});
+
+const dashboardCsp = helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'"],
+    // helmet applique par défaut script-src-attr 'none' si non précisé, ce qui bloquerait
+    // les ~78 attributs on* (onclick, onchange, oninput...) utilisés dans tout le dashboard
+    // pour ses interactions (édition de champs, aperçu live des images, etc.).
+    scriptSrcAttr: ["'unsafe-inline'"],
+    styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+    fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+    imgSrc: ["'self'", 'data:'],
+    connectSrc: ["'self'"],
+    frameAncestors: ["'none'"],
+  },
+});
+
+// En-têtes non liés au CSP (X-Content-Type-Options, X-Frame-Options, etc.) partout ;
+// le CSP lui-même est géré séparément ci-dessous pour pouvoir varier par route.
+app.use(helmet({ contentSecurityPolicy: false }));
+// Politique stricte par défaut sur toutes les routes ; la route /dashboard.html (définie
+// plus bas) applique dashboardCsp après ce middleware, ce qui REMPLACE l'en-tête déjà posé
+// (les en-têtes HTTP ne sont envoyés qu'à l'appel de res.sendFile()/res.send(), donc c'est
+// la dernière valeur posée avant l'envoi qui compte — pas besoin de middleware conditionnel).
+app.use(strictCsp);
+
 // Désactive le cache HTTP pour toujours servir la dernière version des fichiers
 // (évite qu'un navigateur affiche une ancienne copie de js/portfolio-data.js
 // après une sauvegarde depuis le dashboard)
@@ -123,7 +171,7 @@ app.use((req, res, next) => {
 // Le dashboard et la sauvegarde sont protégés par mot de passe (HTTP Basic Auth),
 // enregistrés AVANT express.static pour que ce dernier ne puisse jamais servir
 // dashboard.html directement sans passer par la vérification d'identifiants.
-app.get('/dashboard.html', authLimiter, requireDashboardAuth, (req, res) => {
+app.get('/dashboard.html', authLimiter, requireDashboardAuth, dashboardCsp, (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
