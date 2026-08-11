@@ -1119,6 +1119,7 @@
 
       function updateCategoryIcon(catIdx, val) {
         PORTFOLIO_DATA.skills[catIdx].icon = val;
+        markUnsavedChanges();
         renderSkillsEditor();
       }
 
