@@ -31,6 +31,27 @@ function safeEqual(a, b) {
   return crypto.timingSafeEqual(hashA, hashB);
 }
 
+// Le fichier généré par /api/save est chargé par le navigateur comme du VRAI JavaScript
+// (const DEFAULT_PORTFOLIO_DATA = {...};), pas via JSON.parse — une clé "__proto__" dans
+// le payload aurait donc un effet réel sur le prototype de l'objet une fois interprétée
+// par le navigateur. On la retire par précaution, à tous les niveaux d'imbrication.
+const DANGEROUS_KEYS = ['__proto__', 'constructor', 'prototype'];
+function stripDangerousKeys(value) {
+  if (Array.isArray(value)) return value.map(stripDangerousKeys);
+  if (value && typeof value === 'object') {
+    const clean = {};
+    for (const key of Object.keys(value)) {
+      if (DANGEROUS_KEYS.includes(key)) continue;
+      clean[key] = stripDangerousKeys(value[key]);
+    }
+    return clean;
+  }
+  return value;
+}
+
+// Les seules clés de premier niveau que js/portfolio-data.js est censé contenir.
+const ALLOWED_TOP_LEVEL_KEYS = ['hero', 'about', 'skills', 'projects', 'cv', 'contact'];
+
 function requireDashboardAuth(req, res, next) {
   if (!DASHBOARD_PASSWORD) {
     return res
@@ -91,9 +112,15 @@ app.post('/api/save', requireDashboardAuth, (req, res) => {
     return res.status(400).json({ error: 'Données manquantes' });
   }
 
+  const unexpectedKeys = Object.keys(portfolioData).filter(k => !ALLOWED_TOP_LEVEL_KEYS.includes(k));
+  if (unexpectedKeys.length > 0) {
+    return res.status(400).json({ error: `Clés inattendues : ${unexpectedKeys.join(', ')}` });
+  }
+  const cleanData = stripDangerousKeys(portfolioData);
+
   // Formatage en fichier JavaScript
   const fileContent = `// BASE DE DONNÉES DU PORTFOLIO - CENTRALISÉE ET MODIFIABLE EN TEMPS RÉEL
-const DEFAULT_PORTFOLIO_DATA = ${JSON.stringify(portfolioData, null, 2)};
+const DEFAULT_PORTFOLIO_DATA = ${JSON.stringify(cleanData, null, 2)};
 
 // Variable globale pour stocker les données chargées en mémoire
 var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
