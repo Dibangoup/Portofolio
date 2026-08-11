@@ -4,7 +4,7 @@ const DEFAULT_PORTFOLIO_DATA = {
     "name": "Jordan",
     "availability": "Disponible pour un stage",
     "role": "Développeur Full-Stack",
-    "title": "Concevoir l'Avenir,<br /><span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary\">Une Ligne de Code à la Fois.</span>",
+    "title": "Concevoir l'Avenir, Une Ligne de Code à la Fois.",
     "description": "Étudiant passionné en Génie Informatique, IA. Je combine logique technique et créativité pour créer des expériences marquantes.",
     "image": "images/jordan-portrait.jpg",
     "badges": [
