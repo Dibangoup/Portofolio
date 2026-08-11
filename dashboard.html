@@ -1776,7 +1776,8 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
           const response = await fetch('/api/save', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'X-Dashboard-Request': '1'
             },
             body: JSON.stringify(PORTFOLIO_DATA)
           });
