@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Détecte si l'utilisateur a activé l'option de réduction des animations au niveau de son OS (accessibilité)
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Déclaré ici (avant renderAll(), appelé plus bas) pour que renderAll() puisse le référencer
+    // en toute sécurité dès le premier rendu — voir l'assignation réelle plus bas, §8 ANIMATIONS AU SCROLL.
+    let revealObserver = null;
+
     /* ==========================================================================
        2. SYSTÈME DE NOTIFICATIONS TOAST PREMIUM
        ========================================================================== 
@@ -604,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
             threshold: 0.1 // 10% de l'élément doit être visible
         };
 
-        const revealObserver = new IntersectionObserver((entries, observer) => {
+        revealObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active'); // Ajoute la classe d'activation CSS
