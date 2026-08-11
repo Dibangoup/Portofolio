@@ -544,7 +544,16 @@
             <div class="mock-block-title">Projets</div>
             <div class="mock-proj-grid" id="mock-projects-preview"></div>
 
-            <div class="preview-note">Reflète en direct l'onglet « Général », et les listes « Compétences » / « Projets » à mesure que vous les modifiez ou réordonnez.</div>
+            <div class="mock-block-title">À propos</div>
+            <div class="mock-about">
+              <div class="mock-about-title" id="mock-about-title"></div>
+              <p class="mock-about-text" id="mock-about-text"></p>
+            </div>
+
+            <div class="mock-block-title">Contact</div>
+            <div class="mock-contact" id="mock-contact"></div>
+
+            <div class="preview-note">Reflète en direct les onglets « Général », « À propos », « Compétences », « Projets » et « Contact » à mesure que vous les modifiez.</div>
           </aside>
         </div>
       </div>
@@ -681,6 +690,8 @@
         // Suit les modifications non enregistrées sur tous les champs de l'éditeur
         document.querySelector('.editor-col').addEventListener('input', markUnsavedChanges);
         document.getElementById('form-general').addEventListener('input', syncHeroPreview);
+        document.getElementById('form-about').addEventListener('input', syncAboutPreview);
+        document.getElementById('form-contact').addEventListener('input', syncContactPreview);
       }
 
       // ==========================================================================
@@ -808,6 +819,25 @@
           </div>`).join('') : '<p class="preview-note" style="margin:0;">Aucun projet pour l\'instant.</p>';
       }
 
+      function syncAboutPreview() {
+        document.getElementById('mock-about-title').textContent = document.getElementById('about-title').value;
+        document.getElementById('mock-about-text').textContent = document.getElementById('about-p1').value;
+      }
+
+      function syncContactPreview() {
+        const el = document.getElementById('mock-contact');
+        if (!el) return;
+        const rows = [
+          ['Email', document.getElementById('contact-email').value],
+          ['Lieu', document.getElementById('contact-location').value],
+        ];
+        el.innerHTML = rows.map(([k, v]) => `
+          <div class="mock-contact-row">
+            <span class="k">${escapeHtml(k)}</span>
+            <span class="v">${escapeHtml(v || '—')}</span>
+          </div>`).join('');
+      }
+
       // GENERAL FORM FILL
       function fillGeneralForm() {
         const h = PORTFOLIO_DATA.hero;
@@ -883,6 +913,7 @@
         // Render lists
         renderValuesEditor();
         renderEducationEditor();
+        syncAboutPreview();
       }
 
       // Values Editor
@@ -1477,6 +1508,7 @@
         document.getElementById('contact-location').value = c.location || '';
         document.getElementById('contact-github').value = c.github || '';
         document.getElementById('contact-linkedin').value = c.linkedin || '';
+        syncContactPreview();
       }
 
       // COMPILE ALL INPUTS BACK TO PORTFOLIO_DATA
