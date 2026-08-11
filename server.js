@@ -117,7 +117,8 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
 // fichiers pointés (dotfiles) — ce middleware couvre les fichiers non pointés.
 const BLOCKED_STATIC_PREFIXES = ['/server.js', '/package.json', '/package-lock.json', '/node_modules/', '/docs/', '/.superpowers/'];
 app.use((req, res, next) => {
-    if (BLOCKED_STATIC_PREFIXES.some(p => req.path === p || req.path.startsWith(p))) {
+    const lowerPath = req.path.toLowerCase();
+    if (BLOCKED_STATIC_PREFIXES.some(p => lowerPath === p || lowerPath.startsWith(p))) {
         return res.status(404).send('Not found');
     }
     next();
@@ -139,4 +140,3 @@ app.listen(PORT, () => {
   console.log(`👉 Dashboard  : http://localhost:${PORT}/dashboard.html (protégé par mot de passe)`);
   console.log(`=============================================================\n`);
 });
-
