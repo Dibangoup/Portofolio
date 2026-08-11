@@ -9,7 +9,7 @@
  * ==========================================================================
  */
 module.exports = {
-  content: ["./index.html", "./dashboard.html", "./js/**/*.js"],
+  content: ["./public/index.html", "./dashboard.html", "./public/js/**/*.js"],
   darkMode: "class",
   theme: {
     extend: {
