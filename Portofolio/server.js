@@ -4,6 +4,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -79,6 +80,15 @@ function requireDashboardAuth(req, res, next) {
 
 // Middleware pour parser le JSON
 app.use(express.json({ limit: '10mb' }));
+// Limite les tentatives d'authentification pour rendre le brute-force du mot de passe
+// du dashboard impraticable, sans gêner un usage légitime (un seul admin).
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Trop de tentatives, réessayez plus tard.',
+});
 
 // Désactive le cache HTTP pour toujours servir la dernière version des fichiers
 // (évite qu'un navigateur affiche une ancienne copie de js/portfolio-data.js
@@ -101,12 +111,12 @@ app.use((req, res, next) => {
 // Le dashboard et la sauvegarde sont protégés par mot de passe (HTTP Basic Auth),
 // enregistrés AVANT express.static pour que ce dernier ne puisse jamais servir
 // dashboard.html directement sans passer par la vérification d'identifiants.
-app.get('/dashboard.html', requireDashboardAuth, (req, res) => {
+app.get('/dashboard.html', authLimiter, requireDashboardAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
 // Endpoint pour sauvegarder les données du portfolio sur le disque
-app.post('/api/save', requireDashboardAuth, (req, res) => {
+app.post('/api/save', authLimiter, requireDashboardAuth, (req, res) => {
   const portfolioData = req.body;
   if (!portfolioData) {
     return res.status(400).json({ error: 'Données manquantes' });
@@ -167,3 +177,6 @@ app.listen(PORT, () => {
   console.log(`👉 Dashboard  : http://localhost:${PORT}/dashboard.html (protégé par mot de passe)`);
   console.log(`=============================================================\n`);
 });
+
+
+
