@@ -111,6 +111,18 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
   });
 });
 
+// Empêche express.static de servir des fichiers internes au projet (code serveur,
+// dépendances, documentation de planification) qui ne sont jamais destinés à être publics.
+// .env lui-même est déjà bloqué par le comportement par défaut d'express.static pour les
+// fichiers pointés (dotfiles) — ce middleware couvre les fichiers non pointés.
+const BLOCKED_STATIC_PREFIXES = ['/server.js', '/package.json', '/package-lock.json', '/node_modules/', '/docs/', '/.superpowers/'];
+app.use((req, res, next) => {
+    if (BLOCKED_STATIC_PREFIXES.some(p => req.path === p || req.path.startsWith(p))) {
+        return res.status(404).send('Not found');
+    }
+    next();
+});
+
 // Servir les fichiers statiques du site (portfolio public + reste des assets du dashboard)
 app.use(express.static(__dirname));
 
@@ -127,3 +139,4 @@ app.listen(PORT, () => {
   console.log(`👉 Dashboard  : http://localhost:${PORT}/dashboard.html (protégé par mot de passe)`);
   console.log(`=============================================================\n`);
 });
+
