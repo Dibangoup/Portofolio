@@ -301,6 +301,14 @@ textarea.form-input {
     text-decoration: none;
     white-space: nowrap;
 }
+.nav-logo-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-left: 4px;
+}
 .nav-links {
     align-items: center;
     gap: 28px;
