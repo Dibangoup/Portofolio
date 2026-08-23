@@ -1,0 +1,18 @@
+{
+  "name": "Jordan DIBANGOUP | Portfolio Développeur Full-Stack",
+  "short_name": "J. DIBANGOUP",
+  "description": "Portfolio de Jordan DIBANGOUP, étudiant en Génie Logiciel, IA et Développeur Full-Stack.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F1B2E",
+  "theme_color": "#0F1B2E",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
