@@ -730,6 +730,137 @@ textarea.form-input {
     .dest-grid { grid-template-columns: 1fr; gap: 44px; }
 }
 
+/* ==========================================================================
+   BADGES DE NIVEAU DE COMPÉTENCES & STATUT PROJET
+   ========================================================================== */
+.skill-level-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(232, 162, 60, 0.12);
+    color: var(--accent-ink);
+    border: 1px solid rgba(232, 162, 60, 0.3);
+    letter-spacing: 0.02em;
+}
+
+.stop-status-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(15, 27, 46, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--accent-ink);
+    border: 1px solid var(--line);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    z-index: 2;
+}
+
+.lang-switch-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all .2s ease;
+}
+.lang-switch-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    background: var(--bg-3);
+}
+
+/* Modale Projet Étendue (Étude de cas) */
+.project-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+.project-modal-block {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+}
+.project-modal-block h4 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-ink);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.project-modal-block p {
+    font-size: 14px;
+    color: var(--ink-70);
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   STYLES D'IMPRESSION (EXPORT CV PDF PROPRE)
+   ========================================================================== */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #cv-modal, #cv-modal * {
+        visibility: visible;
+    }
+    #cv-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: auto;
+        background: #ffffff !important;
+        color: #1a1a1a !important;
+        padding: 0 !important;
+        display: block !important;
+        opacity: 1 !important;
+    }
+    .modal-container {
+        background: #ffffff !important;
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        padding: 20px !important;
+    }
+    .modal-close, #download-pdf-btn {
+        display: none !important;
+    }
+    .cv-sheet {
+        color: #1a1a1a !important;
+    }
+    .cv-header h2 {
+        color: #111827 !important;
+    }
+    .cv-role, .cv-availability, .cv-entry-org, .cv-contact-list li {
+        color: #4b5563 !important;
+    }
+    .tech-pill {
+        border-color: #d1d5db !important;
+        color: #374151 !important;
+        background: #f3f4f6 !important;
+    }
+}
+
 .site-footer {
     border-top: 1px solid var(--line);
 }

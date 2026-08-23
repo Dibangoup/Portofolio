@@ -1038,16 +1038,19 @@
 
         container.innerHTML = PORTFOLIO_DATA.skills.map((cat, catIdx) => {
           const itemsHtml = cat.items.map((item, itemIdx) => `
-            <div class="drag-row grid grid-cols-12 gap-3 items-center">
+            <div class="drag-row grid grid-cols-12 gap-2 items-center">
               <span class="material-symbols-outlined drag-handle col-span-1">drag_indicator</span>
-              <div class="col-span-6">
-                <input type="text" class="admin-input py-1.5 px-3 text-xs" value="${escapeHtml(item.name)}" onchange="updateSkillName(${catIdx}, ${itemIdx}, this.value)" />
+              <div class="col-span-4">
+                <input type="text" class="admin-input py-1.5 px-3 text-xs" value="${escapeHtml(item.name)}" onchange="updateSkillName(${catIdx}, ${itemIdx}, this.value)" placeholder="Nom" />
               </div>
-              <div class="col-span-3 flex items-center gap-2">
-                <input type="number" class="admin-input py-1.5 px-2 text-xs text-center" min="0" max="100" value="${item.percent}" onchange="updateSkillPercent(${catIdx}, ${itemIdx}, this.value)" />
-                <span class="text-xs text-white/50">%</span>
+              <div class="col-span-3">
+                <input type="text" class="admin-input py-1.5 px-2 text-xs text-center" value="${escapeHtml(item.level || 'Maîtrisé')}" onchange="updateSkillLevel(${catIdx}, ${itemIdx}, this.value)" placeholder="Niveau (ex: Avancé)" />
               </div>
-              <div class="col-span-2 flex justify-end">
+              <div class="col-span-3 flex items-center gap-1">
+                <input type="number" class="admin-input py-1.5 px-1 text-xs text-center" min="0" max="100" value="${item.percent}" onchange="updateSkillPercent(${catIdx}, ${itemIdx}, this.value)" />
+                <span class="text-[10px] text-white/50">%</span>
+              </div>
+              <div class="col-span-1 flex justify-end">
                 <button type="button" onclick="deleteSkill(${catIdx}, ${itemIdx})" class="icon-btn-mini" title="Supprimer">
                   <span class="material-symbols-outlined text-sm">delete</span>
                 </button>
@@ -1090,16 +1093,17 @@
               </div>
 
               <div class="space-y-2 mt-2 pl-7" id="skill-items-${catIdx}">
-                <div class="flex justify-between items-center text-xs text-white/50 px-1 pl-7">
-                  <span>Nom de la Compétence</span>
-                  <span>Maîtrise</span>
+                <div class="grid grid-cols-12 gap-2 text-xs text-white/50 px-1">
+                  <span class="col-span-5">Nom de la Compétence</span>
+                  <span class="col-span-3 text-center">Niveau / Badge</span>
+                  <span class="col-span-3 text-center">Jauge (%)</span>
                 </div>
                 ${itemsHtml}
               </div>
 
               <div class="flex justify-start pl-7">
-                <button type="button" onclick="addSkillToCategory(${catIdx})" class="btn-secondary-admin py-1.5 px-3 rounded-lg text-xs flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">add</span> Ajouter compétence
+                <button type="button" onclick="addSkillToCategory(${catIdx})" class="btn-secondary-admin py-1.5 px-3 text-xs flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">add</span> Ajouter une compétence
                 </button>
               </div>
             </div>
@@ -1125,6 +1129,11 @@
 
       function updateSkillName(catIdx, itemIdx, val) {
         PORTFOLIO_DATA.skills[catIdx].items[itemIdx].name = val;
+        syncSkillsPreview();
+      }
+
+      function updateSkillLevel(catIdx, itemIdx, val) {
+        PORTFOLIO_DATA.skills[catIdx].items[itemIdx].level = val;
         syncSkillsPreview();
       }
 
@@ -1571,7 +1580,7 @@
       // HISTORIQUE & RESTAURATION
       // ==========================================================================
       const HISTORY_KEY = 'portfolio_history';
-      const SECTION_LABELS = { hero: 'Général', about: 'À propos', skills: 'Compétences', projects: 'Projets', cv: 'CV', contact: 'Contact' };
+      const SECTION_LABELS = { hero: 'Général', about: 'À propos', skills: 'Compétences', timeline: 'Parcours', projects: 'Projets', cv: 'CV', contact: 'Contact' };
 
       function getHistory() {
         try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }

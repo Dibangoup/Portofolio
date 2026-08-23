@@ -1,64 +1,81 @@
 <!doctype html>
 <!-- 
-     PORTFOLIO ÉTUDIANT INTERACTIF - FICHIER STRUCTUREL PRINCIPAL (HTML)
+     PORTFOLIO ÉTUDIANT INTERACTIF - JORDAN DIBANGOUP
      ==========================================================================
-     Ce fichier index.html contient la structure et le balisage de votre site.
-     Il est conçu pour être facilement éditable afin que vous puissiez personnaliser
-     chaque élément textuel, photo ou lien selon votre propre profil.
-     
-     CONSEIL DE CONFIGURATION :
-     - La classe 'light' sur la balise <html> force le site en mode clair.
-     - La classe 'scroll-smooth' active un défilement fluide lors des clics sur les ancres.
+     Portfolio moderne pour Jordan DIBANGOUP, étudiant en Génie Logiciel à l'ESATIC.
+     Thème "Carte Céleste", PWA hors-ligne, Dashboard temps réel & Export CV PDF.
 -->
 <html class="scroll-smooth" lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <!-- 
-         ==========================================================================
-         A. OPTIMISATION SEO & MÉTA-DONNÉES (À MODIFIER AVEC VOS INFOS)
-         ==========================================================================
-         Ces informations sont lues par les moteurs de recherche (Google, Bing) et
-         les réseaux sociaux. Modifiez-les pour booster votre visibilité en ligne !
-    -->
-    <title>D.J.Portfolio | Portfolio Étudiant De Jordan</title>
+    <!-- Optimisation SEO & Méta-données -->
+    <title>Jordan DIBANGOUP | Portfolio Développeur Full-Stack &amp; Génie Logiciel</title>
     <meta
       name="description"
-      content="Découvrez le portfolio moderne et évolutif de Jordan, étudiant en développement logiciel et UI design. Explorez des projets full-stack, des interfaces ergonomiques et des compétences avancées."
+      content="Portfolio professionnel de Jordan DIBANGOUP, étudiant en Génie Logiciel à l'ESATIC (Abidjan). Découvrez mes projets Full-Stack (React, Django, Node.js), compétences et parcours."
     />
     <meta
       name="keywords"
-      content="Portfolio, Jordan, Développeur Web, UI Designer, React, Node.js, Étudiant, Stage, Alternance"
+      content="Jordan DIBANGOUP, Portfolio, Développeur Full-Stack, Génie Logiciel, ESATIC, Abidjan, React, Django, Node.js, Python, Stage, Alternance"
     />
-    <meta name="author" content="Jordan" />
+    <meta name="author" content="Jordan DIBANGOUP" />
+    <meta name="theme-color" content="#0F1B2E" />
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+    <link rel="manifest" href="manifest.json" />
 
-    <!-- Balises Open Graph (Pour un affichage premium lors du partage sur LinkedIn, WhatsApp, etc.) -->
-    <meta property="og:title" content="Jordan | Portfolio Étudiant Moderne" />
+    <!-- Balises Open Graph (LinkedIn, Twitter, réseaux sociaux) -->
+    <meta property="og:title" content="Jordan DIBANGOUP | Développeur Full-Stack &amp; Génie Logiciel" />
     <meta
       property="og:description"
-      content="Développeur logiciel & designer d'interfaces passionné. Découvrez mes réalisations web et mobiles."
+      content="Étudiant en Génie Logiciel à l'ESATIC. Découvrez mes réalisations Full-Stack, compétences techniques et parcours."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="images/jordan-portrait.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jordan DIBANGOUP | Développeur Full-Stack" />
+    <meta name="twitter:description" content="Portfolio et réalisations logicielles de Jordan DIBANGOUP." />
+    <meta name="twitter:image" content="images/jordan-portrait.jpg" />
 
+    <!-- Données structurées Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Jordan DIBANGOUP",
+      "jobTitle": "Développeur Full-Stack & Étudiant en Génie Logiciel",
+      "url": "https://github.com/Dibangoup",
+      "sameAs": [
+        "https://github.com/Dibangoup",
+        "https://www.linkedin.com/in/jordan-dibangoup-3373a3375"
+      ],
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "ESATIC – École Supérieure Africaine des TIC",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Abidjan",
+          "addressCountry": "CI"
+        }
+      },
+      "knowsAbout": [
+        "Génie Logiciel",
+        "React",
+        "Django",
+        "Python",
+        "JavaScript",
+        "Node.js",
+        "SQL",
+        "Tailwind CSS"
+      ]
+    }
+    </script>
 
-    <!--
-         ==========================================================================
-         B. CONFIGURATION DU THÈME DE COULEURS TAILWIND (DESIGN TOKENS)
-         ==========================================================================
-         Tailwind est maintenant compilé au build (voir tailwind.config.js à la
-         racine + `npm run build:css`), plus de compilation à la volée par CDN.
-
-         MODIFICATIONS UTILES :
-         - 'primary' (#3525cd) : La couleur violette dominante du site.
-         - 'secondary' (#006591) : La couleur bleue d'accent secondaire.
-         - 'background' (#f9f9ff) : Le fond clair du site.
-         Après toute modification de tailwind.config.js, relancez `npm run build:css`.
-    -->
+    <!-- Tailwind CSS compilé au build -->
     <link rel="stylesheet" href="css/tailwind-build.css" />
 
-    <!-- Liaison avec le point d'entrée CSS (importe tous les modules : glass, animations, layout, etc.) -->
+    <!-- Liaison avec le point d'entrée CSS -->
     <link rel="stylesheet" href="css/style.css" />
 
     <!-- Chargement des données centralisées -->
@@ -71,23 +88,22 @@
          ==========================================================================
          1. BARRE DE NAVIGATION (NAVBAR STICKY GLASSMORPHIC)
          ==========================================================================
-         Reste fixée en haut lors du défilement.
-         - 'id="navbar"' est utilisé en JS pour appliquer l'effet de rétrécissement (shrink).
-         - Le bouton 'id="cv-btn"' ouvre automatiquement le CV interactif.
     -->
     <nav class="nav-masthead" id="navbar">
       <div class="nav-inner">
         <a class="nav-brand" href="#hero" id="nav-logo"></a>
 
         <ul class="nav-links hidden md:flex">
-          <li><a class="nav-link" href="#about">À Propos</a></li>
-          <li><a class="nav-link" href="#skills">Compétences</a></li>
-          <li><a class="nav-link" href="#projects">Projets</a></li>
-          <li><a class="nav-link" href="#contact">Contact</a></li>
+          <li><a class="nav-link" href="#about" data-i18n="nav.about">À Propos</a></li>
+          <li><a class="nav-link" href="#skills" data-i18n="nav.skills">Compétences</a></li>
+          <li><a class="nav-link" href="#experience" data-i18n="nav.experience">Parcours</a></li>
+          <li><a class="nav-link" href="#projects" data-i18n="nav.projects">Projets</a></li>
+          <li><a class="nav-link" href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
 
-        <div class="nav-actions flex items-center gap-4">
-          <a class="nav-cta hidden md:inline-flex" id="cv-btn">Mon CV</a>
+        <div class="nav-actions flex items-center gap-3">
+          <button class="lang-switch-btn" id="lang-toggle" aria-label="Changer de langue" title="Switch Language">EN</button>
+          <a class="nav-cta hidden md:inline-flex" id="cv-btn" data-i18n="nav.cv">Mon CV</a>
           <button class="nav-menu-toggle md:hidden" id="menu-toggle" aria-label="Menu Mobile">
             <span id="menu-toggle-icon"></span>
           </button>
@@ -96,19 +112,15 @@
       <div class="scroll-progress-bar" id="scroll-progress"></div>
     </nav>
 
-    <!-- 
-         ==========================================================================
-         MENU MOBILE PLEIN ÉCRAN (OVERLAY)
-         ==========================================================================
-         S'affiche en plein écran lors du clic sur le menu burger (mobile).
-         - 'id="mobile-nav-overlay"' est requis pour les écouteurs d'événements JS.
-    -->
+    <!-- MENU MOBILE PLEIN ÉCRAN (OVERLAY) -->
     <div class="mobile-nav-overlay" id="mobile-nav-overlay">
       <ul class="flex flex-col gap-6 items-center text-center">
-        <li><a class="mobile-nav-link" href="#about">À Propos</a></li>
-        <li><a class="mobile-nav-link" href="#skills">Compétences</a></li>
-        <li><a class="mobile-nav-link" href="#projects">Projets</a></li>
-        <li><a class="mobile-nav-link" href="#contact">Contact</a></li>
+        <li><a class="mobile-nav-link" href="#about" data-i18n="nav.about">À Propos</a></li>
+        <li><a class="mobile-nav-link" href="#skills" data-i18n="nav.skills">Compétences</a></li>
+        <li><a class="mobile-nav-link" href="#experience" data-i18n="nav.experience">Parcours</a></li>
+        <li><a class="mobile-nav-link" href="#projects" data-i18n="nav.projects">Projets</a></li>
+        <li><a class="mobile-nav-link" href="#contact" data-i18n="nav.contact">Contact</a></li>
+        <li class="pt-4"><a class="btn btn-primary" id="mobile-cv-btn" data-i18n="nav.cv">Consulter le CV</a></li>
       </ul>
     </div>
 
@@ -117,10 +129,6 @@
            ==========================================================================
            2. SECTION D'ACCUEIL (HERO SECTION) — "Carte Céleste"
            ==========================================================================
-           Champ d'étoiles interactif en arrière-plan (canvas, voir js/app.js
-           initHeroCanvas), coordonnées géographiques, badge de disponibilité,
-           titre, description, CTA, et portrait en cadre "postcard".
-           - Image de profil : modifiez l'attribut 'src' de #hero-img ci-dessous.
       -->
       <section class="hero" id="hero">
         <canvas id="hero-canvas" aria-hidden="true"></canvas>
@@ -142,25 +150,26 @@
             </h1>
 
             <p class="hero-desc" id="hero-description">
-              Étudiant passionné en Génie Informatique, IA et Data-science. Je combine logique technique et créativité pour créer des expériences marquantes.
+              Étudiant passionné en Génie Logiciel, IA &amp; Data Science à l'ESATIC. Je combine rigueur d'ingénierie et sensibilité design pour bâtir des solutions logicielles performantes.
             </p>
 
             <div class="hero-cta-row">
-              <a class="btn btn-primary" href="#projects">Voir mes projets</a>
-              <a class="btn btn-ghost" href="#contact">Contact</a>
+              <a class="btn btn-primary" href="#projects" data-i18n="hero.cta_projects">Voir mes projets</a>
+              <a class="btn btn-ghost" href="#contact" data-i18n="hero.cta_contact">Contact</a>
+              <button class="btn btn-ghost hidden sm:inline-flex" id="hero-cv-btn" data-i18n="hero.cta_cv">📄 CV</button>
             </div>
           </div>
 
           <div class="hero-visual">
             <div class="postcard">
               <div class="postcard-viewport">
-                <img alt="Portrait de l'étudiant" id="hero-img" src="images/jordan-portrait.jpg" />
+                <img alt="Portrait de Jordan DIBANGOUP" id="hero-img" src="images/jordan-portrait.jpg" />
               </div>
-              <div class="postcard-tag mono">Point de départ</div>
+              <div class="postcard-tag mono" data-i18n="hero.tag">Point de départ</div>
             </div>
             <div class="hero-badges">
-              <div class="hero-badge"><span id="hero-badge-1">Développeur Web</span></div>
-              <div class="hero-badge"><span id="hero-badge-2">Développeur Mobile</span></div>
+              <div class="hero-badge"><span id="hero-badge-1">Développeur Full-Stack</span></div>
+              <div class="hero-badge"><span id="hero-badge-2">Génie Logiciel &amp; IA</span></div>
             </div>
           </div>
         </div>
@@ -170,19 +179,12 @@
            ==========================================================================
            3. SECTION À PROPOS (ABOUT)
            ==========================================================================
-           Présentation de l'étudiant à deux volets.
-           - Colonne gauche : Récit écrit.
-           - Colonne droite : Onglets interactifs gérés en JavaScript.
-           
-           FONCTIONNEMENT DES ONGLETS :
-           Les boutons possèdent l'attribut 'data-tab="nom_onglet"'. 
-           Le JS masque tous les blocs et affiche uniquement le div avec l'id 'tab-nom_onglet'.
       -->
       <section class="section" id="about">
         <div class="section-inner reveal">
-          <span class="eyebrow">À propos</span>
-          <h2 class="section-title">Le chemin parcouru</h2>
-          <p class="section-sub">Du baccalauréat scientifique à la licence en Génie Logiciel, les grandes étapes de ma formation.</p>
+          <span class="eyebrow" data-i18n="about.eyebrow">À propos</span>
+          <h2 class="section-title" data-i18n="about.title">Le chemin parcouru</h2>
+          <p class="section-sub" data-i18n="about.sub">Du baccalauréat scientifique à la licence en Génie Logiciel, les grandes étapes de ma formation.</p>
 
           <h3 class="about-story-title" id="about-story-title">Créer avec Code &amp; Innovation.</h3>
           <div id="about-paragraphs" class="about-paragraphs">
@@ -190,9 +192,9 @@
           </div>
 
           <div class="rubriques">
-            <button class="rubrique-btn active" data-tab="journey">Mon Histoire</button>
-            <button class="rubrique-btn" data-tab="edu">Études</button>
-            <button class="rubrique-btn" data-tab="core">Valeurs</button>
+            <button class="rubrique-btn active" data-tab="journey" data-i18n="about.tab_story">Mon Histoire</button>
+            <button class="rubrique-btn" data-tab="edu" data-i18n="about.tab_edu">Études</button>
+            <button class="rubrique-btn" data-tab="core" data-i18n="about.tab_values">Valeurs</button>
           </div>
 
           <div class="tab-content active" id="tab-journey">
@@ -218,19 +220,12 @@
            ==========================================================================
            4. SECTION COMPÉTENCES TECHNIQUES (SKILLS)
            ==========================================================================
-           Présente des barres de progression animées au scroll.
-           
-           AJOUT OU MODIFICATION DE COMPÉTENCE :
-           1. Modifiez le nom textuel (ex: React & Next.js).
-           2. Changez le pourcentage affiché en texte (ex: 90%).
-           3. Mettez à jour 'data-percent="XX"' sur le conteneur interne pour que
-              l'animation JavaScript remplisse la jauge précisément à cette valeur.
       -->
       <section class="section" id="skills">
         <div class="section-inner reveal">
-          <span class="eyebrow">Compétences</span>
-          <h2 class="section-title">Compétences techniques</h2>
-          <p class="section-sub">Trois domaines travaillés en parallèle, avec le niveau de maîtrise réel pour chaque technologie.</p>
+          <span class="eyebrow" data-i18n="skills.eyebrow">Compétences</span>
+          <h2 class="section-title" data-i18n="skills.title">Compétences techniques &amp; Ingénierie</h2>
+          <p class="section-sub" data-i18n="skills.sub">Niveau de maîtrise opérationnel structuré par domaine d'expertise logicielle.</p>
 
           <div class="skill-legend" id="skills-categories-container">
             <!-- Rempli dynamiquement -->
@@ -240,31 +235,36 @@
 
       <!-- 
            ==========================================================================
-           5. SECTION PROJETS RÉCENTS (BENTO GRID STYLE & FILTRE DYNAMIQUE)
+           5. SECTION MON PARCOURS (FRISE CHRONOLOGIQUE - TIMELINE)
            ==========================================================================
-           Section affichant vos réalisations de manière asymétrique (Bento Grid).
-           Elle est gérée par un système de filtrage et d'ouverture de modales.
-           
-           RÈGLES D'INTEGRATION DE PROJETS :
-           Chaque carte possède deux attributs indispensables pour l'interactivité :
-           1. 'data-category="nom_categorie"' : Filtre le projet (valeurs : 'web' ou 'mobile').
-           2. 'data-project-id="identifiant"' : Associe la carte à sa fiche descriptive enrichie
-              définie dans la variable PROJECTS_DATA de 'js/app.js' (ex: "analytique", "ecommerce").
-              
-           CORRECTION DU BUG DE FILTRAGE :
-           Pour préserver la mise en page Bento, l'affichage est modifié en 'display: block' 
-           en JavaScript au lieu de 'flex', évitant ainsi toute déformation des vignettes.
+      -->
+      <section class="section" id="experience">
+        <div class="section-inner reveal">
+          <span class="eyebrow" data-i18n="experience.eyebrow">Parcours</span>
+          <h2 class="section-title" data-i18n="experience.title">Expériences &amp; Formation Académique</h2>
+          <p class="section-sub" data-i18n="experience.sub">Historique de mes expériences pratiques, projets académiques et parcours en Génie Logiciel.</p>
+
+          <div class="timeline" id="timeline-container">
+            <!-- Rempli dynamiquement par renderTimeline() -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 
+           ==========================================================================
+           6. SECTION PROJETS RÉCENTS (BENTO GRID STYLE & FILTRE DYNAMIQUE)
+           ==========================================================================
       -->
       <section class="section" id="projects">
         <div class="section-inner reveal">
-          <span class="eyebrow">Réalisations</span>
-          <h2 class="section-title">Étapes du parcours</h2>
-          <p class="section-sub">Une sélection de mes travaux académiques et personnels, du développement web aux applications mobiles.</p>
+          <span class="eyebrow" data-i18n="projects.eyebrow">Réalisations</span>
+          <h2 class="section-title" data-i18n="projects.title">Étapes &amp; Projets Réalisés</h2>
+          <p class="section-sub" data-i18n="projects.sub">Une sélection de réalisations complètes, du développement web full-stack aux applications mobiles.</p>
 
           <div class="filter-row">
-            <button class="filter-btn active" data-filter="all">Tout</button>
-            <button class="filter-btn" data-filter="web">Web Advanced</button>
-            <button class="filter-btn" data-filter="mobile">Applications Mobiles</button>
+            <button class="filter-btn active" data-filter="all" data-i18n="projects.filter_all">Tous</button>
+            <button class="filter-btn" data-filter="web" data-i18n="projects.filter_web">Web Full-Stack</button>
+            <button class="filter-btn" data-filter="mobile" data-i18n="projects.filter_mobile">Applications Mobiles</button>
           </div>
 
           <div class="stops" id="projects-grid">
@@ -275,133 +275,14 @@
 
       <!-- 
            ==========================================================================
-           6. SECTION MON PARCOURS (FRISE CHRONOLOGIQUE - TIMELINE)
-           ==========================================================================
-           Une frise élégante alternant entre la gauche et la droite.
-           
-           CONSTRUCTION DU BALISAGE :
-           - Utilisez la classe 'timeline-left' pour aligner la carte d'expérience à gauche.
-           - Utilisez la classe 'timeline-right' pour aligner la carte d'expérience à droite.
-           - Sur mobile, ces classes s'annulent proprement via CSS Media Queries pour 
-             garantir un empilement vertical fluide.
-      -->
-      <!-- 
-           DESACTIVÉ : Section Parcours (Timeline).
-           Pour la réactiver, supprimez simplement les balises de début et de fin de commentaire ci-dessous.
-           Note : Les commentaires internes ont été convertis en format crochets [] pour éviter tout conflit de syntaxe HTML.
-      <section
-        class="py-xl bg-surface-container-low dark:bg-surface-container/30 transition-colors duration-500"
-        id="experience"
-      >
-        <div class="container max-w-container-max mx-auto px-gutter">
-          <div class="flex flex-col items-center text-center mb-lg reveal">
-            <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">
-              Mon Parcours
-            </h2>
-            <p
-              class="font-body-md text-body-md text-on-surface-variant max-w-2xl"
-            >
-              Un historique chronologique de mes stages, expériences
-              professionnelles et projets académiques.
-            </p>
-          </div>
-
-          [Conteneur général de la frise (Timeline)]
-          <div class="timeline">
-            [CARTE 1 : Alignée à Gauche (timeline-left)]
-            <div class="timeline-container timeline-left reveal">
-              <div
-                class="glass-card rounded-xl p-6 timeline-card flex flex-col gap-2"
-              >
-                <span
-                  class="text-xs font-bold text-primary dark:text-primary-fixed-dim"
-                  >Avril 2024 - Présent</span
-                >
-                <h3 class="text-lg font-bold text-on-surface font-headline-md">
-                  Stage Développeur Full-Stack
-                </h3>
-                <h4 class="text-sm font-semibold text-on-surface-variant">
-                  TechCorp Solutions
-                </h4>
-                <p class="text-sm text-on-surface-variant">
-                  Conception d'APIs scalables en Node.js et intégration
-                  d'interfaces React hautement dynamiques au sein d'une équipe
-                  agile.
-                </p>
-              </div>
-            </div>
-
-            [CARTE 2 : Alignée à Droite (timeline-right)]
-            <div class="timeline-container timeline-right reveal delay-100">
-              <div
-                class="glass-card rounded-xl p-6 timeline-card flex flex-col gap-2"
-              >
-                <span
-                  class="text-xs font-bold text-primary dark:text-primary-fixed-dim"
-                  >Octobre 2023 - Mars 2024</span
-                >
-                <h3 class="text-lg font-bold text-on-surface font-headline-md">
-                  Développeur Indépendant (Freelance)
-                </h3>
-                <h4 class="text-sm font-semibold text-on-surface-variant">
-                  Projets Freelance
-                </h4>
-                <p class="text-sm text-on-surface-variant">
-                  Création d'outils d'administration sur mesure pour des
-                  commerçants locaux. Accent mis sur le SEO et l'optimisation
-                  des performances.
-                </p>
-              </div>
-            </div>
-
-            [CARTE 3 : Alignée à Gauche (timeline-left)]
-            <div class="timeline-container timeline-left reveal delay-200">
-              <div
-                class="glass-card rounded-xl p-6 timeline-card flex flex-col gap-2"
-              >
-                <span
-                  class="text-xs font-bold text-primary dark:text-primary-fixed-dim"
-                  >Septembre 2022 - Juin 2023</span
-                >
-                <h3 class="text-lg font-bold text-on-surface font-headline-md">
-                  Projet Académique Majeur
-                </h3>
-                <h4 class="text-sm font-semibold text-on-surface-variant">
-                  Projet Fin de Licence
-                </h4>
-                <p class="text-sm text-on-surface-variant">
-                  Conception d'un tableau de bord analytique micro-services
-                  primé pour sa rigueur et ses performances d'affichage.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      -->
-
-      <!-- 
-           ==========================================================================
            7. SECTION CONTACT (FORMULAIRE & LIENS DE CONTACT)
            ==========================================================================
-           Permet aux visiteurs de vous contacter facilement.
-           
-           À MODIFIER :
-           - Votre email principal ligne 1105.
-           - Votre localisation géographique ligne 1129.
-           - Vos réseaux sociaux (GitHub, LinkedIn) ligne 1144 et 1152.
-           
-           FONCTIONNEMENT DU FORMULAIRE :
-           Le formulaire de soumission possède 'id="contact-form"'. JavaScript intercepte
-           la validation côté client pour s'assurer que les champs ne sont pas vides
-           et que le mail est valide. Il simule ensuite un envoi réseau et affiche
-           un toast flottant de succès.
       -->
       <section class="section" id="contact">
         <div class="section-inner reveal">
-          <span class="eyebrow">Contact</span>
-          <h2 class="section-title">Prochaine destination</h2>
-          <p class="section-sub">Un projet, un stage, une question ? Je réponds à tous les messages.</p>
+          <span class="eyebrow" data-i18n="contact.eyebrow">Contact</span>
+          <h2 class="section-title" data-i18n="contact.title">Prochaine destination</h2>
+          <p class="section-sub" data-i18n="contact.sub">Un projet, une proposition de stage ou une question technique ? Écrivez-moi directement.</p>
 
           <div class="dest-grid">
             <div>
@@ -412,42 +293,45 @@
                   <span class="field-val"><a href="mailto:jdibangoup5@gmail.com" id="contact-email-link">jdibangoup5@gmail.com</a></span>
                 </div>
                 <div class="field-row">
-                  <span class="field-key mono">Lieu</span>
+                  <span class="field-key mono" data-i18n="contact.location_key">Lieu</span>
                   <span class="field-val" id="contact-location-text">Abidjan, Côte d'Ivoire</span>
                 </div>
                 <div class="field-row">
                   <span class="field-key mono">GitHub</span>
-                  <span class="field-val"><a href="#" id="contact-github-link" aria-label="GitHub">Profil GitHub</a></span>
+                  <span class="field-val"><a href="https://github.com/Dibangoup" id="contact-github-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">Profil GitHub</a></span>
                 </div>
                 <div class="field-row">
                   <span class="field-key mono">LinkedIn</span>
-                  <span class="field-val"><a href="#" id="contact-linkedin-link" aria-label="LinkedIn">Profil LinkedIn</a></span>
+                  <span class="field-val"><a href="https://www.linkedin.com/in/jordan-dibangoup-3373a3375" id="contact-linkedin-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">Profil LinkedIn</a></span>
                 </div>
               </div>
             </div>
 
             <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
               <input type="hidden" name="access_key" value="1e96af0c-37e9-4900-95ab-3413ff598fd2">
+              <!-- Honeypot anti-spam invisible pour les utilisateurs -->
+              <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+              <input type="text" name="_gotcha" class="hidden" style="display: none !important;" tabindex="-1" autocomplete="off" />
               <div class="form-row-2">
                 <div>
-                  <label for="form-name">Nom complet *</label>
+                  <label for="form-name" data-i18n="contact.label_name">Nom complet *</label>
                   <input class="form-input" type="text" id="form-name" name="name" placeholder="Votre nom" required />
                 </div>
                 <div>
-                  <label for="form-email">Adresse e-mail *</label>
+                  <label for="form-email" data-i18n="contact.label_email">Adresse e-mail *</label>
                   <input class="form-input" type="email" id="form-email" name="email" placeholder="votre.email@exemple.com" required />
                 </div>
               </div>
               <div>
-                <label for="form-subject">Sujet *</label>
+                <label for="form-subject" data-i18n="contact.label_subject">Sujet *</label>
                 <input class="form-input" type="text" id="form-subject" name="subject" placeholder="Sujet de votre message" required />
               </div>
               <div>
-                <label for="form-message-text">Votre message *</label>
+                <label for="form-message-text" data-i18n="contact.label_message">Votre message *</label>
                 <textarea class="form-input" id="form-message-text" name="message" placeholder="Dites-m'en plus sur votre projet..." required></textarea>
               </div>
               <button class="btn btn-primary" type="submit" id="contact-submit-btn">
-                <span id="contact-submit-icon"></span> Envoyer le message
+                <span id="contact-submit-icon"></span> <span data-i18n="contact.btn_send">Envoyer le message</span>
               </button>
               <div class="hidden mt-2" id="form-message"></div>
             </form>
@@ -460,18 +344,18 @@
          ==========================================================================
          8. PIED DE PAGE COMMUN (FOOTER)
          ==========================================================================
-         Affichage des crédits et de la marque du site en bas de page.
     -->
     <footer class="site-footer">
       <div class="footer-inner">
-        <div class="footer-brand" id="footer-logo">DevPortfolio</div>
+        <div class="footer-brand" id="footer-logo">Jordan DIBANGOUP</div>
         <ul class="footer-links">
-          <li><a href="#about">À Propos</a></li>
-          <li><a href="#skills">Compétences</a></li>
-          <li><a href="#projects">Projets</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#about" data-i18n="nav.about">À Propos</a></li>
+          <li><a href="#skills" data-i18n="nav.skills">Compétences</a></li>
+          <li><a href="#experience" data-i18n="nav.experience">Parcours</a></li>
+          <li><a href="#projects" data-i18n="nav.projects">Projets</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
-        <div class="footer-copy" id="footer-copyright">© 2026 Jordan Portfolio. Conçu avec Précision &amp; Clarté.</div>
+        <div class="footer-copy" id="footer-copyright">© 2026 Jordan DIBANGOUP. Conçu avec Précision &amp; Clarté.</div>
       </div>
     </footer>
 
@@ -479,12 +363,8 @@
          ==========================================================================
          9. SYSTÈMES ET STRUCTURES INTERACTIFS DYNAMIQUES (MODALES & TOASTS)
          ==========================================================================
-         Ces conteneurs HTML sont initialement invisibles sur la page (grâce à 
-         l'opacité 0 et aux pointer-events: none dans css/style.css).
-         JavaScript les remplit dynamiquement et y applique la classe '.active' 
-         au clic utilisateur pour les faire surgir.
     -->
-
+    <!-- MODALE 1 : Fiche Projet Détaillée (Étude de cas) -->
     <div class="modal-overlay" id="project-modal" aria-hidden="true">
       <div class="modal-container p-6 relative">
         <button class="modal-close" id="close-project-modal" aria-label="Fermer la modale"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
@@ -494,7 +374,7 @@
       </div>
     </div>
 
-    <!-- MODALE 2 : Visualisation Interactive du CV Papier -->
+    <!-- MODALE 2 : Visualisation & Impression Interactive du CV -->
     <div class="modal-overlay" id="cv-modal" aria-hidden="true">
       <div class="modal-container p-6 relative">
         <button class="modal-close" id="close-cv-modal" aria-label="Fermer la modale"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
@@ -504,11 +384,10 @@
       </div>
     </div>
 
-    <!-- CONTENEUR DES NOTIFICATIONS TOAST FLOATTANTES -->
-    <!-- JavaScript y crée et injecte des enfants dynamiquement lors des événements -->
+    <!-- CONTENEUR DES NOTIFICATIONS TOAST FLOTTANTES -->
     <div class="toast-container" id="toast-container"></div>
 
-    <!-- Chargement du fichier Javascript à la fin du document pour de meilleures performances -->
+    <!-- Chargement des scripts JS -->
     <script src="js/icons.js"></script>
     <script src="js/app.js"></script>
   </body>
