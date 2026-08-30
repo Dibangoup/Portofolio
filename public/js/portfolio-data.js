@@ -181,7 +181,7 @@ const DEFAULT_PORTFOLIO_DATA = {
       "description": "Application web complète permettant de tracer les produits agricoles depuis la coopérative jusqu'au consommateur. Visualisation en temps réel des flux logistiques, gestion des alertes et tableaux de bord analytiques pour optimiser les rendements et réduire les pertes.",
       "context": "Problématique de transparence et de lutte contre les pertes post-récolte dans la filière agro-alimentaire.",
       "architecture": "Architecture MVC découplée, API REST sécurisée, interface dynamique et visualisation cartographique des données de stockage.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDz7XS5kpXghKL-PdviAJbJLwm9PYrtMQN491Cb4A61rI3P8zFkh-4BxRJJMEYgBpLiI03FydyNz9rLiZ38argCMcrTGx-3GmmZ1IBGSXMYGCi247t2pz34QpSL5H-jzLcoglsq-KeLP5LMlTdy2C9wdfBc8reOL5Znxkvun9KBib6wXkyk6Jl_8Z1j9fU3-UCqPlyWl78-iLw5m7-uuO23OKZrIoP8OKXM1hxda4tCqcdVb9B5cMxnE874ms3HkL5MVDbjzDn4elAX",
+      "image": "images/tracabilite-agricole.png",
       "tech": [
         "Python / Django",
         "JavaScript (ES6+)",
@@ -209,7 +209,7 @@ const DEFAULT_PORTFOLIO_DATA = {
       "description": "Portfolio développé avec un thème astronomique sur mesure, un rendu en JavaScript modulaire et une interface d'administration sécurisée permettant d'éditer l'intégralité du contenu en direct avec persistance serveur.",
       "context": "Créer une identité visuelle marquante et une plateforme personnelle évolutive sans dépendre de CMS lourds.",
       "architecture": "Architecture hybride Express.js + Vanilla JS + CSS Tokens, authentification Basic Auth durcie et animations GPU accélérées.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuC2SYCIchKQjNY8S4EvVUP_MfFJK-_cWlN0pqIz8gJ7kzWCbbCWEGitwOYqN2bQGqFxnvLLHWnl-PeW_DynWiSf7c0oixHCXNGMOY3HZFmrWe",
+      "image": "images/portfolio-preview.png",
       "tech": [
         "Node.js & Express",
         "HTML5 Canvas",
@@ -237,7 +237,7 @@ const DEFAULT_PORTFOLIO_DATA = {
       "description": "Application mobile conçue pour organiser les flux de travail en équipe : attribution de tâches, suivi de progression, rappels et notifications en temps réel pour booster la productivité collective.",
       "context": "Besoin d'un outil mobile léger et réactif pour gérer les projets de groupe académiques et associatifs.",
       "architecture": "Application Flutter / React Native avec gestion d'état centralisée et persistance locale + synchronisation cloud.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDz7XS5kpXghKL-PdviAJbJLwm9PYrtMQN491Cb4A61rI3P8zFkh-4BxRJJMEYgBpLiI03FydyNz9rLiZ38argCMcrTGx-3GmmZ1IBGSXMYGCi247t2pz34QpSL5H-jzLcoglsq-KeLP5LMlTdy2C9wdfBc8reOL5Znxkvun9KBib6wXkyk6Jl_8Z1j9fU3-UCqPlyWl78-iLw5m7-uuO23OKZrIoP8OKXM1hxda4tCqcdVb9B5cMxnE874ms3HkL5MVDbjzDn4elAX",
+      "image": "images/gestion-taches.png",
       "tech": [
         "Flutter / Dart",
         "Firebase Firestore",
@@ -264,7 +264,7 @@ const DEFAULT_PORTFOLIO_DATA = {
       "description": "Développement d'une plateforme web complète intégrant catalogue de produits interactif, gestion de panier, interface d'administration pour la gestion des stocks et interface utilisateur fluide.",
       "context": "Digitalisation du parcours client pour commerces de proximité avec expérience utilisateur sans friction.",
       "architecture": "Frontend React avec rendu réactif, Backend Node/Express ou Django, base de données relationnelle et validation de formulaires.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuC2SYCIchKQjNY8S4EvVUP_MfFJK-_cWlN0pqIz8gJ7kzWCbbCWEGitwOYqN2bQGqFxnvLLHWnl-PeW_DynWiSf7c0oixHCXNGMOY3HZFmrWe",
+      "image": "images/ecom.png",
       "tech": [
         "React",
         "Node.js",
