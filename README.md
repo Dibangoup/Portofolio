@@ -75,6 +75,20 @@ npm run dev
 | `npm run build:css` | Compile Tailwind (minifié) |
 | `npm run watch:css` | Recompile Tailwind à chaque changement |
 
+## 🚀 Déploiement (site statique sur Vercel)
+
+Le **dashboard admin reste local** (il n'est pas déployé). Seul le site public (`public/`) est mis en ligne, en statique sur Vercel.
+
+1. Connecte le repo `Dibangoup/Portofolio` sur [vercel.com](https://vercel.com).
+2. Vercel lit `vercel.json` → sert le dossier `public/` (aucun build requis).
+3. Si Vercel demande un framework, choisis **Other**.
+
+### Workflow d'édition
+
+1. En local : `npm run dev` → édite le contenu via `http://localhost:3000/dashboard.html`.
+2. La sauvegarde écrit `public/js/portfolio-data.js`.
+3. `git add public/js/portfolio-data.js && git commit && git push` → Vercel redéploie automatiquement.
+
 ## 📄 Licence
 
 MIT
