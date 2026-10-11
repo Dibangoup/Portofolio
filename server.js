@@ -64,7 +64,7 @@ function stripDangerousKeys(value) {
 }
 
 // Les seules clés de premier niveau que js/portfolio-data.js est censé contenir.
-const ALLOWED_TOP_LEVEL_KEYS = ['hero', 'about', 'skills', 'projects', 'cv', 'contact'];
+const ALLOWED_TOP_LEVEL_KEYS = ['hero', 'about', 'skills', 'timeline', 'projects', 'cv', 'contact'];
 
 function requireDashboardAuth(req, res, next) {
   if (!DASHBOARD_PASSWORD) {
@@ -148,9 +148,17 @@ const dashboardCsp = helmet.contentSecurityPolicy({
   },
 });
 
-// En-têtes non liés au CSP (X-Content-Type-Options, X-Frame-Options, etc.) partout ;
+// En-têtes non liés au CSP (X-Content-Type-Options, X-Frame-Options, HSTS, etc.) partout ;
 // le CSP lui-même est géré séparément ci-dessous pour pouvoir varier par route.
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
 // Politique stricte par défaut sur toutes les routes ; la route /dashboard.html (définie
 // plus bas) applique dashboardCsp après ce middleware, ce qui REMPLACE l'en-tête déjà posé
 // (les en-têtes HTTP ne sont envoyés qu'à l'appel de res.sendFile()/res.send(), donc c'est

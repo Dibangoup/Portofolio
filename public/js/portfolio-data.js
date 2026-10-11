@@ -1,33 +1,33 @@
 // BASE DE DONNÉES DU PORTFOLIO - CENTRALISÉE ET MODIFIABLE EN TEMPS RÉEL
 const DEFAULT_PORTFOLIO_DATA = {
   "hero": {
-    "name": "Jordan",
+    "name": "Jordan DIBANGOUP",
     "availability": "Disponible pour un stage",
-    "role": "Développeur Full-Stack",
+    "role": "Développeur Full-Stack & Génie Logiciel",
     "title": "Concevoir l'Avenir, Une Ligne de Code à la Fois.",
-    "description": "Étudiant passionné en Génie Informatique, IA. Je combine logique technique et créativité pour créer des expériences marquantes.",
+    "description": "Étudiant passionné en Génie Logiciel, IA & Data Science à l'ESATIC. Je combine rigueur d'ingénierie et sensibilité design pour bâtir des solutions logicielles performantes.",
     "image": "images/jordan-portrait.jpg",
     "badges": [
-      "Développeur Web",
-      "Développeur Mobile"
+      "Développeur Full-Stack",
+      "Génie Logiciel & IA"
     ]
   },
   "about": {
     "title": "Créer avec Code & Innovation.",
     "paragraphs": [
-      "Actuellement étudiant en informatique plus précisément en Génie Logiciel, j'ai développé une passion profonde pour le développement web full-stack, l'intelligence artificielle et la data science.",
-      "Je m'attache à réduire le fossé entre la rigueur de l'ingénierie logicielle et l'élégance d'un design visuel moderne et soigné. Pour moi, le code doit être aussi fluide, intuitif et harmonieux que le monde qui nous entoure. En combinant mes compétences techniques à la puissance des outils d'intelligence artificielle, je souhaite concevoir des applications innovantes, performantes et centrées sur l'expérience utilisateur."
+      "Actuellement étudiant en informatique plus précisément en Génie Logiciel à l'ESATIC (Abidjan), j'ai développé une passion profonde pour le développement full-stack, l'intelligence artificielle et l'ingénierie logicielle.",
+      "Je m'attache à réduire le fossé entre la rigueur de l'ingénierie logicielle et l'élégance d'un design visuel moderne et soigné. Pour moi, le code doit être aussi fluide, intuitif et robuste que le monde qui nous entoure. En combinant mes compétences techniques aux architectures modernes, je conçois des applications innovantes, scalables et centrées sur l'utilisateur."
     ],
     "journey": {
-      "text1": "Passionné de nouvelles technologies depuis mon plus jeune âge, j'ai démarré le codage de petites applications avant de plonger dans l'écosystème web moderne avec React et Node.js.",
-      "text2": "Aujourd'hui, je crée des produits soignés en m'assurant que chaque animation et interaction apporte une réelle plus-value à l'expérience de l'utilisateur final."
+      "text1": "Passionné de nouvelles technologies depuis mon plus jeune âge, j'ai démarré le codage de petites applications avant de plonger dans l'écosystème web moderne avec React, Python et Node.js.",
+      "text2": "Aujourd'hui, je crée des produits soignés en m'assurant que chaque architecture, algorithme et interaction apporte une réelle plus-value et des performances optimales."
     },
     "education": [
       {
         "dates": "2023 - 2026",
         "degree": "Licence en Génie Logiciel",
         "school": "ESATIC – Abidjan, Côte d'Ivoire",
-        "desc": "Formation approfondie en développement logiciel, bases de données, systèmes d'exploitation et méthodes agiles."
+        "desc": "Formation approfondie en développement logiciel, architectures systèmes, bases de données, génie logiciel et méthodes agiles."
       },
       {
         "dates": "2023",
@@ -40,22 +40,22 @@ const DEFAULT_PORTFOLIO_DATA = {
       {
         "emoji": "🚀",
         "title": "Innovation",
-        "desc": "Je reste à l'affût des dernières technologies pour proposer des solutions modernes."
+        "desc": "Je reste à l'affût des dernières technologies pour proposer des architectures logicielles modernes et efficientes."
       },
       {
         "emoji": "🎨",
-        "title": "Design",
-        "desc": "L'esthétique et l'ergonomie sont au cœur de chaque projet que je réalise."
+        "title": "Design & Ergonomie",
+        "desc": "L'esthétique, l'accessibilité et la fluidité UX sont au cœur de chaque application que je conçois."
       },
       {
-        "emoji": "🤝",
-        "title": "Collaboration",
-        "desc": "Je crois au travail d'équipe et à l'échange de compétences pour avancer ensemble."
+        "emoji": "⚙️",
+        "title": "Rigueur Technique",
+        "desc": "Je privilégie un code propre, modulaire, sécurisé et documenté selon les standards du génie logiciel."
       },
       {
         "emoji": "📚",
-        "title": "Apprentissage",
-        "desc": "Chaque jour est une nouvelle occasion d'apprendre et de progresser."
+        "title": "Apprentissage Continu",
+        "desc": "Veille technologique constante pour maîtriser les outils émergents en IA, cloud et développement web."
       }
     ]
   },
@@ -65,58 +65,108 @@ const DEFAULT_PORTFOLIO_DATA = {
       "icon": "palette",
       "items": [
         {
-          "name": "HTML5 & CSS3",
-          "percent": 81
+          "name": "HTML5 & CSS3 / Tailwind",
+          "percent": 90,
+          "level": "Avancé"
         },
         {
-          "name": "JavaScript (ES6+)",
-          "percent": 75
+          "name": "JavaScript (ES6+) & TypeScript",
+          "percent": 85,
+          "level": "Avancé"
         },
         {
-          "name": "React",
-          "percent": 70
+          "name": "React & Next.js",
+          "percent": 80,
+          "level": "Maîtrisé"
         },
         {
-          "name": "Tailwind CSS",
-          "percent": 40
+          "name": "UI/UX Design (Figma)",
+          "percent": 75,
+          "level": "Opérationnel"
         }
       ]
     },
     {
-      "category": "Backend & APIs",
+      "category": "Backend & Données",
       "icon": "database",
       "items": [
         {
-          "name": "Python (Flask/Django)",
-          "percent": 55
+          "name": "Python (Django / Flask)",
+          "percent": 80,
+          "level": "Maîtrisé"
         },
         {
-          "name": "SQL (MySQL/PostgreSQL)",
-          "percent": 50
+          "name": "Node.js & Express",
+          "percent": 75,
+          "level": "Opérationnel"
         },
         {
-          "name": "API REST & GraphQL",
-          "percent": 25
+          "name": "SQL (PostgreSQL / MySQL)",
+          "percent": 78,
+          "level": "Maîtrisé"
+        },
+        {
+          "name": "APIs REST & GraphQL",
+          "percent": 70,
+          "level": "Opérationnel"
         }
       ]
     },
     {
-      "category": "Mobile & Autres",
+      "category": "Mobile, DevOps & IA",
       "icon": "smartphone",
       "items": [
         {
+          "name": "Git & GitHub / CI-CD",
+          "percent": 85,
+          "level": "Avancé"
+        },
+        {
           "name": "Flutter & Dart",
-          "percent": 35
+          "percent": 65,
+          "level": "Opérationnel"
         },
         {
-          "name": "Git & GitHub",
-          "percent": 80
+          "name": "Docker & Environnements",
+          "percent": 60,
+          "level": "Opérationnel"
         },
         {
-          "name": "IA & Machine Learning",
-          "percent": 5
+          "name": "IA & Machine Learning (Concepts & APIs)",
+          "percent": 60,
+          "level": "En pratique"
         }
       ]
+    }
+  ],
+  "timeline": [
+    {
+      "period": "2025 - Présent",
+      "role": "Développeur Full-Stack (Projets & Freelance)",
+      "organization": "Projets Indépendants & Académiques",
+      "type": "experience",
+      "description": "Conception d'architectures complètes (Django, React, Node.js), intégration d'APIs sécurisées et déploiements cloud."
+    },
+    {
+      "period": "Juin - Août 2025",
+      "role": "Développeur Web Stagiaire",
+      "organization": "Startup Tech – Abidjan",
+      "type": "experience",
+      "description": "Développement de composants frontend dynamiques en React, intégration d'APIs REST et participation aux revues de code en méthode Scrum."
+    },
+    {
+      "period": "2023 - 2026",
+      "role": "Licence en Génie Logiciel",
+      "organization": "ESATIC – Abidjan, Côte d'Ivoire",
+      "type": "formation",
+      "description": "Spécialisation en génie logiciel, algorithmique avancée, structures de données, bases de données relationnelles et ingénierie logicielle."
+    },
+    {
+      "period": "2023",
+      "role": "Baccalauréat Scientifique (Mention Bien)",
+      "organization": "Lycée Classique – Abidjan",
+      "type": "formation",
+      "description": "Spécialité Mathématiques et Sciences Physiques."
     }
   ],
   "projects": [
@@ -126,101 +176,115 @@ const DEFAULT_PORTFOLIO_DATA = {
       "cardTitle": "Traçabilité Agricole",
       "category": "web",
       "categoryLabel": "Web App Full-Stack",
-      "shortDescription": "Plateforme de suivi de la chaîne d'approvisionnement agricole avec blockchain et IoT.",
-      "description": "Application web complète permettant de tracer les produits agricoles depuis la ferme jusqu'au consommateur. Utilisation de la blockchain pour l'authenticité des données et intégration de capteurs IoT pour le suivi des conditions de stockage en temps réel.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDz7XS5kpXghKL-PdviAJbJLwm9PYrtMQN491Cb4A61rI3P8zFkh-4BxRJJMEYgBpLiI03FydyNz9rLiZ38argCMcrTGx-3GmmZ1IBGSXMYGCi247t2pz34QpSL5H-jzLcoglsq-KeLP5LMlTdy2C9wdfBc8reOL5Znxkvun9KBib6wXkyk6Jl_8Z1j9fU3-UCqPlyWl78-iLw5m7-uuO23OKZrIoP8OKXM1hxda4tCqcdVb9B5cMxnE874ms3HkL5MVDbjzDn4elAX",
+      "status": "Académique & Prototype",
+      "shortDescription": "Plateforme de suivi et traçabilité de la chaîne d'approvisionnement agricole avec IoT et sécurité des données.",
+      "description": "Application web complète permettant de tracer les produits agricoles depuis la coopérative jusqu'au consommateur. Visualisation en temps réel des flux logistiques, gestion des alertes et tableaux de bord analytiques pour optimiser les rendements et réduire les pertes.",
+      "context": "Problématique de transparence et de lutte contre les pertes post-récolte dans la filière agro-alimentaire.",
+      "architecture": "Architecture MVC découplée, API REST sécurisée, interface dynamique et visualisation cartographique des données de stockage.",
+      "image": "images/tracabilite-agricole.png",
       "tech": [
-        "HTML5",
-        "CSS3",
+        "Python / Django",
         "JavaScript (ES6+)",
-        "PHP"
+        "PostgreSQL",
+        "Chart.js",
+        "Tailwind CSS"
       ],
       "features": [
-        "Tableau de bord interactif avec visualisation en temps réel",
-        "Système de QR code pour scanner et vérifier l'authenticité",
-        "Notifications automatiques lors des anomalies de température",
-        "Export de rapports PDF et statistiques avancées"
+        "Tableau de bord interactif avec métriques en temps réel",
+        "Génération et scan de QR codes pour authentification des lots",
+        "Système d'alertes en cas d'anomalies de stockage",
+        "Exportation de rapports analytiques et statistiques détaillées"
       ],
-      "demo": "#",
-      "source": "https://github.com/jordan/tracabilite-agricole"
+      "demo": "",
+      "source": "https://github.com/Dibangoup/tracabilite-agricole"
     },
     {
       "id": "portfolio-moderne",
-      "title": "Portfolio Étudiant Premium & Interactif",
-      "cardTitle": "Portfolio Moderne",
+      "title": "Portfolio Développeur Carte Céleste & Dashboard Admin",
+      "cardTitle": "Portfolio Carte Céleste",
       "category": "web",
-      "categoryLabel": "Site Vitrine",
-      "shortDescription": "Site portfolio personnel avec animations premium, mode glassmorphisme et CV interactif.",
-      "description": "Portfolio développé avec HTML, Tailwind CSS et JavaScript vanilla. Design glassmorphique avec des animations soignées, un visualiseur de CV interactif et des effets de parallaxe. Le site est entièrement responsive et optimisé pour le SEO.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuC2SYCIchKQjNY8S4EvVUP_MfFJK-_cWlN0pqIz8gJ7kzWCbbCWEGitwOYqN2bQGqFxnvLLHWnl-PeW_DynWiSf7c0oixHCXNGMOY3HZFmrWe",
+      "categoryLabel": "Full-Stack & Design System",
+      "status": "En Ligne",
+      "shortDescription": "Portfolio interactif haute performance avec thème Carte Céleste, canvas d'étoiles, PWA et dashboard d'édition en temps réel.",
+      "description": "Portfolio développé avec un thème astronomique sur mesure, un rendu en JavaScript modulaire et une interface d'administration sécurisée permettant d'éditer l'intégralité du contenu en direct avec persistance serveur.",
+      "context": "Créer une identité visuelle marquante et une plateforme personnelle évolutive sans dépendre de CMS lourds.",
+      "architecture": "Architecture hybride Express.js + Vanilla JS + CSS Tokens, authentification Basic Auth durcie et animations GPU accélérées.",
+      "image": "images/portfolio-preview.png",
       "tech": [
-        "HTML5",
-        "Tailwind CSS",
-        "JavaScript",
-        "CSS Animations"
+        "Node.js & Express",
+        "HTML5 Canvas",
+        "Vanilla JavaScript",
+        "CSS Custom Properties",
+        "PWA"
       ],
       "features": [
-        "Design glassmorphique premium et responsive",
-        "CV interactif avec simulation de téléchargement PDF",
-        "Animations de scroll reveal et effets parallaxe",
-        "Formulaire de contact avec validation et notifications toast"
+        "Champ stellaire interactif animé au Canvas",
+        "Dashboard d'administration sécurisé en temps réel",
+        "Visualiseur et exportateur de CV interactif",
+        "Mode PWA et support hors-ligne"
       ],
-      "demo": "#",
-      "source": "#"
+      "demo": "/",
+      "source": "https://github.com/Dibangoup/Portofolio"
     },
     {
       "id": "app-gestion-taches",
-      "title": "Application de Gestion de Tâches Collaboratives",
+      "title": "Application de Gestion de Tâches & Projets Collaboratifs",
       "cardTitle": "Gestionnaire de Tâches",
       "category": "mobile",
       "categoryLabel": "Application Mobile",
-      "shortDescription": "Application mobile de gestion de projets et tâches en équipe avec synchronisation en temps réel.",
-      "description": "Application mobile développée avec React Native permettant aux équipes de gérer leurs projets et tâches de manière collaborative. Synchronisation en temps réel via Firebase, notifications push et interface intuitive avec drag & drop.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDz7XS5kpXghKL-PdviAJbJLwm9PYrtMQN491Cb4A61rI3P8zFkh-4BxRJJMEYgBpLiI03FydyNz9rLiZ38argCMcrTGx-3GmmZ1IBGSXMYGCi247t2pz34QpSL5H-jzLcoglsq-KeLP5LMlTdy2C9wdfBc8reOL5Znxkvun9KBib6wXkyk6Jl_8Z1j9fU3-UCqPlyWl78-iLw5m7-uuO23OKZrIoP8OKXM1hxda4tCqcdVb9B5cMxnE874ms3HkL5MVDbjzDn4elAX",
+      "status": "Projet Mobile",
+      "shortDescription": "Application mobile de gestion de projets d'équipe avec synchronisation cloud et interface intuitive.",
+      "description": "Application mobile conçue pour organiser les flux de travail en équipe : attribution de tâches, suivi de progression, rappels et notifications en temps réel pour booster la productivité collective.",
+      "context": "Besoin d'un outil mobile léger et réactif pour gérer les projets de groupe académiques et associatifs.",
+      "architecture": "Application Flutter / React Native avec gestion d'état centralisée et persistance locale + synchronisation cloud.",
+      "image": "images/gestion-taches.png",
       "tech": [
-        "React Native",
-        "Firebase",
-        "Redux",
-        "Expo"
+        "Flutter / Dart",
+        "Firebase Firestore",
+        "State Management",
+        "REST API"
       ],
       "features": [
-        "Synchronisation en temps réel entre les membres",
-        "Notifications push personnalisées",
-        "Interface de glisser-déposer intuitive",
-        "Statistiques de productivité et rapports hebdomadaires"
+        "Organisation des tâches en tableaux visuels",
+        "Synchronisation cloud en temps réel",
+        "Filtres par priorité, date d'échéance et responsable",
+        "Statistiques de productivité et historique d'activité"
       ],
-      "demo": "#",
-      "source": "#"
+      "demo": "",
+      "source": "https://github.com/Dibangoup"
     },
     {
       "id": "refonte-agence",
-      "title": "Refonte Site Web d'Agence de Communication",
-      "cardTitle": "Site Agence Digitale",
+      "title": "Plateforme Web Digitale & E-Commerce",
+      "cardTitle": "Plateforme Web Digitale",
       "category": "web",
-      "categoryLabel": "Site Vitrine Premium",
-      "shortDescription": "Refonte complète du site d'une agence avec design moderne et animations dynamiques.",
-      "description": "Refonte complète de l'identité visuelle et du site web d'une agence de communication. Nouveau design épuré et premium avec des animations GSAP, un système de galerie filtrable et une section de témoignages clients interactive.",
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuC2SYCIchKQjNY8S4EvVUP_MfFJK-_cWlN0pqIz8gJ7kzWCbbCWEGitwOYqN2bQGqFxnvLLHWnl-PeW_DynWiSf7c0oixHCXNGMOY3HZFmrWe",
+      "categoryLabel": "Web App Full-Stack",
+      "status": "Projet Académique",
+      "shortDescription": "Application web moderne avec catalogue dynamique, authentification et tunnel de commande.",
+      "description": "Développement d'une plateforme web complète intégrant catalogue de produits interactif, gestion de panier, interface d'administration pour la gestion des stocks et interface utilisateur fluide.",
+      "context": "Digitalisation du parcours client pour commerces de proximité avec expérience utilisateur sans friction.",
+      "architecture": "Frontend React avec rendu réactif, Backend Node/Express ou Django, base de données relationnelle et validation de formulaires.",
+      "image": "images/ecom.png",
       "tech": [
-        "Next.js",
-        "GSAP",
-        "Tailwind",
-        "Vercel"
+        "React",
+        "Node.js",
+        "PostgreSQL",
+        "Tailwind CSS"
       ],
       "features": [
-        "Animations avancées avec GSAP ScrollTrigger",
-        "Galerie de projets filtrable avec transitions fluides",
-        "Section de témoignages clients avec carrousel",
-        "Formulaire de devis avec estimation automatique"
+        "Catalogue avec filtres et recherche instantanée",
+        "Système d'authentification et gestion de profil",
+        "Panier d'achat interactif et calcul automatique",
+        "Panneau d'administration pour gestion des articles"
       ],
-      "demo": "#",
-      "source": "https://github.com/jordan/refonte-agence"
+      "demo": "",
+      "source": "https://github.com/Dibangoup"
     }
   ],
   "cv": {
     "identity": {
-      "name": "Jordan DIBANGOU",
-      "role": "Développeur Full-Stack & UI Designer",
+      "name": "Jordan DIBANGOUP",
+      "role": "Développeur Full-Stack & Génie Logiciel",
       "availability": "Disponible pour un stage ou une alternance"
     },
     "contact": {
@@ -231,19 +295,16 @@ const DEFAULT_PORTFOLIO_DATA = {
     "skills": [
       "React",
       "Next.js",
-      "Node.js",
-      "Express",
-      "Python",
-      "JavaScript",
-      "TypeScript",
-      "SQL",
-      "MongoDB",
-      "Git",
-      "Figma",
-      "Tailwind CSS",
+      "Python (Django/Flask)",
+      "Node.js / Express",
+      "JavaScript / TypeScript",
+      "PostgreSQL / MySQL",
+      "APIs REST & GraphQL",
+      "Git & GitHub",
       "Docker",
-      "Firebase",
-      "REST API"
+      "Flutter",
+      "Tailwind CSS",
+      "Figma UI/UX"
     ],
     "languages": [
       "🇫🇷 Français (Maternelle)",
@@ -252,16 +313,22 @@ const DEFAULT_PORTFOLIO_DATA = {
     ],
     "experiences": [
       {
+        "dates": "2025 - Présent",
+        "role": "Développeur Full-Stack (Projets & Freelance)",
+        "company": "Projets Indépendants",
+        "description": "Conception et déploiement d'applications web (React, Django, Node.js), création d'APIs RESTful et optimisation des performances front/back."
+      },
+      {
         "dates": "Juin - Août 2025",
         "role": "Développeur Web Stagiaire",
         "company": "Startup Tech – Abidjan",
-        "description": "Développement de fonctionnalités frontend en React, intégration d'API REST, participation aux sprints agiles et revues de code."
+        "description": "Développement de fonctionnalités frontend en React, intégration d'APIs REST, participation aux sprints agiles Scrum et revues de code."
       },
       {
         "dates": "Jan - Mars 2025",
         "role": "Freelance UI/UX Designer",
-        "company": "Divers clients",
-        "description": "Création de maquettes Figma et prototypes interactifs pour des sites vitrines et applications mobiles. Analyse UX et tests utilisateurs."
+        "company": "Clients Indépendants",
+        "description": "Conception de parcours utilisateurs, wireframes et prototypes interactifs Figma pour applications web et mobiles."
       }
     ],
     "formations": [

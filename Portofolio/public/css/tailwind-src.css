@@ -1,5 +1,0 @@
-/* Point d'entrée pour la CLI Tailwind (voir "npm run build:css").
-   Compile vers css/tailwind-build.css, qui remplace le script CDN. */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;

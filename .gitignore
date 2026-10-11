@@ -1,8 +1,13 @@
 node_modules/
 npm-debug.log*
 .env
+.env*
 .DS_Store
 Thumbs.db
 .worktrees/
 .impeccable/
 .superpowers/
+.claude/
+.playwright-mcp/
+.vercel
+*.png
