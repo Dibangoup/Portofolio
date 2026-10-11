@@ -6,6 +6,7 @@
   "scripts": {
     "predev": "npm run build:css",
     "dev": "node server.js",
+    "start": "node server.js",
     "build:css": "tailwindcss -i ./public/css/tailwind-src.css -o ./public/css/tailwind-build.css --minify",
     "watch:css": "tailwindcss -i ./public/css/tailwind-src.css -o ./public/css/tailwind-build.css --watch"
   },

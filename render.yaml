@@ -1,0 +1,15 @@
+# Blueprint Render — déploiement en un clic du portfolio (Node/Express)
+# Docs : https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: portofolio
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/status
+    envVars:
+      - key: DASHBOARD_USER
+        value: admin
+      - key: DASHBOARD_PASSWORD
+        sync: false   # à définir manuellement dans le dashboard Render (secret, non commité)
