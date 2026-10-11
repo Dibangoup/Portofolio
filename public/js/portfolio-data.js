@@ -171,32 +171,32 @@ const DEFAULT_PORTFOLIO_DATA = {
   ],
   "projects": [
     {
-      "id": "tracabilite-agricole",
-      "title": "Système de Traçabilité Agricole Intelligent",
-      "cardTitle": "Traçabilité Agricole",
+      "id": "ussd-birth-registration",
+      "title": "Enregistrement de Naissance par USSD",
+      "cardTitle": "État Civil USSD",
       "category": "web",
-      "categoryLabel": "Web App Full-Stack",
-      "status": "Académique & Prototype",
-      "shortDescription": "Plateforme de suivi et traçabilité de la chaîne d'approvisionnement agricole avec IoT et sécurité des données.",
-      "description": "Application web complète permettant de tracer les produits agricoles depuis la coopérative jusqu'au consommateur. Visualisation en temps réel des flux logistiques, gestion des alertes et tableaux de bord analytiques pour optimiser les rendements et réduire les pertes.",
-      "context": "Problématique de transparence et de lutte contre les pertes post-récolte dans la filière agro-alimentaire.",
-      "architecture": "Architecture MVC découplée, API REST sécurisée, interface dynamique et visualisation cartographique des données de stockage.",
-      "image": "images/tracabilite-agricole.png",
+      "categoryLabel": "Full-Stack (API + Frontend)",
+      "status": "Projet Réel",
+      "shortDescription": "Service d'état civil accessible par menu USSD (*123#) depuis n'importe quel téléphone, sans smartphone ni internet.",
+      "description": "Application permettant d'enregistrer une naissance via un flux de session USSD. Le backend FastAPI (Python) gère le dialogue USSD (langue, nom, confirmation) et persiste les enregistrements dans PostgreSQL. Un frontend React/Vite sert d'interface de suivi.",
+      "context": "Digitaliser l'état civil dans les zones à faible connectivité, où l'USSD reste le canal le plus accessible.",
+      "architecture": "FastAPI (Python) + PostgreSQL côté serveur, protocole USSD (session/texte), frontend React/Vite. API testable via Postman et curl.",
+      "image": "",
       "tech": [
-        "Python / Django",
-        "JavaScript (ES6+)",
+        "FastAPI (Python)",
+        "React / Vite",
         "PostgreSQL",
-        "Chart.js",
-        "Tailwind CSS"
+        "Protocole USSD",
+        "REST API"
       ],
       "features": [
-        "Tableau de bord interactif avec métriques en temps réel",
-        "Génération et scan de QR codes pour authentification des lots",
-        "Système d'alertes en cas d'anomalies de stockage",
-        "Exportation de rapports analytiques et statistiques détaillées"
+        "Menu USSD multilingue (Français / Langue locale)",
+        "Flux de session complet : langue → nom → confirmation",
+        "Interface web de suivi des enregistrements",
+        "API documentée et testable (Postman / curl)"
       ],
       "demo": "",
-      "source": "https://github.com/Dibangoup/tracabilite-agricole"
+      "source": "https://github.com/Dibangoup/ussd-birth-registration"
     },
     {
       "id": "portfolio-moderne",
@@ -205,11 +205,11 @@ const DEFAULT_PORTFOLIO_DATA = {
       "category": "web",
       "categoryLabel": "Full-Stack & Design System",
       "status": "En Ligne",
-      "shortDescription": "Portfolio interactif haute performance avec thème Carte Céleste, canvas d'étoiles, PWA et dashboard d'édition en temps réel.",
+      "shortDescription": "Portfolio interactif avec thème Carte Céleste, canvas d'étoiles, PWA et dashboard d'édition en temps réel.",
       "description": "Portfolio développé avec un thème astronomique sur mesure, un rendu en JavaScript modulaire et une interface d'administration sécurisée permettant d'éditer l'intégralité du contenu en direct avec persistance serveur.",
       "context": "Créer une identité visuelle marquante et une plateforme personnelle évolutive sans dépendre de CMS lourds.",
       "architecture": "Architecture hybride Express.js + Vanilla JS + CSS Tokens, authentification Basic Auth durcie et animations GPU accélérées.",
-      "image": "images/portfolio-preview.png",
+      "image": "",
       "tech": [
         "Node.js & Express",
         "HTML5 Canvas",
@@ -227,58 +227,59 @@ const DEFAULT_PORTFOLIO_DATA = {
       "source": "https://github.com/Dibangoup/Portofolio"
     },
     {
-      "id": "app-gestion-taches",
-      "title": "Application de Gestion de Tâches & Projets Collaboratifs",
-      "cardTitle": "Gestionnaire de Tâches",
-      "category": "mobile",
-      "categoryLabel": "Application Mobile",
-      "status": "Projet Mobile",
-      "shortDescription": "Application mobile de gestion de projets d'équipe avec synchronisation cloud et interface intuitive.",
-      "description": "Application mobile conçue pour organiser les flux de travail en équipe : attribution de tâches, suivi de progression, rappels et notifications en temps réel pour booster la productivité collective.",
-      "context": "Besoin d'un outil mobile léger et réactif pour gérer les projets de groupe académiques et associatifs.",
-      "architecture": "Application Flutter / React Native avec gestion d'état centralisée et persistance locale + synchronisation cloud.",
-      "image": "images/gestion-taches.png",
-      "tech": [
-        "Flutter / Dart",
-        "Firebase Firestore",
-        "State Management",
-        "REST API"
-      ],
-      "features": [
-        "Organisation des tâches en tableaux visuels",
-        "Synchronisation cloud en temps réel",
-        "Filtres par priorité, date d'échéance et responsable",
-        "Statistiques de productivité et historique d'activité"
-      ],
-      "demo": "",
-      "source": "https://github.com/Dibangoup"
-    },
-    {
-      "id": "refonte-agence",
-      "title": "Plateforme Web Digitale & E-Commerce",
-      "cardTitle": "Plateforme Web Digitale",
+      "id": "site-ecommerce",
+      "title": "Site E-Commerce (React + Vite)",
+      "cardTitle": "Site E-Commerce",
       "category": "web",
-      "categoryLabel": "Web App Full-Stack",
-      "status": "Projet Académique",
-      "shortDescription": "Application web moderne avec catalogue dynamique, authentification et tunnel de commande.",
-      "description": "Développement d'une plateforme web complète intégrant catalogue de produits interactif, gestion de panier, interface d'administration pour la gestion des stocks et interface utilisateur fluide.",
-      "context": "Digitalisation du parcours client pour commerces de proximité avec expérience utilisateur sans friction.",
-      "architecture": "Frontend React avec rendu réactif, Backend Node/Express ou Django, base de données relationnelle et validation de formulaires.",
+      "categoryLabel": "Application Web (React)",
+      "status": "En Ligne",
+      "shortDescription": "Site e-commerce en React avec navigation SPA et interface catalogue, déployé sur Vercel.",
+      "description": "Site e-commerce développé avec React 19, Vite et React Router. Interface de catalogue produits avec navigation côté client et parcours d'achat fluide, déployé en production sur Vercel.",
+      "context": "Construire une vitrine e-commerce moderne et rapide avec un rendu côté client optimisé.",
+      "architecture": "React 19 + Vite + React Router, SPA avec navigation par routes, déploiement continu sur Vercel.",
       "image": "images/ecom.png",
       "tech": [
         "React",
-        "Node.js",
-        "PostgreSQL",
-        "Tailwind CSS"
+        "Vite",
+        "React Router",
+        "CSS"
       ],
       "features": [
-        "Catalogue avec filtres et recherche instantanée",
-        "Système d'authentification et gestion de profil",
-        "Panier d'achat interactif et calcul automatique",
-        "Panneau d'administration pour gestion des articles"
+        "Catalogue de produits avec navigation par routes",
+        "SPA rapide (rendu côté client, Vite)",
+        "Interface responsive",
+        "Déployé en production sur Vercel"
+      ],
+      "demo": "https://site-ecommerce-phi-black.vercel.app",
+      "source": "https://github.com/Dibangoup/SiteEcommerce"
+    },
+    {
+      "id": "tracabilite-agricole",
+      "title": "Plateforme de Traçabilité Agricole",
+      "cardTitle": "Traçabilité Agricole",
+      "category": "web",
+      "categoryLabel": "Application Web PHP",
+      "status": "Projet Académique",
+      "shortDescription": "Application PHP de gestion et traçabilité des produits agricoles : ajout, consultation, tableau de bord et avis.",
+      "description": "Application web PHP permettant de gérer les produits agricoles : enregistrement, consultation, tableau de bord et avis consommateurs, avec authentification des utilisateurs.",
+      "context": "Problématique de transparence et de suivi des produits dans la filière agro-alimentaire.",
+      "architecture": "PHP + base de données SQL, authentification (login/logout), pages CRUD produits, avis et tableau de bord.",
+      "image": "",
+      "tech": [
+        "PHP",
+        "MySQL",
+        "JavaScript",
+        "CSS",
+        "HTML"
+      ],
+      "features": [
+        "Authentification (connexion / déconnexion)",
+        "Ajout et consultation de produits",
+        "Tableau de bord de suivi",
+        "Avis consommateurs"
       ],
       "demo": "",
-      "source": "https://github.com/Dibangoup"
+      "source": "https://github.com/Dibangoup/tracabilite-agricole"
     }
   ],
   "cv": {
