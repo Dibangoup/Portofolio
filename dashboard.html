@@ -9,20 +9,10 @@
     <!-- Tailwind CSS compilé au build (voir tailwind.config.js + `npm run build:css`) -->
     <link rel="stylesheet" href="/css/tailwind-build.css" />
 
-    <!-- Google Fonts & Icons -->
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Space+Grotesk:wght@700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
-
     <!-- Styles CSS personnalisés pour le Dashboard -->
     <link rel="stylesheet" href="/css/dashboard.css" />
+    <!-- Habillage "JordanOS" (éditeur de code), prioritaire sur dashboard.css -->
+    <link rel="stylesheet" href="/css/dashboard-os.css" />
 
     <!-- Script de données par défaut -->
     <script src="/js/portfolio-data.js"></script>
@@ -42,9 +32,9 @@
     <div class="shell">
       <!-- ICON RAIL -->
       <nav class="rail">
-        <div class="rail-logo"><span class="material-symbols-outlined">bolt</span></div>
+        <div class="rail-logo" aria-hidden="true">JD</div>
 
-        <button class="rail-btn-icon active" data-tab="general" onclick="goTab('general', this)">
+        <button class="rail-btn-icon active" data-tab="general" aria-current="page" onclick="goTab('general', this)">
           <span class="material-symbols-outlined">person</span>
           <span class="rail-tip">Général &amp; Accueil</span>
         </button>
@@ -74,7 +64,7 @@
         </button>
 
         <div class="rail-health" title="Complétude globale du contenu">
-          <div class="health-ring" id="rail-ring"><div class="health-ring-inner" id="rail-ring-label">—</div></div>
+          <div class="health-ring" id="rail-ring"><div class="health-ring-inner" id="rail-ring-label">-</div></div>
           <div class="rail-health-label">Santé</div>
         </div>
       </nav>
@@ -92,17 +82,6 @@
             <div class="preview-switch-row">
               <span>Aperçu live</span>
               <div class="switch-track on" id="preview-switch" onclick="togglePreview()"><div class="switch-thumb"></div></div>
-            </div>
-
-            <!-- Server Status Badge -->
-            <div id="connection-status" class="save-status-banner warning py-1.5 px-3 rounded-full text-xs">
-              <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse inline-block mr-1"></span>
-              Recherche serveur local...
-            </div>
-            <!-- Unsaved changes indicator -->
-            <div id="unsaved-indicator" class="save-status-banner warning py-1.5 px-3 rounded-full text-xs hidden">
-              <span class="w-2 h-2 rounded-full bg-yellow-400 inline-block mr-1"></span>
-              Non enregistré
             </div>
 
             <a href="index.html" class="btn-secondary-admin text-xs py-2 px-4 rounded-lg flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all">
@@ -146,19 +125,26 @@
               <div class="glass-panel p-4 flex items-center gap-3">
                 <div class="stat-icon"><span class="material-symbols-outlined">schedule</span></div>
                 <div>
-                  <div id="stat-lastsave" class="text-xl font-bold text-white">—</div>
+                  <div id="stat-lastsave" class="text-xl font-bold text-white">-</div>
                   <div class="text-[10px] uppercase tracking-wider text-white/40">Dernier enregistrement</div>
                 </div>
               </div>
             </div>
 
-            <section class="glass-panel p-8">
+            <section class="glass-panel editor-file" id="editor-file">
+              <div class="editor-file-tabs">
+                <div class="editor-file-tab"><span class="material-symbols-outlined">data_object</span><span id="editor-file-name">hero.json</span></div>
+                <div class="editor-file-path" id="editor-file-path">portfolio-data.js &rsaquo; hero</div>
+              </div>
+              <div class="editor-file-body">
+                <pre class="editor-gutter" id="editor-gutter" aria-hidden="true"></pre>
+                <div class="editor-file-content" id="editor-file-content">
 
               <!-- TAB 1: GENERAL & HERO -->
               <div id="tab-general" class="admin-tab-content active">
                 <div class="flex items-center justify-between mb-2">
                   <h2 class="text-xl font-bold text-white">Général &amp; Accueil (Hero)</h2>
-                  <span id="chip-general" class="chip-status">—</span>
+                  <span id="chip-general" class="chip-status">-</span>
                 </div>
                 <p class="text-xs text-[#9e9eb3] mb-6">Modifiez vos informations personnelles d'accroche et vos photos de profil. L'aperçu à droite se met à jour pendant que vous tapez.</p>
 
@@ -197,13 +183,13 @@
                     </div>
                     <div class="dropzone" id="hero-dropzone" onclick="document.getElementById('hero-file-input').click()">
                       <img id="hero-image-preview" class="img-preview" alt="Aperçu photo de profil" />
-                      <div class="dz-text"><b>Glissez une image</b> ici, ou cliquez pour parcourir vos fichiers.<br />PNG, JPG — l'aperçu se met à jour instantanément.</div>
+                      <div class="dz-text"><b>Glissez une image</b> ici, ou cliquez pour parcourir vos fichiers.<br />PNG, JPG : l'aperçu se met à jour instantanément.</div>
                     </div>
                     <div id="hero-url-field" style="display:none; margin-top:10px;">
                       <input type="text" id="hero-image-input" class="admin-input" placeholder="https://... ou images/mon-portrait.png" oninput="onHeroImageUrlInput(this.value)" />
                     </div>
                     <input type="file" id="hero-file-input" accept="image/*" style="display:none" onchange="handleHeroFile(this.files)" />
-                    <div class="text-[10px] text-white/40 mt-2">Astuce : pour l'image finale, préférez un fichier placé dans <code>images/</code> ou une URL plutôt qu'un glisser-déposer — celui-ci encode l'image directement dans les données et alourdit le fichier.</div>
+                    <div class="text-[10px] text-white/40 mt-2">Astuce : pour l'image finale, préférez un fichier placé dans <code>images/</code> ou une URL plutôt qu'un glisser-déposer, car celui-ci encode l'image directement dans les données et alourdit le fichier.</div>
                   </div>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -223,9 +209,9 @@
               <div id="tab-about" class="admin-tab-content">
                 <div class="flex items-center justify-between mb-2">
                   <h2 class="text-xl font-bold text-white">À Propos de moi &amp; Valeurs</h2>
-                  <span id="chip-about" class="chip-status">—</span>
+                  <span id="chip-about" class="chip-status">-</span>
                 </div>
-                <p class="text-xs text-[#9e9eb3] mb-6">Présentez votre histoire, vos études et les valeurs fondamentales de votre profil. Valeurs et diplômes se réorganisent par glisser-déposer.</p>
+                <p class="text-xs text-[#9e9eb3] mb-6">Présentez votre histoire, vos valeurs et votre parcours (expériences et formation). Valeurs, expériences et diplômes se réorganisent par glisser-déposer.</p>
 
                 <form id="form-about" class="space-y-6" onsubmit="event.preventDefault()">
                   <div>
@@ -245,14 +231,14 @@
                   </div>
 
                   <div class="border-t border-white/5 pt-6">
-                    <h3 class="text-sm font-semibold text-white mb-4">Onglet "Mon Histoire"</h3>
+                    <h3 class="text-sm font-semibold text-white mb-4">Encadré « parcours » (à côté de la bio)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label class="block text-xs font-semibold text-[#9e9eb3] mb-2">Histoire - Paragraphe 1</label>
+                        <label class="block text-xs font-semibold text-[#9e9eb3] mb-2">Encadré - Paragraphe 1</label>
                         <textarea id="about-journey-text1" class="admin-textarea h-24"></textarea>
                       </div>
                       <div>
-                        <label class="block text-xs font-semibold text-[#9e9eb3] mb-2">Histoire - Paragraphe 2</label>
+                        <label class="block text-xs font-semibold text-[#9e9eb3] mb-2">Encadré - Paragraphe 2</label>
                         <textarea id="about-journey-text2" class="admin-textarea h-24"></textarea>
                       </div>
                     </div>
@@ -261,7 +247,7 @@
                   <!-- Values Editor -->
                   <div class="border-t border-white/5 pt-6">
                     <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-sm font-semibold text-white">Onglet "Mes Valeurs"</h3>
+                      <h3 class="text-sm font-semibold text-white">Ce qui guide mon travail (valeurs)</h3>
                       <button type="button" onclick="addValueRow()" class="btn-secondary-admin text-xs py-1.5 px-3 rounded-lg flex items-center gap-1">
                         <span class="material-symbols-outlined text-xs">add</span> Ajouter une valeur
                       </button>
@@ -271,10 +257,23 @@
                     </div>
                   </div>
 
+                  <!-- Experiences Editor (section Parcours du site, piste « Expériences ») -->
+                  <div class="border-t border-white/5 pt-6">
+                    <div class="flex justify-between items-center mb-4">
+                      <h3 class="text-sm font-semibold text-white">Parcours : expériences</h3>
+                      <button type="button" onclick="addExperienceRow()" class="btn-secondary-admin text-xs py-1.5 px-3 rounded-lg flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">add</span> Ajouter une expérience
+                      </button>
+                    </div>
+                    <div class="space-y-4" id="experience-list-editor">
+                      <!-- Generated by JS -->
+                    </div>
+                  </div>
+
                   <!-- Education Editor -->
                   <div class="border-t border-white/5 pt-6">
                     <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-sm font-semibold text-white">Onglet "Mes Études"</h3>
+                      <h3 class="text-sm font-semibold text-white">Parcours : formation</h3>
                       <button type="button" onclick="addEducationRow()" class="btn-secondary-admin text-xs py-1.5 px-3 rounded-lg flex items-center gap-1">
                         <span class="material-symbols-outlined text-xs">add</span> Ajouter un diplôme
                       </button>
@@ -290,9 +289,9 @@
               <div id="tab-skills" class="admin-tab-content">
                 <div class="flex items-center justify-between mb-2">
                   <h2 class="text-xl font-bold text-white">Compétences Techniques</h2>
-                  <span id="chip-skills" class="chip-status">—</span>
+                  <span id="chip-skills" class="chip-status">-</span>
                 </div>
-                <p class="text-xs text-[#9e9eb3] mb-6">Organisez vos compétences par glisser-déposer — catégories et items sont réordonnables.</p>
+                <p class="text-xs text-[#9e9eb3] mb-6">Organisez vos compétences par glisser-déposer : catégories et items sont réordonnables.</p>
 
                 <div class="space-y-6" id="skills-categories-editor">
                   <!-- Generated by JS -->
@@ -310,9 +309,9 @@
               <div id="tab-projects" class="admin-tab-content">
                 <div class="flex justify-between items-center mb-2">
                   <h2 class="text-xl font-bold text-white">Projets Récents</h2>
-                  <span id="chip-projects" class="chip-status">—</span>
+                  <span id="chip-projects" class="chip-status">-</span>
                 </div>
-                <p class="text-xs text-[#9e9eb3] mb-6">Gérez les vignettes de vos réalisations. Faites glisser l'en-tête d'une carte (icône <span class="material-symbols-outlined align-middle text-xs">drag_indicator</span>) pour la réordonner — l'aperçu à droite suit en direct.</p>
+                <p class="text-xs text-[#9e9eb3] mb-6">Gérez les vignettes de vos réalisations. Faites glisser l'en-tête d'une carte (icône <span class="material-symbols-outlined align-middle text-xs">drag_indicator</span>) pour la réordonner, l'aperçu à droite suit en direct.</p>
                 <div class="flex justify-end mb-4">
                   <button onclick="addNewProject()" class="btn-secondary-admin text-xs py-1.5 px-3 rounded-lg flex items-center gap-1">
                     <span class="material-symbols-outlined text-sm">add</span> Nouveau projet
@@ -328,7 +327,7 @@
               <div id="tab-cv" class="admin-tab-content">
                 <div class="flex items-center justify-between mb-2">
                   <h2 class="text-xl font-bold text-white">Curriculum Vitæ (Popup Interactif)</h2>
-                  <span id="chip-cv" class="chip-status">—</span>
+                  <span id="chip-cv" class="chip-status">-</span>
                 </div>
                 <p class="text-xs text-[#9e9eb3] mb-6">Modifiez les informations détaillées affichées dans la modale interactive de CV.</p>
 
@@ -406,7 +405,7 @@
               <div id="tab-contact" class="admin-tab-content">
                 <div class="flex items-center justify-between mb-2">
                   <h2 class="text-xl font-bold text-white">Contact &amp; Réseaux</h2>
-                  <span id="chip-contact" class="chip-status">—</span>
+                  <span id="chip-contact" class="chip-status">-</span>
                 </div>
                 <p class="text-xs text-[#9e9eb3] mb-6">Informations affichées dans la section "Me Contacter" et le pied de page du portfolio.</p>
 
@@ -466,7 +465,7 @@
                       <span class="material-symbols-outlined text-primary text-3xl">history</span>
                       <div>
                         <h3 class="font-bold text-white text-sm">Historique des sauvegardes</h3>
-                        <p class="text-xs text-white/50">Chaque enregistrement garde une capture consultable — revenez en arrière si une modification casse quelque chose.</p>
+                        <p class="text-xs text-white/50">Chaque enregistrement garde une capture consultable : revenez en arrière si une modification casse quelque chose.</p>
                       </div>
                     </div>
                     <div class="timeline" id="timeline">
@@ -519,6 +518,8 @@
                 </div>
               </div>
 
+                </div>
+              </div>
             </section>
           </div>
 
@@ -572,6 +573,26 @@
       </div>
     </div>
 
+    <!-- BARRE D'ÉTAT -->
+    <footer class="ide-statusbar" aria-label="Barre d'état">
+      <span class="sb-item"><span class="material-symbols-outlined">code</span>main</span>
+      <span class="sb-item" id="sb-file">hero.json</span>
+      <!-- Server Status Badge -->
+      <div id="connection-status" class="save-status-banner warning py-1.5 px-3 rounded-full text-xs">
+        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse inline-block mr-1"></span>
+        Recherche serveur local...
+      </div>
+      <!-- Unsaved changes indicator -->
+      <div id="unsaved-indicator" class="save-status-banner warning py-1.5 px-3 rounded-full text-xs hidden">
+        <span class="w-2 h-2 rounded-full bg-yellow-400 inline-block mr-1"></span>
+        Non enregistré
+      </div>
+      <span class="sb-item sb-push" title="Complétude globale du contenu">Santé <span id="sb-health">-</span></span>
+      <span class="sb-item">Dernier enregistrement <span id="sb-lastsave">-</span></span>
+      <span class="sb-item">UTF-8</span>
+      <span class="sb-item">JSON</span>
+    </footer>
+
     <!-- Admin Toast Notification Container -->
     <div id="admin-toast-container" class="admin-toast-container"></div>
 
@@ -580,13 +601,64 @@
       // ==========================================================================
       // NAVIGATION
       // ==========================================================================
+      // Chaque onglet est présenté comme un fichier ouvert dans l'éditeur
+      const TAB_FILES = {
+        general: ['hero.json', 'hero'], about: ['about.json', 'about'], skills: ['skills.json', 'skills'],
+        projects: ['projects.json', 'projects'], cv: ['cv.json', 'cv'], contact: ['contact.json', 'contact'],
+        save: ['historique.log', 'sauvegarde']
+      };
+
       function goTab(tabId, btn) {
         document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.rail-btn-icon').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.rail-btn-icon').forEach(el => { el.classList.remove('active'); el.removeAttribute('aria-current'); });
 
         document.getElementById(`tab-${tabId}`).classList.add('active');
-        if (btn) btn.classList.add('active');
+        if (btn) { btn.classList.add('active'); btn.setAttribute('aria-current', 'page'); }
+
+        const [file, key] = TAB_FILES[tabId] || [tabId, tabId];
+        document.getElementById('editor-file-name').textContent = file;
+        document.getElementById('editor-file-path').textContent = tabId === 'save' ? 'localStorage › historique' : `portfolio-data.js › ${key}`;
+        document.getElementById('sb-file').textContent = file;
+        fillEditorGutter();
       }
+
+      // Numéros de ligne : suivent la hauteur réelle du contenu (lignes ajoutées, onglet changé…)
+      function fillEditorGutter() {
+        const content = document.getElementById('editor-file-content');
+        const gutter = document.getElementById('editor-gutter');
+        if (!content || !gutter) return;
+        const n = Math.max(1, Math.ceil(content.offsetHeight / 24));
+        if (gutter.childElementCount !== n && gutter.dataset.n !== String(n)) {
+          gutter.dataset.n = String(n);
+          gutter.textContent = Array.from({ length: n }, (_, i) => i + 1).join('\n');
+        }
+      }
+
+      // Icônes : les noms Material Symbols du code sont remplacés par les glyphes Phosphor
+      // de js/icons.js (même bibliothèque que le site, aucune police externe).
+      const MATERIAL_TO_ICON = {
+        drag_indicator: 'grip', delete: 'trash', delete_forever: 'trash', add: 'plus', add_box: 'plusSquare',
+        content_copy: 'copy', search: 'search', save: 'floppy', psychology: 'brain', folder_open: 'folderOpen',
+        download: 'download', visibility: 'eye', storage: 'drive', school: 'graduation', schedule: 'clock',
+        person: 'user', link: 'link', info: 'info', history: 'history', drive_file_rename_outline: 'pencil',
+        cloud_upload: 'cloudUp', bolt: 'bolt', article: 'article', alternate_email: 'at', check_circle: 'check',
+        error: 'error', restart_alt: 'reset', toggle_on: 'toggle', work: 'briefcase', work_history: 'briefcase',
+        compass: 'compass', code: 'code', data_object: 'code'
+      };
+      function hydrateMaterialIcons(scope) {
+        const nodes = scope.matches && scope.matches('.material-symbols-outlined:not(.ms-ready)')
+          ? [scope] : scope.querySelectorAll ? scope.querySelectorAll('.material-symbols-outlined:not(.ms-ready)') : [];
+        nodes.forEach(el => {
+          const name = el.textContent.trim();
+          const svg = renderIcon(MATERIAL_TO_ICON[name] || name) || renderIcon('star');
+          el.innerHTML = svg;
+          el.classList.add('ms-ready');
+          el.setAttribute('aria-hidden', 'true');
+        });
+      }
+      hydrateMaterialIcons(document.body);
+      new MutationObserver(muts => muts.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) hydrateMaterialIcons(n); })))
+        .observe(document.body, { childList: true, subtree: true });
 
       // Échappe les caractères HTML spéciaux avant injection via innerHTML :
       // sans ça, un guillemet dans un titre/description casse l'attribut value="..."
@@ -682,7 +754,14 @@
         }
 
         const lastSave = localStorage.getItem('portfolio_last_save');
-        if (lastSave) document.getElementById('stat-lastsave').textContent = lastSave;
+        if (lastSave) {
+          document.getElementById('stat-lastsave').textContent = lastSave;
+          document.getElementById('sb-lastsave').textContent = lastSave;
+        }
+
+        // Gouttière : recalculée quand le contenu change de hauteur
+        fillEditorGutter();
+        if ('ResizeObserver' in window) new ResizeObserver(fillEditorGutter).observe(document.getElementById('editor-file-content'));
 
         checkServerStatus();
         // Reinterroge périodiquement : si le dashboard est ouvert avant `npm run dev`,
@@ -749,6 +828,8 @@
         const score = computeHealthScore();
         document.getElementById('rail-ring').style.background = `conic-gradient(var(--teal) ${score * 3.6}deg, rgba(255,255,255,.08) 0)`;
         document.getElementById('rail-ring-label').textContent = score + '%';
+        document.getElementById('sb-health').textContent = score + '%';
+        document.getElementById('sb-lastsave').textContent = document.getElementById('stat-lastsave').textContent;
 
         const a = PORTFOLIO_DATA.about || {};
         setChip('chip-general', sectionStatus([PORTFOLIO_DATA.hero?.name, PORTFOLIO_DATA.hero?.role, PORTFOLIO_DATA.hero?.title, PORTFOLIO_DATA.hero?.description, PORTFOLIO_DATA.hero?.image]));
@@ -836,7 +917,7 @@
         el.innerHTML = rows.map(([k, v]) => `
           <div class="mock-contact-row">
             <span class="k">${escapeHtml(k)}</span>
-            <span class="v">${escapeHtml(v || '—')}</span>
+            <span class="v">${escapeHtml(v || '-')}</span>
           </div>`).join('');
       }
 
@@ -914,44 +995,84 @@
 
         // Render lists
         renderValuesEditor();
+        renderExperienceEditor();
         renderEducationEditor();
         syncAboutPreview();
       }
 
-      // Values Editor
+      // Values Editor : chaque valeur a une icône (même bibliothèque que le site, voir js/icons.js).
+      // Sans choix explicite, l'icône est devinée d'après le titre, exactement comme sur le site.
+      const VALUE_ICONS = ['lightbulb', 'palette', 'shield', 'book', 'team', 'bolt', 'compass', 'code', 'star'];
+      const VALUE_ICON_LABELS = { lightbulb: 'Ampoule', palette: 'Palette', shield: 'Bouclier', book: 'Livre', team: 'Équipe', bolt: 'Éclair', compass: 'Boussole', code: 'Code', star: 'Étoile' };
+      function guessValueIcon(title) {
+        const t = String(title || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        if (/innov|creat|idee/.test(t)) return 'lightbulb';
+        if (/design|ergonom|ux|ui|esthet/.test(t)) return 'palette';
+        if (/rigueur|qualit|fiab|secur|technique|propre/.test(t)) return 'shield';
+        if (/apprent|veille|curios|formation|learn/.test(t)) return 'book';
+        if (/equipe|collab|partage|communic|team/.test(t)) return 'team';
+        if (/perform|rapid|efficac|optimi/.test(t)) return 'bolt';
+        return 'compass';
+      }
       function renderValuesEditor() {
         const container = document.getElementById('values-list-editor');
         if (!container || !PORTFOLIO_DATA.about.values) return;
 
-        container.innerHTML = PORTFOLIO_DATA.about.values.map((v, idx) => `
-          <div class="drag-row grid grid-cols-12 gap-3 items-center">
-            <span class="material-symbols-outlined drag-handle col-span-1">drag_indicator</span>
-            <div class="col-span-2">
-              <label class="text-[10px] text-white/50 block mb-1">Emoji</label>
-              <input type="text" class="admin-input text-center py-2 px-1" value="${escapeHtml(v.emoji || '🚀')}" onchange="updateValueItem(${idx}, 'emoji', this.value)" />
-            </div>
-            <div class="col-span-3">
-              <label class="text-[10px] text-white/50 block mb-1">Titre</label>
-              <input type="text" class="admin-input py-2 px-2" value="${escapeHtml(v.title || '')}" onchange="updateValueItem(${idx}, 'title', this.value)" />
-            </div>
-            <div class="col-span-5">
-              <label class="text-[10px] text-white/50 block mb-1">Description</label>
-              <input type="text" class="admin-input py-2 px-2" value="${escapeHtml(v.desc || '')}" onchange="updateValueItem(${idx}, 'desc', this.value)" />
-            </div>
-            <button type="button" onclick="deleteValueRow(${idx})" class="icon-btn-mini col-span-1" title="Supprimer">
+        container.innerHTML = PORTFOLIO_DATA.about.values.map((v, idx) => {
+          const current = VALUE_ICONS.includes(v.icon) ? v.icon : guessValueIcon(v.title);
+          return `
+          <div class="drag-row bg-white/2 p-4 rounded-lg border border-white/5 relative flex flex-col gap-3">
+            <button type="button" onclick="deleteValueRow(${idx})" class="icon-btn-mini" style="position:absolute; top:8px; right:8px;" title="Supprimer">
               <span class="material-symbols-outlined text-sm">delete</span>
             </button>
-          </div>
-        `).join('');
+            <span class="material-symbols-outlined drag-handle" style="position:absolute; top:12px; left:12px;">drag_indicator</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-7 pr-8">
+              <div>
+                <label class="text-[10px] text-white/50 block mb-1">Titre</label>
+                <input type="text" class="admin-input py-2 px-2" value="${escapeHtml(v.title || '')}" onchange="updateValueItem(${idx}, 'title', this.value)" />
+              </div>
+              <div>
+                <label class="text-[10px] text-white/50 block mb-1">Description</label>
+                <input type="text" class="admin-input py-2 px-2" value="${escapeHtml(v.desc || '')}" onchange="updateValueItem(${idx}, 'desc', this.value)" />
+              </div>
+            </div>
+            <div class="pl-7">
+              <label class="text-[10px] text-white/50 block mb-1">Icône${v.icon ? '' : ' (devinée d\'après le titre, cliquez pour en choisir une)'}</label>
+              <div class="icon-picker">
+                ${VALUE_ICONS.map(name => `
+                  <button type="button" class="icon-picker-btn${current === name ? ' active' : ''}" data-icon="${name}" onclick="updateValueIcon(${idx}, '${name}')" title="${VALUE_ICON_LABELS[name]}" aria-label="${VALUE_ICON_LABELS[name]}" aria-pressed="${current === name}">
+                    ${renderIcon(name)}
+                  </button>`).join('')}
+              </div>
+            </div>
+          </div>`;
+        }).join('');
         makeSortable(container, PORTFOLIO_DATA.about.values, renderValuesEditor);
       }
 
       function updateValueItem(idx, key, val) {
         PORTFOLIO_DATA.about.values[idx][key] = val;
+        // Le titre change l'icône devinée tant qu'aucune icône n'a été choisie : mise à jour
+        // sur place (re-rendre la liste détruirait le champ suivant et avalerait le clic en cours)
+        if (key === 'title' && !PORTFOLIO_DATA.about.values[idx].icon) {
+          const guess = guessValueIcon(val);
+          const row = document.getElementById('values-list-editor').children[idx];
+          if (row) row.querySelectorAll('.icon-picker-btn').forEach(b => {
+            const on = b.dataset.icon === guess;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-pressed', String(on));
+          });
+        }
+      }
+
+      function updateValueIcon(idx, name) {
+        PORTFOLIO_DATA.about.values[idx].icon = name;
+        renderValuesEditor();
+        markUnsavedChanges();
       }
 
       function addValueRow() {
-        PORTFOLIO_DATA.about.values.push({ emoji: '✨', title: 'Nouvelle Valeur', desc: 'Description...' });
+        PORTFOLIO_DATA.about.values.push({ icon: 'compass', title: 'Nouvelle valeur', desc: 'Description...' });
         renderValuesEditor();
         updateStats();
       }
@@ -961,6 +1082,103 @@
         PORTFOLIO_DATA.about.values.splice(idx, 1);
         renderValuesEditor();
         updateStats();
+      }
+
+      // Experiences Editor : les entrées de la frise "timeline" qui ne sont pas de type "formation"
+      // (c'est la piste « Expériences » de la section Parcours du site). Les entrées de formation
+      // de la frise sont conservées telles quelles, après les expériences.
+      function timelineSplit() {
+        if (!Array.isArray(PORTFOLIO_DATA.timeline)) PORTFOLIO_DATA.timeline = [];
+        return {
+          exp: PORTFOLIO_DATA.timeline.filter(t => t.type !== 'formation'),
+          other: PORTFOLIO_DATA.timeline.filter(t => t.type === 'formation')
+        };
+      }
+      function setExperiences(exp) {
+        PORTFOLIO_DATA.timeline = [...exp, ...timelineSplit().other];
+      }
+      function renderExperienceEditor() {
+        const container = document.getElementById('experience-list-editor');
+        if (!container) return;
+        const { exp } = timelineSplit();
+        container.innerHTML = exp.length ? exp.map((e, idx) => `
+          <div class="drag-row bg-white/2 p-4 rounded-lg border border-white/5 relative flex flex-col gap-3">
+            <div class="flex items-center gap-2 absolute top-2 right-2">
+              <button type="button" onclick="duplicateExperienceRow(${idx})" class="icon-btn-mini dup" title="Dupliquer">
+                <span class="material-symbols-outlined text-sm">content_copy</span>
+              </button>
+              <button type="button" onclick="deleteExperienceRow(${idx})" class="icon-btn-mini" title="Supprimer">
+                <span class="material-symbols-outlined text-sm">delete</span>
+              </button>
+            </div>
+            <span class="material-symbols-outlined drag-handle" style="position:absolute; top:12px; left:12px;">drag_indicator</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pl-7">
+              <div>
+                <label class="text-[10px] text-white/50 block">Période</label>
+                <input type="text" class="admin-input py-1 px-2 text-xs" value="${escapeHtml(e.period || '')}" onchange="updateExperienceItem(${idx}, 'period', this.value)" />
+              </div>
+              <div>
+                <label class="text-[10px] text-white/50 block">Poste</label>
+                <input type="text" class="admin-input py-1 px-2 text-xs" value="${escapeHtml(e.role || '')}" onchange="updateExperienceItem(${idx}, 'role', this.value)" />
+              </div>
+              <div>
+                <label class="text-[10px] text-white/50 block">Organisation / Ville</label>
+                <input type="text" class="admin-input py-1 px-2 text-xs" value="${escapeHtml(e.organization || '')}" onchange="updateExperienceItem(${idx}, 'organization', this.value)" />
+              </div>
+            </div>
+            <div class="pl-7">
+              <label class="text-[10px] text-white/50 block">Description courte</label>
+              <input type="text" class="admin-input py-1 px-2 text-xs" value="${escapeHtml(e.description || '')}" onchange="updateExperienceItem(${idx}, 'description', this.value)" />
+            </div>
+          </div>
+        `).join('') : ((PORTFOLIO_DATA.cv?.experiences || []).length && !timelineSplit().other.length
+          ? `<div class="text-xs text-white/50 flex flex-col gap-3 items-start">
+               <p>Aucune expérience dans le Parcours : le site affiche pour l'instant les ${PORTFOLIO_DATA.cv.experiences.length} expériences de l'onglet CV. Ajouter une expérience ici remplacera cet affichage.</p>
+               <button type="button" onclick="importCvExperiences()" class="btn-secondary-admin text-xs py-1.5 px-3 rounded-lg">Importer les expériences du CV</button>
+             </div>`
+          : '<p class="text-xs text-white/50">Aucune expérience pour l\'instant. Ajoutez votre premier stage, projet freelance ou emploi.</p>');
+        if (exp.length) makeSortable(container, exp, () => { setExperiences(exp); renderExperienceEditor(); markUnsavedChanges(); });
+      }
+
+      function importCvExperiences() {
+        const imported = (PORTFOLIO_DATA.cv?.experiences || []).map(e => ({
+          period: e.dates || '', role: e.role || '', organization: e.company || '', type: 'experience', description: e.description || ''
+        }));
+        setExperiences(imported);
+        renderExperienceEditor();
+        markUnsavedChanges();
+        showToast(`${imported.length} expérience(s) importée(s) depuis le CV ✓`, 'success');
+      }
+
+      function updateExperienceItem(idx, key, val) {
+        const { exp } = timelineSplit();
+        exp[idx][key] = val;
+      }
+
+      function addExperienceRow() {
+        const { exp } = timelineSplit();
+        exp.unshift({ period: '2026', role: 'Nouveau poste', organization: 'Entreprise - Ville', type: 'experience', description: 'Description...' });
+        setExperiences(exp);
+        renderExperienceEditor();
+        markUnsavedChanges();
+      }
+
+      function duplicateExperienceRow(idx) {
+        const { exp } = timelineSplit();
+        exp.splice(idx + 1, 0, JSON.parse(JSON.stringify(exp[idx])));
+        setExperiences(exp);
+        renderExperienceEditor();
+        markUnsavedChanges();
+        showToast('Expérience dupliquée ✓', 'success');
+      }
+
+      function deleteExperienceRow(idx) {
+        if (!confirm("Supprimer cette expérience ? Cette action est irréversible.")) return;
+        const { exp } = timelineSplit();
+        exp.splice(idx, 1);
+        setExperiences(exp);
+        renderExperienceEditor();
+        markUnsavedChanges();
       }
 
       // Education Editor
@@ -1640,7 +1858,7 @@
         fillContactForm();
         updateStats();
         markUnsavedChanges();
-        showToast('Version restaurée dans l\'éditeur — cliquez sur « Enregistrer » pour la rendre permanente ✓', 'success');
+        showToast('Version restaurée dans l\'éditeur. Cliquez sur « Enregistrer » pour la rendre permanente ✓', 'success');
       }
 
       // SAVE ALL ACTIONS
@@ -1769,14 +1987,14 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
         try {
           const response = await fetch('/api/status');
           if (response.ok) {
-            badge.className = "save-status-banner success py-1.5 px-3 rounded-full text-xs";
+            badge.className = "save-status-banner success";
             badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-400 inline-block mr-1"></span> Serveur local actif`;
             return;
           }
         } catch (err) {
           // Serveur non démarré
         }
-        badge.className = "save-status-banner error py-1.5 px-3 rounded-full text-xs";
+        badge.className = "save-status-banner error";
         badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-400 inline-block mr-1"></span> Mode client (Local)`;
       }
 
@@ -1805,16 +2023,17 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
       // ==========================================================================
       function buildCommands() {
         const commands = [
-          { icon: 'person', label: 'Aller à — Général & Accueil', tag: 'section', run: () => goTab('general', document.querySelector('.rail-btn-icon[data-tab=general]')) },
-          { icon: 'info', label: 'Aller à — À propos & Valeurs', tag: 'section', run: () => goTab('about', document.querySelector('.rail-btn-icon[data-tab=about]')) },
-          { icon: 'psychology', label: 'Aller à — Compétences', tag: 'section', run: () => goTab('skills', document.querySelector('.rail-btn-icon[data-tab=skills]')) },
-          { icon: 'folder_open', label: 'Aller à — Projets', tag: 'section', run: () => goTab('projects', document.querySelector('.rail-btn-icon[data-tab=projects]')) },
-          { icon: 'article', label: 'Aller à — Curriculum Vitæ', tag: 'section', run: () => goTab('cv', document.querySelector('.rail-btn-icon[data-tab=cv]')) },
-          { icon: 'alternate_email', label: 'Aller à — Contact & Réseaux', tag: 'section', run: () => goTab('contact', document.querySelector('.rail-btn-icon[data-tab=contact]')) },
-          { icon: 'history', label: 'Aller à — Sauvegarde & Historique', tag: 'section', run: () => goTab('save', document.querySelector('.rail-btn-icon[data-tab=save]')) },
+          { icon: 'person', label: 'Aller à : Général & Accueil', tag: 'section', run: () => goTab('general', document.querySelector('.rail-btn-icon[data-tab=general]')) },
+          { icon: 'info', label: 'Aller à : À propos & Valeurs', tag: 'section', run: () => goTab('about', document.querySelector('.rail-btn-icon[data-tab=about]')) },
+          { icon: 'psychology', label: 'Aller à : Compétences', tag: 'section', run: () => goTab('skills', document.querySelector('.rail-btn-icon[data-tab=skills]')) },
+          { icon: 'folder_open', label: 'Aller à : Projets', tag: 'section', run: () => goTab('projects', document.querySelector('.rail-btn-icon[data-tab=projects]')) },
+          { icon: 'article', label: 'Aller à : Curriculum Vitæ', tag: 'section', run: () => goTab('cv', document.querySelector('.rail-btn-icon[data-tab=cv]')) },
+          { icon: 'alternate_email', label: 'Aller à : Contact & Réseaux', tag: 'section', run: () => goTab('contact', document.querySelector('.rail-btn-icon[data-tab=contact]')) },
+          { icon: 'history', label: 'Aller à : Sauvegarde & Historique', tag: 'section', run: () => goTab('save', document.querySelector('.rail-btn-icon[data-tab=save]')) },
           { icon: 'add', label: 'Ajouter un nouveau projet', tag: 'action', run: () => { goTab('projects', document.querySelector('.rail-btn-icon[data-tab=projects]')); addNewProject(); } },
           { icon: 'add_box', label: 'Ajouter une catégorie de compétences', tag: 'action', run: () => { goTab('skills', document.querySelector('.rail-btn-icon[data-tab=skills]')); addSkillCategory(); } },
           { icon: 'school', label: 'Ajouter un diplôme', tag: 'action', run: () => { goTab('about', document.querySelector('.rail-btn-icon[data-tab=about]')); addEducationRow(); } },
+          { icon: 'work_history', label: 'Ajouter une expérience (Parcours)', tag: 'action', run: () => { goTab('about', document.querySelector('.rail-btn-icon[data-tab=about]')); addExperienceRow(); } },
           { icon: 'work', label: 'Ajouter une expérience CV', tag: 'action', run: () => { goTab('cv', document.querySelector('.rail-btn-icon[data-tab=cv]')); addCVExperience(); } },
           { icon: 'toggle_on', label: "Basculer l'aperçu live", tag: 'action', run: () => togglePreview() },
           { icon: 'cloud_upload', label: 'Enregistrer tout maintenant', tag: 'action', run: () => saveAllChanges() },
@@ -1823,7 +2042,7 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
 
         (PORTFOLIO_DATA.projects || []).forEach((p, idx) => {
           commands.push({
-            icon: 'folder_open', label: `Projet — ${p.cardTitle || p.title || 'Sans titre'}`, tag: 'projet',
+            icon: 'folder_open', label: `Projet : ${p.cardTitle || p.title || 'Sans titre'}`, tag: 'projet',
             run: () => {
               goTab('projects', document.querySelector('.rail-btn-icon[data-tab=projects]'));
               setTimeout(() => {
@@ -1840,7 +2059,7 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
 
         (PORTFOLIO_DATA.skills || []).forEach((cat) => {
           commands.push({
-            icon: 'psychology', label: `Catégorie de compétences — ${cat.category}`, tag: 'compétence',
+            icon: 'psychology', label: `Catégorie de compétences : ${cat.category}`, tag: 'compétence',
             run: () => goTab('skills', document.querySelector('.rail-btn-icon[data-tab=skills]'))
           });
         });

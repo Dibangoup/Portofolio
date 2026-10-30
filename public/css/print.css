@@ -1,0 +1,90 @@
+/* ==========================================================================
+   PRINT.CSS - IMPRESSION / EXPORT PDF DU CV
+   ==========================================================================
+   Chargé avec media="print". Quand la fenêtre du CV est ouverte, seule la
+   feuille du CV est imprimée, en noir sur blanc.
+*/
+
+@page {
+    size: A4;
+    margin: 14mm;
+}
+
+/* Couvre les trois cas (aucun choix, clair forcé, sombre forcé) avec une
+   spécificité au moins égale à celle du thème sombre système de tokens.css */
+:root,
+:root[data-theme],
+:root:not([data-theme='light']) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f1f1ee;
+    --ink: #111111;
+    --ink-2: #333333;
+    --ink-3: #555555;
+    --line: #cfcfca;
+    --accent: #b3341a;
+    --accent-ink: #ffffff; /* le thème sombre met un texte sombre sur l'accent : illisible sur l'accent d'impression */
+}
+
+/* Impression de la page entière : rien ne doit rester masqué ou en mouvement */
+[data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+.marquee,
+.marquee-toggle,
+.site-header,
+.toasts {
+    animation: none !important;
+}
+
+.marquee-toggle {
+    display: none !important;
+}
+
+html:has(#cv-modal[open]) body > *:not(#cv-modal) {
+    display: none !important;
+}
+
+#cv-modal[open] {
+    position: static;
+    display: block;
+    width: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    overflow: visible;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+    color: #111;
+    animation: none !important;
+}
+
+#cv-modal::backdrop {
+    display: none;
+}
+
+.cv-actions {
+    display: none !important;
+}
+
+.cv-sheet {
+    padding: 0;
+}
+
+.cv-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) !important;
+}
+
+.cv-entry {
+    break-inside: avoid;
+}
+
+.chip {
+    border-color: #bbb;
+    color: #222;
+}
