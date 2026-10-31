@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTasks();
     }
     function openWin(id, from) {
+        if (id === 'terminal' && typeof startTerminalIntro === 'function') startTerminalIntro();
         const win = wins[id];
         const { w } = win;
         // Réouverture pendant l'animation de fermeture : on l'annule
@@ -171,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const f = from?.getBoundingClientRect();
             const dx = f ? f.left + f.width / 2 - (r.left + r.width / 2) : 0;
             const dy = f ? f.top + f.height / 2 - (r.top + r.height / 2) : 20;
-            animate(w, [{ opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(0.85)` }, { opacity: 1, transform: 'none' }], { duration: 420 });
+            animate(w, [{ opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(0.9)` }, { opacity: 1, transform: 'none' }], { duration: 340 });
         }
         renderTasks();
     }
@@ -192,7 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const tr = t?.getBoundingClientRect();
         const dx = tr ? tr.left + tr.width / 2 - (r.left + r.width / 2) : 0;
         const dy = tr ? tr.top - (r.top + r.height / 2) : 10;
-        const a = animate(w, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(${toTask ? 0.2 : 0.9})` }], { duration: 300, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' });
+        // Réduire = vrai déplacement vers la barre des tâches (ease-in-out) ; fermer = sortie qui réagit tout de suite (ease-out, plus courte)
+        const a = animate(w, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(${toTask ? 0.2 : 0.96})` }], toTask ? { duration: 300, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' } : { duration: 200 });
         if (!a) return finish();
         win.closing = a;
         a.finished.then(finish, () => { /* annulée par une réouverture */ });
@@ -433,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bindText(input, 'termInput', 'aria-label');
     inRow.hidden = true;
     term.append(inRow);
-    makeWindow('terminal', null, 'terminal', term, { dark: true, title: 'Terminal - zsh' });
+    makeWindow('terminal', null, 'terminal', term, { dark: true, title: 'Terminal - zsh', hidden: true });
 
     const print = (text, cls = '') => {
         const d = el('div', `ln ${cls}`);
@@ -535,29 +537,22 @@ document.addEventListener('DOMContentLoaded', () => {
         caret.remove();
         await sleep(fast ? 0 : 200);
     }
-    (async () => {
-        await sleep(reduced ? 0 : (showBoot ? 1900 : 900));
+    // Le terminal démarre réduit : sa séquence (whoami, neofetch) ne se tape qu'à sa première ouverture,
+    // pour qu'une seule chose bouge à la fois et que le message de l'accueil reste lisible.
+    let introStarted = false;
+    async function startTerminalIntro() {
+        if (introStarted) return;
+        introStarted = true;
+        await sleep(reduced ? 0 : 350);
         await typeCmd('whoami');
         COMMANDS.whoami();
         await typeCmd('neofetch');
         COMMANDS.neofetch();
-        // Sur mobile, l'éditeur reste sur bienvenue.md : c'est le premier écran (titre, boutons)
-        const showCode = !reduced && isDesk();
-        if (showCode) {
-            await typeCmd('code jordan.ts');
-            print(L().openingCode, 'ok');
-            // Pas de bascule si le visiteur a déjà choisi, ou si le focus est dans bienvenue.md
-            if (!userTouchedEditor && !paneMd.contains(document.activeElement)) showFile('ts', false);
-        }
         print(L().termHint, 'hint');
         inRow.hidden = false;
         term.setAttribute('aria-live', 'polite');
-        // Le code reste affiché quelques secondes, puis l'éditeur revient au contenu principal
-        if (showCode) {
-            await sleep(9000);
-            if (!userTouchedEditor && !paneTs.hidden) showFile('md', false);
-        }
-    })();
+        if (!wins.terminal.w.hidden) input.focus({ preventScroll: true });
+    }
 
     /* ======================================================================
        7. ICÔNES, BARRE DES TÂCHES, MENU DÉMARRER, HORLOGE
@@ -568,10 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { key: 'editor', ic: 'code', tone: 'code', run: (b) => openWin('editor', b) },
         { key: 'terminal', ic: 'terminal', tone: 'term', run: (b) => { openWin('terminal', b); if (!inRow.hidden) input.focus({ preventScroll: true }); } },
         { key: 'projects', ic: 'briefcase', tone: 'accent', run: (b) => openWin('projects', b) },
-        { label: 'photo.jpg', ic: 'file', run: (b) => openWin('photo', b) },
-        { label: 'cv.pdf', ic: 'download', run: openCv },
-        { key: 'journey', ic: 'graduation', run: () => go('experience') },
-        { key: 'contact', ic: 'mail', run: () => go('contact') }
+        { label: 'cv.pdf', ic: 'download', run: openCv }
     ].forEach((d) => {
         const b = el('button', 'os-icon', `${renderIcon(d.ic)}<span></span>`);
         b.type = 'button';
@@ -737,7 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
     palette.addEventListener('click', (e) => { if (e.target === palette) palette.close(); });
 
     /* ======================================================================
-       9. SECTIONS : NUMÉROS DE LIGNE ET INVITES TAPÉES
+       9. SECTIONS : INVITES TAPÉES
        ====================================================================== */
     const PROMPTS = {
         projects: ['~/projets', 'ls -la'],
@@ -746,14 +738,9 @@ document.addEventListener('DOMContentLoaded', () => {
         skills: ['~', 'cat competences.json | jq'],
         contact: ['~', './contact.sh --stage']
     };
-    const gutters = [];
     Object.entries(PROMPTS).forEach(([id, [path, cmd]]) => {
-        const wrap = document.querySelector(`#${id} > .wrap[data-file]`);
+        const wrap = document.querySelector(`#${id} > .wrap`);
         if (!wrap) return;
-        const g = el('pre', 'sec-gutter');
-        g.setAttribute('aria-hidden', 'true');
-        wrap.prepend(g);
-        gutters.push([wrap, g]);
         const head = wrap.querySelector('.section-title, .statement');
         if (!head) return;
         const holder = head.closest('.projects-head') || head;
@@ -777,14 +764,6 @@ document.addEventListener('DOMContentLoaded', () => {
             typeIt();
         }, { threshold: 1 }).observe(p);
     });
-    const fillGutters = () => gutters.forEach(([wrap, g]) => {
-        const n = Math.max(1, Math.ceil((wrap.offsetHeight - 38) / 24));
-        g.textContent = Array.from({ length: n }, (_, i) => i + 1).join('\n');
-    });
-    fillGutters();
-    window.addEventListener('resize', fillGutters);
-    window.addEventListener('load', fillGutters);
-    document.fonts?.ready.then(fillGutters);
 
     /* ======================================================================
        10. LANGUE ET DONNÉES EN DIRECT
@@ -797,13 +776,11 @@ document.addEventListener('DOMContentLoaded', () => {
         tick();
         if (codeTyped) renderCodeStatic();
         if (palette.open) renderPalette();
-        requestAnimationFrame(fillGutters);
     });
     document.addEventListener('portfolio:rendered', () => {
         keepFocus(sideList, renderExplorer);
         keepFocus(files, renderProjectFiles);
         if (codeTyped) renderCodeStatic();
-        requestAnimationFrame(fillGutters);
     });
 
     /* ======================================================================
@@ -834,8 +811,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTasks();
     if (!reduced) {
         const delay = showBoot ? 1300 : 80;
-        [...iconBox.children].forEach((b, i) => animate(b, [{ opacity: 0, transform: 'translateX(-20px)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: delay + i * 40, fill: 'backwards' }));
-        Object.values(wins).filter(({ w }) => !w.hidden).forEach(({ w }, i) => animate(w, [{ opacity: 0, transform: 'translateY(40px) scale(0.94)' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: delay + 100 + i * 120, fill: 'backwards' }));
-        animate(taskbar, [{ transform: 'translateY(52px)' }, { transform: 'none' }], { duration: 600, delay, fill: 'backwards' });
+        // Entrée discrète : faibles distances, durées courtes, léger décalage entre éléments
+        [...iconBox.children].forEach((b, i) => animate(b, [{ opacity: 0, transform: 'translateX(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 400, delay: delay + i * 40, fill: 'backwards' }));
+        Object.values(wins).filter(({ w }) => !w.hidden).forEach(({ w }, i) => animate(w, [{ opacity: 0, transform: 'translateY(12px) scale(0.98)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: delay + 60 + i * 60, fill: 'backwards' }));
+        animate(taskbar, [{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 450, delay, fill: 'backwards' });
     }
 });

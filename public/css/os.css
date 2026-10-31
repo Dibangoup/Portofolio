@@ -15,9 +15,8 @@
    -------------------------------------------------------------------------- */
 .hero.is-desktop {
     --os-col: clamp(296px, 27vw, 400px); /* colonne droite : photo puis terminal */
-    --wallpaper: radial-gradient(1100px 650px at 82% 12%, rgba(240, 150, 80, 0.85), transparent 60%),
-        radial-gradient(900px 600px at 8% 95%, rgba(29, 111, 122, 0.9), transparent 62%),
-        linear-gradient(160deg, #0f2a3a, #19485a 55%, #2c6a6c);
+    /* Fond calme : ardoise sombre presque unie, pour que les fenêtres et le message dominent */
+    --wallpaper: linear-gradient(180deg, #1b262c 0%, #151d22 100%);
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -172,8 +171,6 @@
 
 .ed-status,
 .os-clock,
-.sec-gutter,
-.ascii,
 .term {
     font-variant-numeric: tabular-nums;
 }
@@ -400,6 +397,21 @@
     50% { opacity: 0; }
 }
 
+/* Retour au clic, identique aux boutons du site (.btn) */
+.os-icon,
+.os-task,
+.os-start,
+.ed-tab {
+    transition: transform 0.16s var(--ease-out);
+}
+
+.os-icon:active,
+.os-task:active,
+.os-start:active,
+.ed-tab:active {
+    transform: scale(0.97);
+}
+
 /* --------------------------------------------------------------------------
    BARRE DES TÂCHES ET MENU DÉMARRER
    -------------------------------------------------------------------------- */
@@ -605,91 +617,17 @@
 .palette-empty { padding: 14px 16px; color: #8a92a1; font-size: 0.88rem; }
 
 /* --------------------------------------------------------------------------
-   SECTIONS PRÉSENTÉES EN FENÊTRES D'ÉDITEUR
+   SECTIONS : mise en page "Atelier" calme ; seule signature JordanOS,
+   la petite commande tapée au-dessus de chaque titre
    -------------------------------------------------------------------------- */
-.section { padding-block: clamp(2rem, 5vw, 3.5rem); }
-.section-alt { background: transparent; border: 0; }
-
-.section > .wrap[data-file] {
-    position: relative;
-    padding-top: 4.4rem;
-    padding-bottom: 3rem;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: 0 30px 60px -40px rgba(10, 30, 40, 0.45);
-}
-
-/* La gouttière de numéros de ligne n'existe qu'avec JavaScript */
-.js .section > .wrap[data-file] { padding-left: calc(var(--gutter) + 46px); }
-
-.section > .wrap[data-file]::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 38px;
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--line);
-    border-radius: 14px 14px 0 0;
-}
-
-.section > .wrap[data-file]::after {
-    content: attr(data-file);
-    position: absolute;
-    left: 16px;
-    top: 10px;
-    color: var(--ink-3);
-    font: 600 0.76rem var(--font-code);
-}
-
-.section-alt .project,
-.section-alt .skill { background: var(--bg); }
-
-.sec-gutter {
-    position: absolute;
-    left: 0;
-    top: 38px;
-    bottom: 0;
-    width: 46px;
-    margin: 0;
-    padding: 14px 10px 0 0;
-    overflow: hidden;
-    background: var(--surface-2);
-    border-right: 1px solid var(--line);
-    border-radius: 0 0 0 14px;
-    color: color-mix(in srgb, var(--ink-3) 70%, transparent);
-    font: 11px/24px var(--font-code);
-    text-align: right;
-    pointer-events: none;
-    user-select: none;
-}
-
-/* Titre secondaire d'a-propos.md : marqueur Markdown décoratif (texte alternatif vide) */
-.js .section > .wrap[data-file] .sub-title::before {
-    content: '## ' / '';
-    color: var(--ink-3);
-    font-family: var(--font-code);
-    font-weight: 500;
-}
-
-.section-prompt { min-height: 1.4em; margin-bottom: 1rem; color: var(--ink-3); font: 0.85rem var(--font-code); }
+.section-prompt { min-height: 1.4em; margin-bottom: 0.9rem; color: var(--ink-3); font: 0.82rem var(--font-code); }
 .section-prompt .u { color: var(--ok); }
 .section-prompt .p { color: #22707c; }
 :root[data-theme='dark'] .section-prompt .p { color: var(--term-cyan); }
-.section-prompt .caret { background: var(--ok); }
-
-@media (prefers-reduced-motion: no-preference) {
-    .js .section > .wrap[data-file] [data-reveal] {
-        transform: none;
-        transition: opacity 0.6s var(--ease-out);
-    }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .section-prompt .p { color: var(--term-cyan); }
 }
-
-.skill-name { font-family: var(--font-code); font-size: 0.86rem; }
-.skill-level { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-.ascii { color: var(--accent); font: 0.78rem var(--font-code); white-space: pre; }
+.section-prompt .caret { background: var(--ok); }
 
 /* --------------------------------------------------------------------------
    LARGEURS INTERMÉDIAIRES (861-1279px) : éditeur à gauche, photo et terminal
@@ -723,6 +661,4 @@
     .ed-pane { max-height: none; }
     .os-search { min-width: 0; }
     .os-search span { display: none; }
-    .js .section > .wrap[data-file] { padding-left: var(--gutter); }
-    .sec-gutter { display: none; }
 }

@@ -411,12 +411,28 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFilter();
     };
 
+    // Filtrage animé : les cartes glissent vers leur nouvelle place au lieu de sauter.
+    // Les noms de transition ne sont posés que le temps du filtrage, pour ne pas
+    // interférer avec le dévoilement du thème. Sans View Transitions : bascule directe.
+    let filterTransition = 0;
+    const filterWithTransition = () => {
+        if (prefersReducedMotion || !document.startViewTransition) return applyFilter();
+        const id = ++filterTransition;
+        const cards = [...document.querySelectorAll('#projects-grid .project')];
+        cards.forEach((c, i) => { c.style.viewTransitionName = `project-${i}`; c.style.viewTransitionClass = 'project'; });
+        const vt = document.startViewTransition(applyFilter);
+        // Un second clic pendant l'animation ne doit pas effacer les noms de la nouvelle transition
+        vt.finished.finally(() => {
+            if (id === filterTransition) cards.forEach((c) => { c.style.viewTransitionName = ''; c.style.viewTransitionClass = ''; });
+        });
+    };
+
     const filterButtons = document.querySelectorAll('#project-filters .filter-btn');
     filterButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             currentFilter = btn.dataset.filter;
             filterButtons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-            applyFilter();
+            filterWithTransition();
         });
     });
 
@@ -555,14 +571,11 @@ document.addEventListener('DOMContentLoaded', () => {
               <h3 class="skill-group-title">${renderIcon(iconFor(cat.icon))} ${escapeHtml(cat.category)}</h3>
               <ul class="skill-list">
                 ${(cat.items || []).map((item) => {
-                    // Barre ASCII décorative [#######---] (le niveau en toutes lettres reste l'information lue)
                     const pct = Math.max(0, Math.min(100, Number(item.percent) || 0));
-                    const n = Math.round(pct / 10);
-                    const bar = `<span class="ascii" aria-hidden="true">[${'#'.repeat(n)}${'-'.repeat(10 - n)}]</span>`;
                     return `
                   <li class="skill">
                     <span class="skill-name">${escapeHtml(item.name)}</span>
-                    ${item.level ? `<span class="skill-level mono${pct >= 80 ? ' is-strong' : ''}">${bar}<span>${escapeHtml(item.level)}</span></span>` : ''}
+                    ${item.level ? `<span class="skill-level mono${pct >= 80 ? ' is-strong' : ''}">${escapeHtml(item.level)}</span>` : ''}
                   </li>`;
                 }).join('')}
               </ul>
@@ -724,11 +737,27 @@ document.addEventListener('DOMContentLoaded', () => {
         $('theme-toggle-icon').innerHTML = renderIcon(dark ? 'sun' : 'moon');
     }
 
-    $('theme-toggle').addEventListener('click', () => {
+    $('theme-toggle').addEventListener('click', (e) => {
         const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
-        try { localStorage.setItem('portfolio_theme', next); } catch { /* ignoré */ }
-        updateThemeButton();
+        const apply = () => {
+            root.setAttribute('data-theme', next);
+            try { localStorage.setItem('portfolio_theme', next); } catch { /* ignoré */ }
+            updateThemeButton();
+        };
+        // Moment rare : le nouveau thème se dévoile en cercle depuis le bouton.
+        // Sans View Transitions ou en mouvement réduit, la bascule reste instantanée.
+        if (prefersReducedMotion || !document.startViewTransition) return apply();
+        const r = e.currentTarget.getBoundingClientRect();
+        const x = r.left + r.width / 2;
+        const y = r.top + r.height / 2;
+        const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        const vt = document.startViewTransition(apply);
+        vt.ready.then(() => {
+            root.animate(
+                { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+                { duration: 450, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' }
+            );
+        }).catch(() => { /* transition ignorée : le thème est déjà appliqué */ });
     });
 
     systemDark.addEventListener('change', updateThemeButton);

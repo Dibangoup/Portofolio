@@ -697,3 +697,21 @@ dialog::backdrop {
 .mobile-nav .btn {
     margin-top: auto;
 }
+
+/* Changement de thème : le cercle (animé en JS depuis le bouton) remplace le fondu par défaut */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+/* Filtre des projets : les cartes glissent vers leur nouvelle place */
+::view-transition-group(*.project) {
+    animation-duration: 0.4s;
+    animation-timing-function: var(--ease-in-out);
+}
+
+::view-transition-old(*.project),
+::view-transition-new(*.project) {
+    animation-duration: 0.25s;
+}
