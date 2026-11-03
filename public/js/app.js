@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.filters': 'Filtrer les projets',
             'projects.empty': "Aucun projet dans cette catégorie pour l'instant.",
             'projects.case': "Voir l'étude de cas",
+            'projects.browser': 'Navigateur',
             'projects.demo': 'Démo',
             'projects.code': 'Code',
             'case.context': 'Contexte',
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'contact.label_message': 'Message',
             'contact.btn_send': 'Envoyer le message',
             'contact.sending': 'Envoi en cours…',
+            'contact.sent': 'Message envoyé',
             'form.required': 'Ce champ est obligatoire.',
             'form.email': 'Saisissez une adresse e-mail valide, par exemple nom@example.com.',
             'form.sent': 'Message envoyé. Je vous réponds au plus vite.',
@@ -139,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.filters': 'Filter projects',
             'projects.empty': 'No project in this category yet.',
             'projects.case': 'View case study',
+            'projects.browser': 'Browser',
             'projects.demo': 'Demo',
             'projects.code': 'Code',
             'case.context': 'Context',
@@ -163,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'contact.label_message': 'Message',
             'contact.btn_send': 'Send message',
             'contact.sending': 'Sending…',
+            'contact.sent': 'Message sent',
             'form.required': 'This field is required.',
             'form.email': 'Enter a valid email address, for example name@example.com.',
             'form.sent': "Message sent. I'll get back to you soon.",
@@ -249,8 +253,27 @@ document.addEventListener('DOMContentLoaded', () => {
         dialog.showModal();
     };
 
-    const closeDialog = (dialog) => {
-        if (dialog && dialog.open) dialog.close();
+    // Fermeture animée : chaque dialogue repart par où il est venu (le panneau
+    // d'étude de cas glisse à droite, les autres retombent en fondu).
+    const closingDialogs = new WeakSet();
+    const closeDialog = (dialog, { instant = false } = {}) => {
+        if (!dialog || !dialog.open || closingDialogs.has(dialog)) return;
+        if (instant || prefersReducedMotion || !dialog.animate) { dialog.close(); return; }
+        closingDialogs.add(dialog);
+        const sheet = dialog.classList.contains('sheet');
+        const opts = { duration: sheet ? 240 : 160, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' };
+        const box = dialog.animate(sheet
+            ? [{ transform: 'none' }, { transform: 'translateX(100%)' }]
+            : [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(8px)' }], opts);
+        let backdrop = null;
+        try { backdrop = dialog.animate([{ opacity: 1 }, { opacity: 0 }], { ...opts, pseudoElement: '::backdrop' }); } catch { /* non pris en charge */ }
+        const done = () => {
+            closingDialogs.delete(dialog);
+            dialog.close();
+            box.cancel();
+            backdrop?.cancel();
+        };
+        box.finished.then(done, done);
     };
 
     document.querySelectorAll('dialog').forEach((dialog) => {
@@ -264,6 +287,11 @@ document.addEventListener('DOMContentLoaded', () => {
         dialog.addEventListener('close', () => {
             const opener = openers.get(dialog);
             if (opener && typeof opener.focus === 'function' && document.contains(opener)) opener.focus();
+        });
+        // Échap : même sortie animée que le bouton Fermer
+        dialog.addEventListener('cancel', (e) => {
+            e.preventDefault();
+            closeDialog(dialog);
         });
         dialog.querySelectorAll('[data-close-dialog]').forEach((btn) => {
             btn.addEventListener('click', () => closeDialog(dialog));
@@ -340,31 +368,22 @@ document.addEventListener('DOMContentLoaded', () => {
        ====================================================================== */
     let currentFilter = 'all';
 
-    // Le premier projet visible est mis en avant ; les suivants alternent
-    // 7/5 puis 5/7 colonnes ; un projet seul en fin de liste passe en large.
+    // Une ligne par projet : la fenêtre alterne à gauche puis à droite, et les
+    // projets sont numérotés dans l'ordre affiché (le filtre recalcule les deux).
     const layoutProjects = () => {
         const cards = [...document.querySelectorAll('#projects-grid .project')];
-        cards.forEach((c) => c.classList.remove('is-featured', 'is-wide', 'span-7', 'span-5'));
         const visible = cards.filter((c) => !c.hidden);
         $('projects-empty').hidden = visible.length > 0;
-        if (!visible.length) return;
-
-        visible[0].classList.add('is-featured');
-        const rest = visible.slice(1);
-        for (let i = 0, row = 0; i < rest.length; i += 2, row++) {
-            const a = rest[i];
-            const b = rest[i + 1];
-            if (!b) {
-                a.classList.add('is-wide');
-            } else if (row % 2 === 0) {
-                a.classList.add('span-7');
-                b.classList.add('span-5');
-            } else {
-                a.classList.add('span-5');
-                b.classList.add('span-7');
-            }
-        }
+        visible.forEach((card, i) => {
+            card.classList.toggle('is-flip', i % 2 === 1);
+            const num = card.querySelector('.project-num');
+            if (num) num.textContent = String(i + 1).padStart(2, '0');
+        });
     };
+
+    // Adresse affichée dans la barre de la fenêtre : « Traçabilité Agricole » → « tracabilite-agricole »
+    const slugify = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
     const applyFilter = () => {
         document.querySelectorAll('#projects-grid .project').forEach((card) => {
@@ -379,18 +398,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         grid.innerHTML = projects.map((proj, idx) => {
             const tech = (proj.tech || []).slice(0, 4).map(escapeHtml).join(' / ');
+            const name = proj.cardTitle || proj.title;
             return `
               <article class="project${hasRendered ? ' is-in' : ''}" data-reveal data-category="${escapeHtml(proj.category)}" data-project-id="${escapeHtml(proj.id)}" data-index="${idx}">
                 <div class="project-media">
-                  <img src="${escapeHtml(safeImg(proj.image))}" alt="" loading="lazy" width="1200" height="750" />
+                  <div class="project-win-bar" aria-hidden="true">
+                    ${renderIcon('code')}<span class="project-win-title">${escapeHtml(name)} - ${escapeHtml(t('projects.browser'))}</span>
+                    <span class="project-win-ctl"><span>–</span><span>×</span></span>
+                  </div>
+                  <div class="project-win-url" aria-hidden="true">https://jordan.os/projets/${escapeHtml(slugify(name))}</div>
+                  <div class="project-shot">
+                    <img src="${escapeHtml(safeImg(proj.image))}" alt="" loading="lazy" width="1200" height="750" />
+                  </div>
                 </div>
                 <div class="project-body">
                   <div class="project-meta">
+                    <span class="project-num mono" aria-hidden="true"></span>
                     <span class="project-cat">${escapeHtml(proj.categoryLabel)}</span>
                     ${proj.status ? `<span>${escapeHtml(proj.status)}</span>` : ''}
                   </div>
                   <h3 class="project-title">
-                    <button class="project-open" type="button" aria-haspopup="dialog">${escapeHtml(proj.cardTitle || proj.title)}</button>
+                    <button class="project-open" type="button" aria-haspopup="dialog">${escapeHtml(name)}</button>
                   </h3>
                   <p class="project-desc">${escapeHtml(proj.shortDescription)}</p>
                   ${tech ? `<p class="project-tech mono">${tech}</p>` : ''}
@@ -406,6 +434,8 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.querySelectorAll('.project').forEach((card, i) => {
             card.style.setProperty('--reveal-delay', `${Math.min(i, 3) * 0.07}s`);
             card.querySelector('.project-open').addEventListener('click', () => openProjectModal(card.dataset.projectId));
+            // La fenêtre ouvre aussi l'étude de cas (souris) ; le bouton titre reste le contrôle accessible
+            card.querySelector('.project-media').addEventListener('click', () => openProjectModal(card.dataset.projectId));
         });
 
         applyFilter();
@@ -591,6 +621,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         container.innerHTML = groups.join('');
+        // Rang de chaque compétence dans son groupe, pour la cascade d'apparition (CSS)
+        container.querySelectorAll('.skill-group').forEach((g) => {
+            g.querySelectorAll('.skill, .chip').forEach((item, i) => item.style.setProperty('--i', String(Math.min(i, 8))));
+        });
         if (hasRendered) container.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-in'));
     };
 
@@ -665,7 +699,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const openCv = () => {
-        closeDialog($('mobile-nav'));
+        // Le CV prend la place du menu : pas d'animation croisée entre deux dialogues
+        closeDialog($('mobile-nav'), { instant: true });
         renderCv();
         openDialog(cvModal);
     };
@@ -810,11 +845,31 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ======================================================================
        14. CONTACT : COPIE DE L'E-MAIL ET FORMULAIRE
        ====================================================================== */
+    // Confirmation sur place : l'icône « copier » devient une coche, puis revient
+    let copyTimer = 0;
+    const popIcon = (node) => {
+        if (prefersReducedMotion || !node?.animate) return;
+        node.animate([{ opacity: 0, transform: 'scale(0.6)' }, { opacity: 1, transform: 'none' }], { duration: 200, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+    };
+    const confirmCopy = () => {
+        const btn = $('copy-email-btn');
+        btn.innerHTML = renderIcon('check');
+        btn.classList.add('is-done');
+        popIcon(btn.firstElementChild);
+        clearTimeout(copyTimer);
+        copyTimer = setTimeout(() => {
+            btn.innerHTML = renderIcon('copy');
+            btn.classList.remove('is-done');
+            popIcon(btn.firstElementChild);
+        }, 1600);
+    };
+
     $('copy-email-btn').addEventListener('click', async () => {
         const email = PORTFOLIO_DATA.contact?.email || '';
         try {
             await navigator.clipboard.writeText(email);
             showToast(t('copy.ok'), 'success');
+            confirmCopy();
         } catch {
             showToast(t('copy.fail'), 'error');
         }
@@ -828,9 +883,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = $(id);
         const error = $(`${id}-error`);
         if (message) {
+            const appearing = error.hidden;
             input.setAttribute('aria-invalid', 'true');
             error.textContent = message;
             error.hidden = false;
+            if (appearing && !prefersReducedMotion && error.animate) {
+                error.animate([{ opacity: 0, transform: 'translateY(-4px)' }, { opacity: 1, transform: 'none' }], { duration: 180, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+            }
         } else {
             input.removeAttribute('aria-invalid');
             error.textContent = '';
@@ -881,12 +940,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalHtml = submitBtn.innerHTML;
         submitBtn.disabled = true;
         submitBtn.innerHTML = `${renderIcon('sync', 'icon-spin')} <span>${escapeHtml(t('contact.sending'))}</span>`;
+        let sent = false;
 
         fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(contactForm) })
             .then(async (response) => {
                 if (response.ok) {
                     showToast(t('form.sent'), 'success');
                     contactForm.reset();
+                    sent = true;
                 } else {
                     const json = await response.json().catch(() => ({}));
                     showToast(json.message || t('form.error'), 'error');
@@ -894,8 +955,19 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(() => showToast(t('form.network'), 'error'))
             .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalHtml;
+                const restore = () => {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('is-sent');
+                    submitBtn.innerHTML = originalHtml;
+                };
+                if (!sent) return restore();
+                // Moment rare : le bouton confirme l'envoi pendant 2 s avant de redevenir utilisable
+                submitBtn.classList.add('is-sent');
+                submitBtn.innerHTML = `${renderIcon('check')} <span>${escapeHtml(t('contact.sent'))}</span>`;
+                if (!prefersReducedMotion && submitBtn.animate) {
+                    submitBtn.firstElementChild.animate([{ opacity: 0, transform: 'scale(0.6) rotate(-12deg)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)' });
+                }
+                setTimeout(restore, 2000);
             });
     });
 

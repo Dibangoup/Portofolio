@@ -62,6 +62,12 @@
     cursor: progress;
 }
 
+/* Envoi réussi : le bouton reste bloqué 2 s mais pleinement lisible */
+.btn.is-sent[disabled] {
+    opacity: 1;
+    cursor: default;
+}
+
 .btn .icon {
     transition: transform 0.25s var(--ease-out);
 }
@@ -714,4 +720,10 @@ dialog::backdrop {
 ::view-transition-old(*.project),
 ::view-transition-new(*.project) {
     animation-duration: 0.25s;
+}
+
+/* Copie de l'e-mail confirmée sur place */
+.icon-btn.is-done {
+    border-color: var(--ok);
+    color: var(--ok);
 }

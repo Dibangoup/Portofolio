@@ -83,6 +83,15 @@
         ],
         "createdAt": "2026-10-30T18:54:15.569Z",
         "reason": "Agent: real semantic state (searching for local server), replaced within milliseconds by checkServerStatus"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "public/css/os.css"
+        ],
+        "createdAt": "2026-11-03T22:39:32.722Z",
+        "reason": "Choix explicite de l'utilisateur (prototype Horizon 3D, 2026-11-03) : sol quadrillé en perspective animé sous le bureau JordanOS"
       }
     ]
   }

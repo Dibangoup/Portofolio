@@ -172,7 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const f = from?.getBoundingClientRect();
             const dx = f ? f.left + f.width / 2 - (r.left + r.width / 2) : 0;
             const dy = f ? f.top + f.height / 2 - (r.top + r.height / 2) : 20;
-            animate(w, [{ opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(0.9)` }, { opacity: 1, transform: 'none' }], { duration: 340 });
+            // L'éditeur garde sa signature 3D quand on le rouvre (bascule plus légère qu'à l'arrivée)
+            const tilt = id === 'editor' ? 'perspective(1600px) rotateX(10deg) ' : '';
+            animate(w, [{ opacity: 0, transform: `translate(${dx}px, ${dy}px) ${tilt}scale(0.9)` }, { opacity: 1, transform: 'none' }], { duration: 340 });
         }
         renderTasks();
     }
@@ -807,13 +809,29 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ======================================================================
        12. ENTRÉE
        ====================================================================== */
+    // Le sol animé du fond (« Horizon 3D », os.css) ne tourne que lorsque l'accueil est visible
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([entry]) => hero.classList.toggle('is-paused', !entry.isIntersecting)).observe(hero);
+    }
     focusWin('editor');
     renderTasks();
     if (!reduced) {
         const delay = showBoot ? 1300 : 80;
         // Entrée discrète : faibles distances, durées courtes, léger décalage entre éléments
         [...iconBox.children].forEach((b, i) => animate(b, [{ opacity: 0, transform: 'translateX(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 400, delay: delay + i * 40, fill: 'backwards' }));
-        Object.values(wins).filter(({ w }) => !w.hidden).forEach(({ w }, i) => animate(w, [{ opacity: 0, transform: 'translateY(12px) scale(0.98)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: delay + 60 + i * 60, fill: 'backwards' }));
+        Object.values(wins).filter(({ w }) => !w.hidden).forEach(({ w }, i) => {
+            // L'éditeur se redresse en 3D (charnière en bas, comme un écran qu'on ouvre) ; les autres fenêtres restent discrètes
+            // (opaque dès le premier tiers pour que la bascule se voie ; courbe « drawer », plus progressive)
+            const isEditor = w === wins.editor.w;
+            const frames = isEditor
+                ? [{ opacity: 0, transform: 'perspective(1600px) rotateX(16deg) translateY(28px) scale(0.96)', transformOrigin: '50% 100%' },
+                    { opacity: 1, offset: 0.3 },
+                    { opacity: 1, transform: 'none', transformOrigin: '50% 100%' }]
+                : [{ opacity: 0, transform: 'translateY(12px) scale(0.98)' }, { opacity: 1, transform: 'none' }];
+            animate(w, frames, isEditor
+                ? { duration: 900, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', delay: delay + 60, fill: 'backwards' }
+                : { duration: 450, delay: delay + 60 + i * 60, fill: 'backwards' });
+        });
         animate(taskbar, [{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 450, delay, fill: 'backwards' });
     }
 });

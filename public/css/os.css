@@ -15,14 +15,55 @@
    -------------------------------------------------------------------------- */
 .hero.is-desktop {
     --os-col: clamp(296px, 27vw, 400px); /* colonne droite : photo puis terminal */
-    /* Fond calme : ardoise sombre presque unie, pour que les fenêtres et le message dominent */
-    --wallpaper: linear-gradient(180deg, #1b262c 0%, #151d22 100%);
+    /* Fond « Horizon 3D » : nuit bleu-gris avec une lueur à l'horizon ;
+       le sol quadrillé en perspective est dessiné par ::before */
+    --wallpaper: radial-gradient(60% 28% at 50% 46%, rgba(127, 211, 224, 0.2), transparent 70%),
+        linear-gradient(180deg, #0a0f15 0%, #101823 46%, #0d141c 100%);
     position: relative;
     isolation: isolate;
     overflow: hidden;
     min-height: calc(100dvh - var(--header-h));
     padding: 0;
     background: var(--wallpaper);
+}
+
+/* Sol quadrillé incliné en perspective, qui avance en boucle vers le visiteur.
+   Seul transform est animé (calque déplacé par le compositeur, sans redessin) ;
+   la boucle est invisible car elle avance d'exactement une case (56 px). */
+.hero.is-desktop::before {
+    content: '';
+    position: absolute;
+    left: -60%;
+    right: -60%;
+    top: 46%;
+    height: 140%;
+    z-index: -1;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(127, 211, 224, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(127, 211, 224, 0.22) 1px, transparent 1px);
+    background-size: 56px 56px;
+    transform-origin: 50% 0;
+    transform: perspective(420px) rotateX(72deg);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+    animation: os-horizon 3.2s linear infinite;
+}
+
+/* Accueil hors de l'écran (os.js) : le sol s'arrête pour économiser la batterie */
+.hero.is-desktop.is-paused::before {
+    animation-play-state: paused;
+}
+
+@keyframes os-horizon {
+    from { transform: perspective(420px) rotateX(72deg) translateY(-56px); }
+    to { transform: perspective(420px) rotateX(72deg) translateY(0); }
+}
+
+/* Mouvement réduit : le sol reste en place, immobile */
+@media (prefers-reduced-motion: reduce) {
+    .hero.is-desktop::before {
+        animation: none;
+    }
 }
 
 .hero.is-desktop > .wrap {

@@ -472,7 +472,9 @@
 }
 
 /* --------------------------------------------------------------------------
-   PROJETS : grille asymétrique, premier projet mis en avant
+   PROJETS : une ligne par projet ; la capture est présentée dans une fenêtre
+   de navigateur JordanOS qui pivote pour faire face au visiteur pendant le
+   défilement (voir « PROJETS EN 3D » en fin de fichier), côtés alternés
    -------------------------------------------------------------------------- */
 .projects-head {
     display: flex;
@@ -483,48 +485,118 @@
     margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
+#projects {
+    overflow-x: clip; /* la rotation des fenêtres ne doit pas créer de défilement horizontal */
+}
+
 .project-grid {
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: clamp(1rem, 2.2vw, 1.75rem);
+    gap: clamp(4.5rem, 10vw, 8.5rem);
 }
 
 .project {
+    --side: 1;           /* 1 : fenêtre à gauche ; -1 : fenêtre à droite */
+    --tilt: 34deg;       /* rotation de départ de la fenêtre */
+    --text-from: translateX(calc(var(--side) * 40px));
     position: relative;
-    display: flex;
-    flex-direction: column;
-    grid-column: span 12;
-    border: 1px solid var(--line);
-    border-radius: var(--r-surface);
-    background: var(--surface);
-    overflow: hidden;
-    transition: border-color 0.25s ease, box-shadow 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    perspective: 1600px;
 }
 
-.section-alt .project {
-    background: var(--bg);
+.project.is-flip {
+    --side: -1;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
 }
 
-.project:hover {
-    border-color: color-mix(in srgb, var(--ink) 30%, var(--line));
-    box-shadow: var(--shadow);
+.project.is-flip .project-media {
+    order: 2;
 }
 
-.project:has(.project-open:focus-visible) {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-}
-
-.project.span-7 { grid-column: span 7; }
-.project.span-5 { grid-column: span 5; }
-
+/* La fenêtre : même famille que les fenêtres sombres du bureau JordanOS */
 .project-media {
+    border: 1px solid #2a3036;
+    border-radius: 12px;
+    background: #15191d;
+    overflow: hidden;
+    box-shadow: 0 50px 90px -40px rgba(10, 14, 18, 0.55);
+    cursor: pointer;
+    transition: box-shadow 0.4s var(--ease-out);
+}
+
+.project:hover .project-media {
+    box-shadow: 0 60px 100px -40px rgba(10, 14, 18, 0.7);
+}
+
+.project:has(.project-open:focus-visible) .project-media {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+}
+
+.project-win-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 36px;
+    padding: 0 0.9rem;
+    border-bottom: 1px solid #262b31;
+    color: #c9d1d9;
+    font-size: 0.78rem;
+}
+
+.project-win-bar .icon {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    color: #8b949e;
+}
+
+.project-win-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-win-ctl {
+    display: flex;
+    gap: 0.9rem;
+    margin-left: auto;
+    color: #7d8590;
+}
+
+.project-win-url {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 30px;
+    margin: 0.5rem 0.7rem;
+    padding: 0 0.7rem;
+    border-radius: 7px;
+    background: #0e1114;
+    color: #8b949e;
+    font: 0.72rem var(--font-code);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.project-win-url::before {
+    content: '';
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--term-green);
+}
+
+.project-shot {
     overflow: hidden;
     aspect-ratio: 16 / 10;
     background: var(--surface-2);
 }
 
-.project-media img {
+.project-shot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -533,25 +605,30 @@
 
 /* Zoom réservé à la souris : au toucher, le survol resterait « collé » après un tap */
 @media (hover: hover) and (pointer: fine) {
-    .project:hover .project-media img {
+    .project:hover .project-shot img {
         transform: scale(1.035);
     }
 }
 
 .project-body {
     display: flex;
-    flex: 1;
     flex-direction: column;
     gap: 0.75rem;
-    padding: clamp(1.25rem, 2.4vw, 1.75rem);
+}
+
+.project-num {
+    color: var(--ink-3);
+}
+
+.project-num::after {
+    content: ' -';
 }
 
 .project-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    gap: 0.5rem 0.75rem;
     font-size: 0.85rem;
     color: var(--ink-3);
 }
@@ -563,7 +640,7 @@
 
 .project-title {
     font-family: var(--font-display);
-    font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
     font-weight: 650;
     line-height: 1.12;
     letter-spacing: -0.02em;
@@ -586,6 +663,7 @@
 .project-open::after {
     content: '';
     position: absolute;
+    z-index: 1; /* le bouton couvre le bloc de texte ; la fenêtre a son propre clic (app.js) */
     inset: 0;
 }
 
@@ -605,13 +683,12 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.25rem 1.25rem;
-    margin-top: auto;
     padding-top: 0.5rem;
 }
 
 .project-actions a {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 .project-cue {
@@ -633,52 +710,17 @@
     transform: translate(2px, -2px);
 }
 
-/* Carte mise en avant : image et texte côte à côte */
-.project.is-featured {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-}
-
-.project.is-featured .project-media {
-    aspect-ratio: auto;
-    min-height: 100%;
-}
-
-.project.is-featured .project-body {
-    justify-content: center;
-    padding: clamp(1.5rem, 3.5vw, 3rem);
-}
-
-.project.is-featured .project-title {
-    font-size: clamp(1.7rem, 3.2vw, 2.5rem);
-}
-
-/* Carte seule en fin de ligne : format horizontal */
-.project.is-wide {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-}
-
-.project.is-wide .project-media {
-    aspect-ratio: auto;
-    min-height: 100%;
-}
-
 @media (max-width: 900px) {
-    .project.span-7,
-    .project.span-5 {
-        grid-column: span 12;
+    .project,
+    .project.is-flip {
+        --tilt: 16deg;
+        --text-from: translateY(20px);
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
     }
 
-    .project.is-featured,
-    .project.is-wide {
-        display: flex;
-    }
-
-    .project.is-featured .project-media,
-    .project.is-wide .project-media {
-        aspect-ratio: 16 / 10;
-        min-height: 0;
+    .project.is-flip .project-media {
+        order: 0;
     }
 }
 
@@ -1114,6 +1156,83 @@
     }
 
     .js [data-reveal].is-in {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Projets : repli quand le navigateur ne gère pas la rotation au défilement */
+    .js .project[data-reveal]:not(.is-in) {
+        transform: perspective(1200px) rotateX(10deg) translateY(28px);
+    }
+
+    /* Compétences : chaque élément suit son groupe avec un léger décalage (40 ms) */
+    .js .skill-group[data-reveal] :is(.skill, .chip) {
+        opacity: 0;
+        transform: translateY(6px);
+        /* délai propre à l'apparition : le survol (bordure) reste immédiat */
+        transition: opacity 0.4s var(--ease-out) calc(0.15s + var(--i, 0) * 40ms),
+            transform 0.4s var(--ease-out) calc(0.15s + var(--i, 0) * 40ms),
+            border-color 0.2s ease;
+    }
+
+    .js .skill-group[data-reveal].is-in :is(.skill, .chip) {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   PROJETS EN 3D : la fenêtre pivote vers le visiteur au rythme du défilement
+   (animations liées au défilement, sans JavaScript ; repli : apparition simple)
+   -------------------------------------------------------------------------- */
+@supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .project-media {
+            animation: project-window linear both;
+            animation-timeline: view();
+            animation-range: cover 0% cover 100%;
+        }
+
+        .project-body {
+            animation: project-text linear both;
+            animation-timeline: view();
+            animation-range: entry 0% cover 45%;
+        }
+
+        /* La rotation remplace l'apparition générique de la ligne */
+        .js .project[data-reveal],
+        .js .project[data-reveal]:not(.is-in) {
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
+
+@keyframes project-window {
+    0% {
+        opacity: 0.25;
+        transform: rotateY(calc(var(--side) * var(--tilt) * -1)) rotateX(14deg) translateZ(-120px);
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    60% {
+        opacity: 1;
+        transform: none;
+    }
+
+    100% {
+        opacity: 1;
+        transform: rotateX(-10deg);
+    }
+}
+
+@keyframes project-text {
+    from {
+        opacity: 0;
+        transform: var(--text-from);
+    }
+
+    to {
         opacity: 1;
         transform: none;
     }
