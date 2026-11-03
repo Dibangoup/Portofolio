@@ -1,7 +1,1239 @@
 /* ==========================================================================
-   LAYOUT.CSS — MISE EN PAGE & STRUCTURES COMPLEXES
-   ==========================================================================
-   Fichier réservé aux structures de mise en page globales spécifiques.
-   La frise chronologique (timeline) est gérée dans components.css selon
-   le design system "Carte Céleste".
+   LAYOUT.CSS - EN-TÊTE, SECTIONS, GRILLES ET ANIMATIONS D'ENTRÉE
    ========================================================================== */
+
+.wrap {
+    width: 100%;
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+}
+
+.top-sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   EN-TÊTE COLLANT
+   -------------------------------------------------------------------------- */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s ease;
+}
+
+.site-header.is-scrolled {
+    border-bottom-color: var(--line);
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: var(--max);
+    height: var(--header-h);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 44px;
+    text-decoration: none;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    transition: background-color 0.2s ease;
+}
+
+.brand:hover .brand-mark {
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+.brand-name {
+    font-weight: 650;
+    font-size: 0.98rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+
+.primary-nav {
+    margin-inline: auto;
+}
+
+.primary-nav ul {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.8rem;
+    color: var(--ink-2);
+    font-size: 0.93rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link[aria-current='true'] {
+    color: var(--ink);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0.8rem;
+    right: 0.8rem;
+    bottom: 8px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-out);
+}
+
+.nav-link[aria-current='true']::after {
+    transform: scaleX(1);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lang-btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.menu-btn {
+    display: none;
+}
+
+/* Barre de progression : animation pilotée par le défilement (CSS natif) */
+.scroll-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    z-index: 20;
+    height: 2px;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
+}
+
+@supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .scroll-progress {
+            animation: progress linear both;
+            animation-timeline: scroll(root block);
+        }
+    }
+}
+
+@keyframes progress {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@media (max-width: 960px) {
+    .primary-nav,
+    .header-cv {
+        display: none;
+    }
+
+    .menu-btn {
+        display: inline-grid;
+    }
+
+    .header-actions {
+        margin-left: auto;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   ACCUEIL
+   -------------------------------------------------------------------------- */
+.hero {
+    padding-top: clamp(2.5rem, 6vw, 5rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    min-height: calc(100dvh - var(--header-h) - clamp(5.5rem, 12vw, 10rem));
+}
+
+.hero-id {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.75rem;
+    font-size: 1rem;
+}
+
+.hero-id-name {
+    font-weight: 700;
+}
+
+.hero-id-role {
+    color: var(--ink-3);
+}
+
+.hero-title {
+    margin-top: 1.4rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4.9vw, 4.3rem);
+    font-weight: 700;
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+}
+
+.hero-title-muted {
+    color: var(--ink-3);
+    font-weight: 500;
+}
+
+.hero-desc {
+    margin-top: 1.5rem;
+    max-width: 52ch;
+    color: var(--ink-2);
+    font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+    line-height: 1.6;
+}
+
+.hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.2rem;
+}
+
+.hero-visual {
+    justify-self: end;
+    width: 100%;
+    max-width: 440px;
+}
+
+.portrait {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--r-surface);
+    background: var(--surface-2);
+}
+
+.portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+}
+
+.hero-caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin-top: 1rem;
+}
+
+.hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+@media (max-width: 860px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    /* Sur mobile, le message passe d'abord ; le portrait suit, recadré en carré */
+    .hero-visual {
+        justify-self: start;
+        max-width: 420px;
+    }
+
+    .portrait {
+        aspect-ratio: 1 / 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-ctas .btn {
+        flex: 1 1 100%;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   BANDEAU DES TECHNOLOGIES (unique défilement horizontal du site)
+   -------------------------------------------------------------------------- */
+.stack-band {
+    position: relative;
+    border-block: 1px solid var(--line);
+    overflow: hidden;
+}
+
+/* Contrôle pause/lecture (WCAG 2.2.2) : le défilement doit pouvoir être arrêté */
+.marquee-toggle {
+    position: absolute;
+    top: 50%;
+    right: var(--gutter);
+    width: 40px;
+    height: 40px;
+    background: var(--bg);
+    transform: translateY(-50%);
+}
+
+.marquee-toggle:active {
+    transform: translateY(-50%) scale(0.94);
+}
+
+.stack-band.is-paused .marquee {
+    animation-play-state: paused;
+}
+
+/* Fondu sous le bouton pour que le texte défilant ne passe pas dessous à vif */
+.stack-band::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: calc(var(--gutter) + 96px);
+    background: linear-gradient(to right, transparent, var(--bg) 55%);
+    pointer-events: none;
+}
+
+.marquee-toggle {
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stack-band::after {
+        display: none;
+    }
+}
+
+.marquee {
+    display: flex;
+    width: max-content;
+}
+
+.marquee-track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.marquee-track li {
+    display: flex;
+    align-items: center;
+    gap: 2.25rem;
+    padding: 1.15rem 0 1.15rem 2.25rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+
+.marquee-track li::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .marquee {
+        animation: marquee 48s linear infinite;
+    }
+
+    .stack-band:hover .marquee {
+        animation-play-state: paused;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee,
+    .marquee-track {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .marquee-track[aria-hidden='true'],
+    .marquee-toggle {
+        display: none;
+    }
+}
+
+@keyframes marquee {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   SECTIONS (base commune)
+   -------------------------------------------------------------------------- */
+.section {
+    padding-block: var(--section-y);
+}
+
+.section-alt {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+}
+
+.section-lead {
+    margin-top: 1rem;
+    max-width: 52ch;
+    color: var(--ink-2);
+    font-size: 1.05rem;
+}
+
+.statement {
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+}
+
+.sub-title {
+    margin-top: clamp(3.5rem, 7vw, 5.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+.empty-state {
+    padding: 3rem 1.5rem;
+    border: 1px dashed var(--line);
+    border-radius: var(--r-surface);
+    color: var(--ink-3);
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   PROJETS : une ligne par projet ; la capture est présentée dans une fenêtre
+   de navigateur JordanOS qui pivote pour faire face au visiteur pendant le
+   défilement (voir « PROJETS EN 3D » en fin de fichier), côtés alternés
+   -------------------------------------------------------------------------- */
+.projects-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+#projects {
+    overflow-x: clip; /* la rotation des fenêtres ne doit pas créer de défilement horizontal */
+}
+
+.project-grid {
+    display: grid;
+    gap: clamp(4.5rem, 10vw, 8.5rem);
+}
+
+.project {
+    --side: 1;           /* 1 : fenêtre à gauche ; -1 : fenêtre à droite */
+    --tilt: 34deg;       /* rotation de départ de la fenêtre */
+    --text-from: translateX(calc(var(--side) * 40px));
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    perspective: 1600px;
+}
+
+.project.is-flip {
+    --side: -1;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+}
+
+.project.is-flip .project-media {
+    order: 2;
+}
+
+/* La fenêtre : même famille que les fenêtres sombres du bureau JordanOS */
+.project-media {
+    border: 1px solid #2a3036;
+    border-radius: 12px;
+    background: #15191d;
+    overflow: hidden;
+    box-shadow: 0 50px 90px -40px rgba(10, 14, 18, 0.55);
+    cursor: pointer;
+    transition: box-shadow 0.4s var(--ease-out);
+}
+
+.project:hover .project-media {
+    box-shadow: 0 60px 100px -40px rgba(10, 14, 18, 0.7);
+}
+
+.project:has(.project-open:focus-visible) .project-media {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+}
+
+.project-win-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 36px;
+    padding: 0 0.9rem;
+    border-bottom: 1px solid #262b31;
+    color: #c9d1d9;
+    font-size: 0.78rem;
+}
+
+.project-win-bar .icon {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    color: #8b949e;
+}
+
+.project-win-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-win-ctl {
+    display: flex;
+    gap: 0.9rem;
+    margin-left: auto;
+    color: #7d8590;
+}
+
+.project-win-url {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 30px;
+    margin: 0.5rem 0.7rem;
+    padding: 0 0.7rem;
+    border-radius: 7px;
+    background: #0e1114;
+    color: #8b949e;
+    font: 0.72rem var(--font-code);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.project-win-url::before {
+    content: '';
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--term-green);
+}
+
+.project-shot {
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: var(--surface-2);
+}
+
+.project-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s var(--ease-out);
+}
+
+/* Zoom réservé à la souris : au toucher, le survol resterait « collé » après un tap */
+@media (hover: hover) and (pointer: fine) {
+    .project:hover .project-shot img {
+        transform: scale(1.035);
+    }
+}
+
+.project-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.project-num {
+    color: var(--ink-3);
+}
+
+.project-num::after {
+    content: ' -';
+}
+
+.project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--ink-3);
+}
+
+.project-cat {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.project-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    font-weight: 650;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+}
+
+/* Le bouton titre couvre toute la carte (clic n'importe où), les liens restent au-dessus */
+.project-open {
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+}
+
+.project-open:focus-visible {
+    outline: none;
+}
+
+.project-open::after {
+    content: '';
+    position: absolute;
+    z-index: 1; /* le bouton couvre le bloc de texte ; la fenêtre a son propre clic (app.js) */
+    inset: 0;
+}
+
+.project-desc {
+    color: var(--ink-2);
+    font-size: 0.97rem;
+    max-width: 60ch;
+}
+
+.project-tech {
+    font-size: 0.8rem;
+    color: var(--ink-3);
+}
+
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+    padding-top: 0.5rem;
+}
+
+.project-actions a {
+    position: relative;
+    z-index: 2;
+}
+
+.project-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    margin-right: auto;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.project-cue .icon {
+    color: var(--accent);
+    transition: transform 0.3s var(--ease-out);
+}
+
+.project:hover .project-cue .icon {
+    transform: translate(2px, -2px);
+}
+
+@media (max-width: 900px) {
+    .project,
+    .project.is-flip {
+        --tilt: 16deg;
+        --text-from: translateY(20px);
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+    }
+
+    .project.is-flip .project-media {
+        order: 0;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   À PROPOS
+   -------------------------------------------------------------------------- */
+.about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.about-text {
+    display: grid;
+    gap: 1.15rem;
+    color: var(--ink-2);
+    font-size: 1.08rem;
+    line-height: 1.7;
+    max-width: 62ch;
+}
+
+.about-text p:first-child {
+    color: var(--ink);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.about-journey {
+    align-self: start;
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 1.5rem 1.6rem;
+    border-radius: var(--r-surface);
+    background: var(--bg);
+    color: var(--ink-2);
+    font-size: 1rem;
+}
+
+.values {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(2rem, 5vw, 4rem);
+    margin-top: 1.5rem;
+}
+
+.value {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    align-items: start;
+    gap: 1.1rem;
+    padding-block: 1.6rem;
+    border-top: 1px solid var(--line);
+}
+
+/* Tuile d'icône : teinte d'accent au repos, accent plein au survol */
+.value-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.value-icon .icon {
+    width: 24px;
+    height: 24px;
+}
+
+.value:hover .value-icon {
+    background: var(--accent);
+    color: var(--accent-ink);
+    transform: rotate(-6deg);
+}
+
+.value-title {
+    margin-top: 0.2rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+}
+
+.value-desc {
+    margin-top: 0.4rem;
+    max-width: 46ch;
+    color: var(--ink-2);
+    font-size: 0.97rem;
+    line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .value:hover .value-icon {
+        transform: none;
+    }
+}
+
+@media (max-width: 820px) {
+    .about-grid,
+    .values {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   PARCOURS : deux pistes parallèles
+   -------------------------------------------------------------------------- */
+.tracks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2.5rem, 6vw, 5rem);
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.tracks.is-single {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 760px;
+}
+
+.track-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--ink);
+    font-size: 1rem;
+    font-weight: 650;
+}
+
+.track-title .icon {
+    color: var(--accent);
+}
+
+.track-list {
+    position: relative;
+}
+
+.track-item {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.6rem 0 1.6rem 1.75rem;
+    border-left: 1px solid var(--line);
+}
+
+.track-item::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 2.05rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--ink-3);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.track-item:hover::before {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+.track-period {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+}
+
+.track-role {
+    font-size: 1.15rem;
+    font-weight: 650;
+    line-height: 1.3;
+}
+
+.track-org {
+    font-weight: 500;
+    color: var(--ink-2);
+}
+
+.track-desc {
+    margin-top: 0.25rem;
+    color: var(--ink-2);
+    font-size: 0.96rem;
+}
+
+@media (max-width: 820px) {
+    .tracks {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   COMPÉTENCES : intro collante à gauche, groupes à droite
+   -------------------------------------------------------------------------- */
+.skills-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+}
+
+.skills-intro {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+}
+
+.skill-groups {
+    display: grid;
+    gap: clamp(2rem, 4vw, 2.75rem);
+}
+
+.skill-group-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+.skill-group-title .icon {
+    color: var(--accent);
+}
+
+.skill-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.skill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 56px;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-field);
+    background: var(--bg);
+    transition: border-color 0.2s ease;
+}
+
+.skill:hover {
+    border-color: var(--ink-3);
+}
+
+.skill-name {
+    font-weight: 550;
+    font-size: 0.97rem;
+    line-height: 1.3;
+}
+
+.skill-level {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    color: var(--ink-3);
+}
+
+.skill-level.is-strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.lang-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+    .skills-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .skills-intro {
+        position: static;
+    }
+}
+
+@media (max-width: 560px) {
+    .skill-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   CONTACT
+   -------------------------------------------------------------------------- */
+.contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 6vw, 5.5rem);
+    align-items: start;
+}
+
+.email-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+}
+
+.email-link {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+    overflow-wrap: anywhere;
+}
+
+.email-link:hover {
+    color: var(--accent);
+}
+
+.contact-list {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 2rem;
+}
+
+.contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    color: var(--ink-2);
+}
+
+.contact-list .icon {
+    width: 20px;
+    height: 20px;
+    color: var(--ink);
+}
+
+.contact-list a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+}
+
+.contact-list a:hover {
+    text-decoration-color: var(--accent);
+}
+
+.contact-form {
+    display: grid;
+    gap: 1.15rem;
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--r-surface);
+    background: var(--surface);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+}
+
+@media (max-width: 900px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   PIED DE PAGE
+   -------------------------------------------------------------------------- */
+.site-footer {
+    border-top: 1px solid var(--line);
+    padding-block: 2rem;
+}
+
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    font-size: 0.9rem;
+    color: var(--ink-3);
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+}
+
+.footer-links a,
+.back-top {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-2);
+    text-decoration: none;
+}
+
+.footer-links a:hover,
+.back-top:hover {
+    color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   APPARITION AU DÉFILEMENT (uniquement avec JS + mouvement autorisé)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+    .js [data-reveal] {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+        transition-delay: var(--reveal-delay, 0s);
+    }
+
+    .js [data-reveal].is-in {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Projets : repli quand le navigateur ne gère pas la rotation au défilement */
+    .js .project[data-reveal]:not(.is-in) {
+        transform: perspective(1200px) rotateX(10deg) translateY(28px);
+    }
+
+    /* Compétences : chaque élément suit son groupe avec un léger décalage (40 ms) */
+    .js .skill-group[data-reveal] :is(.skill, .chip) {
+        opacity: 0;
+        transform: translateY(6px);
+        /* délai propre à l'apparition : le survol (bordure) reste immédiat */
+        transition: opacity 0.4s var(--ease-out) calc(0.15s + var(--i, 0) * 40ms),
+            transform 0.4s var(--ease-out) calc(0.15s + var(--i, 0) * 40ms),
+            border-color 0.2s ease;
+    }
+
+    .js .skill-group[data-reveal].is-in :is(.skill, .chip) {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   PROJETS EN 3D : la fenêtre pivote vers le visiteur au rythme du défilement
+   (animations liées au défilement, sans JavaScript ; repli : apparition simple)
+   -------------------------------------------------------------------------- */
+@supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .project-media {
+            animation: project-window linear both;
+            animation-timeline: view();
+            animation-range: cover 0% cover 100%;
+        }
+
+        .project-body {
+            animation: project-text linear both;
+            animation-timeline: view();
+            animation-range: entry 0% cover 45%;
+        }
+
+        /* La rotation remplace l'apparition générique de la ligne */
+        .js .project[data-reveal],
+        .js .project[data-reveal]:not(.is-in) {
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
+
+@keyframes project-window {
+    0% {
+        opacity: 0.25;
+        transform: rotateY(calc(var(--side) * var(--tilt) * -1)) rotateX(14deg) translateZ(-120px);
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    60% {
+        opacity: 1;
+        transform: none;
+    }
+
+    100% {
+        opacity: 1;
+        transform: rotateX(-10deg);
+    }
+}
+
+@keyframes project-text {
+    from {
+        opacity: 0;
+        transform: var(--text-from);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

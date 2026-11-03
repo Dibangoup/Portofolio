@@ -111,8 +111,8 @@ const authLimiter = rateLimit({
 // Deux Content-Security-Policy distinctes : le site public n'a aucun script/style inline
 // et peut donc être strict (défense réelle contre une XSS qui passerait malgré tout à
 // travers l'échappement) ; le dashboard a un unique <script> inline de tout son code
-// (~1300 lignes) et charge des polices Google Fonts, donc reste permissif pour continuer
-// à fonctionner — il est déjà protégé par l'authentification HTTP Basic.
+// (~1300 lignes) et des attributs on*, donc reste permissif pour script/style inline (ses
+// polices sont auto-hébergées) — il est déjà protégé par l'authentification HTTP Basic.
 const strictCsp = helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
@@ -138,8 +138,8 @@ const dashboardCsp = helmet.contentSecurityPolicy({
     // les ~78 attributs on* (onclick, onchange, oninput...) utilisés dans tout le dashboard
     // pour ses interactions (édition de champs, aperçu live des images, etc.).
     scriptSrcAttr: ["'unsafe-inline'"],
-    styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-    fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    fontSrc: ["'self'"],
     // 'https:' pour les mêmes raisons que strictCsp (voir son commentaire ci-dessus) :
     // le dashboard affiche lui-même ces images (aperçu live, éditeur de projets).
     imgSrc: ["'self'", 'data:', 'https:'],

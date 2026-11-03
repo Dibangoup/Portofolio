@@ -8,6 +8,90 @@
         "value": "space grotesk",
         "createdAt": "2026-08-10T09:35:18.678Z",
         "reason": "User confirmed Space Grotesk is intentional (already validated in the approved Carte Celeste design spec and prototype)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-10-30T18:13:31.084Z",
+        "reason": "User confirmed Geist is intentional (body face of the JordanOS redesign)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist mono",
+        "createdAt": "2026-10-30T18:13:31.194Z",
+        "reason": "User confirmed Geist Mono is intentional (metadata face of the JordanOS redesign)"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "public/index.html"
+        ],
+        "createdAt": "2026-10-30T18:13:31.314Z",
+        "reason": "Agent: measured in real render 2026-10-30, section windows have 86-94px left / 40-48px right padding; static analysis misses clamp()/var()"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "public/index.html"
+        ],
+        "createdAt": "2026-10-30T18:13:31.440Z",
+        "reason": "Agent: window drop shadow with 24px offset and 60px blur (elevation), not a zero-offset glow"
+      },
+      {
+        "rule": "radial-halo",
+        "value": "*",
+        "files": [
+          "public/index.html"
+        ],
+        "createdAt": "2026-10-30T18:13:31.573Z",
+        "reason": "Agent: desktop wallpaper of the JordanOS D+B+A prototype the user chose"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "public/index.html"
+        ],
+        "createdAt": "2026-10-30T18:13:31.708Z",
+        "reason": "Agent decision: single tech marquee per page, visible pause control (WCAG 2.2.2), static under reduced motion"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "dashboard.html"
+        ],
+        "createdAt": "2026-10-30T18:54:15.239Z",
+        "reason": "Agent: hero-image-preview and mock-avatar get their src from JS at load (fillGeneralForm/syncHeroPreview)"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "dashboard.html"
+        ],
+        "createdAt": "2026-10-30T18:54:15.401Z",
+        "reason": "Agent: detector could not resolve the /css/ stylesheets; real h2 is 1.45rem over 0.82rem h3 (dashboard-os.css)"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "dashboard.html"
+        ],
+        "createdAt": "2026-10-30T18:54:15.569Z",
+        "reason": "Agent: real semantic state (searching for local server), replaced within milliseconds by checkServerStatus"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "public/css/os.css"
+        ],
+        "createdAt": "2026-11-03T22:39:32.722Z",
+        "reason": "Choix explicite de l'utilisateur (prototype Horizon 3D, 2026-11-03) : sol quadrillé en perspective animé sous le bureau JordanOS"
       }
     ]
   }

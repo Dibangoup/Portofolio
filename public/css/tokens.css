@@ -1,0 +1,272 @@
+/* ==========================================================================
+   TOKENS.CSS - POLICES, VARIABLES DE DESIGN ET BASE "ATELIER"
+   ==========================================================================
+   Direction "Atelier" : base neutre, un seul accent (vermillon), thème clair
+   et sombre (suit le système, forçable via [data-theme] posé par theme-init.js).
+
+   Système de formes (une règle, appliquée partout) :
+     - éléments interactifs (boutons, filtres, puces)  -> pilule (--r-pill)
+     - surfaces (cartes projet, panneaux, portrait)     -> 16px  (--r-surface)
+     - champs de formulaire                              -> 12px  (--r-field)
+
+   Échelle des z-index (seules couches autorisées) :
+     10 en-tête collant · 20 barre de progression · 40 toasts
+     (les <dialog> vivent dans la "top layer" du navigateur, sans z-index)
+*/
+
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url('./fonts/bricolage-grotesque-var.woff2') format('woff2-variations');
+}
+
+@font-face {
+    font-family: 'Geist';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('./fonts/geist-var.woff2') format('woff2-variations');
+}
+
+@font-face {
+    font-family: 'Geist Mono';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('./fonts/geist-mono-var.woff2') format('woff2-variations');
+}
+
+/* Police de code de l'éditeur, du terminal et des fenêtres (JordanOS) */
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('./fonts/jetbrains-mono-var.woff2') format('woff2-variations');
+}
+
+:root {
+    color-scheme: light;
+
+    --bg: #f2f2ef;
+    --surface: #fafaf8;
+    --surface-2: #e8e8e3;
+    --ink: #161615;
+    --ink-2: #474744;
+    --ink-3: #686864;
+    --line: #d6d5cf;
+    --line-strong: #8a8983; /* bordures de champs : contraste ≥ 3:1 (WCAG 1.4.11) */
+    --accent: #c93a1b;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(201, 58, 27, 0.1);
+    --ok: #1f7a4d;
+    --shadow: 0 1px 2px rgba(22, 22, 21, 0.06), 0 12px 32px -12px rgba(22, 22, 21, 0.18);
+
+    --font-display: 'Bricolage Grotesque', 'Geist', system-ui, sans-serif;
+    --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+    --font-code: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+    /* Coloration syntaxique (éditeur et terminal, toujours sombres) */
+    --syn-kw: #c58af9;
+    --syn-str: #b5e38c;
+    --syn-prop: #7fb4ff;
+    --syn-num: #f2a65a;
+    --syn-com: #6f7889;
+    --term-green: #9be05f;
+    --term-cyan: #7fd3e0;
+
+    --r-pill: 999px;
+    --r-surface: 16px;
+    --r-field: 12px;
+
+    --max: 1240px;
+    --gutter: clamp(1.25rem, 4vw, 3rem);
+    --section-y: clamp(4.5rem, 10vw, 8rem);
+    --header-h: 68px;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #121211;
+    --surface: #1b1b19;
+    --surface-2: #252522;
+    --ink: #edede8;
+    --ink-2: #b9b9b2;
+    --ink-3: #93938c;
+    --line: #2f2f2c;
+    --line-strong: #6e6e68;
+    --accent: #ff6b47;
+    --accent-ink: #161615;
+    --accent-soft: rgba(255, 107, 71, 0.12);
+    --ok: #4cc38a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #121211;
+        --surface: #1b1b19;
+        --surface-2: #252522;
+        --ink: #edede8;
+        --ink-2: #b9b9b2;
+        --ink-3: #93938c;
+        --line: #2f2f2c;
+    --line-strong: #6e6e68;
+        --accent: #ff6b47;
+        --accent-ink: #161615;
+        --accent-soft: rgba(255, 107, 71, 0.12);
+        --ok: #4cc38a;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   BASE
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--line-strong) var(--bg);
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Bloque le défilement de la page derrière une fenêtre ouverte, sans style inline */
+html:has(dialog[open]) {
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, p, ul, ol, figure, blockquote, dl, dd {
+    margin: 0;
+}
+
+ul, ol {
+    padding: 0;
+    list-style: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    color: inherit;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -100px;
+    z-index: 30;
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--r-pill);
+    background: var(--ink);
+    color: var(--bg);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+.mono {
+    font-family: var(--font-mono);
+    font-feature-settings: 'zero' 0;
+}
+
+.icon {
+    width: 1.15em;
+    height: 1.15em;
+    flex-shrink: 0;
+}
+
+.icon-sm {
+    width: 1em;
+    height: 1em;
+}
+
+.icon-lg {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.icon-spin {
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

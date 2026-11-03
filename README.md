@@ -1,94 +1,128 @@
-# Portfolio — Jordan DIBANGOU
+# Portfolio de Jordan DIBANGOUP
 
-Portfolio étudiant interactif : un site vitrine moderne doublé d'un **dashboard d'édition en temps réel** protégé par mot de passe. Le contenu du site (texte, projets, compétences, CV) se modifie depuis une interface admin, sans toucher au code.
+Portfolio d'étudiant en génie logiciel, bilingue (FR/EN), avec un tableau de bord d'administration pour modifier le contenu sans toucher au code.
 
-**Développeur :** Jordan DIBANGOU — Abidjan, Côte d'Ivoire
-**Stack :** HTML5 · CSS3 · JavaScript (ES6+) · Tailwind CSS · Node.js · Express
+L'accueil prend la forme d'un petit bureau, **JordanOS** : une fenêtre d'éditeur de code, une fenêtre photo, un terminal rangé dans la barre des tâches et une palette de commandes. Les sections qui suivent (projets, à propos, parcours, compétences, contact) restent volontairement sobres.
 
----
+## Fonctionnalités
 
-## ✨ Fonctionnalités
+- **Accueil « JordanOS »** : éditeur (`bienvenue.md`, `jordan.ts`), photo, projets et terminal dans des fenêtres déplaçables, avec barre des tâches, menu démarrer et horloge.
+- **Terminal interactif** : tapez `help` (autres commandes : `whoami`, `neofetch`, `ls`, `projets`, `apropos`, `parcours`, `competences`, `contact`, `cv`, `email`, `code`, `open`, `lang`, `clear`, `exit`). La touche Tab complète la commande.
+- **Palette de commandes** : `Ctrl + K`.
+- **Contenu piloté par les données** : tout le texte vient de `public/js/portfolio-data.js`.
+- **Bilingue FR/EN** et **thème clair/sombre** (préférence du système, modifiable par bouton).
+- **Études de cas** et **CV** dans des boîtes de dialogue natives ; le CV s'imprime seul (`print.css`).
+- **Formulaire de contact** envoyé via Web3Forms.
+- **PWA** : installable et utilisable hors ligne (`service-worker.js`).
+- **Accessible et progressif** : le site reste lisible sans JavaScript, respecte `prefers-reduced-motion` et se manipule au clavier.
+- **Dashboard d'administration** : édition en direct avec aperçu, protégé par mot de passe.
 
-- **Site vitrine responsive** — design glassmorphique, animations au scroll, parallaxe, bilingue FR/EN.
-- **Dashboard admin sécurisé** — édition de tout le contenu en temps réel (héro, à propos, compétences, projets, CV, contact).
-- **CV interactif** — visualiseur + téléchargement PDF.
-- **PWA** — installable, mode hors-ligne (service worker + manifest).
-- **Formulaire de contact** — envoi via Web3Forms.
+## Démarrage
 
-## 🔒 Sécurité
-
-Le projet a fait l'objet d'un audit sécurité complet (7 vulnérabilités identifiées et corrigées) :
-
-- **Authentification** du dashboard en HTTP Basic, avec comparaison à temps constant (`timingSafeEqual`).
-- **Anti-brute-force** via rate limiting (`express-rate-limit`).
-- **Anti-CSRF** sur l'API de sauvegarde (header custom, contre le ré-attachement automatique du Basic Auth).
-- **Anti-pollution de prototype** — purge récursive de `__proto__` / `constructor` / `prototype`.
-- **Double Content-Security-Policy** (stricte pour le site public, permissive pour le dashboard) via `helmet`.
-- **Échappement XSS systématique** (`escapeHtml` + validation d'URL `safeUrl`) sur toutes les données du dashboard.
-- **Contournement de chemin neutralisé** (normalisation des slashs, blocs de chemins internes).
-
-## 🚀 Démarrage rapide
+Prérequis : [Node.js](https://nodejs.org) 18 ou plus récent.
 
 ```bash
-# 1. Installer les dépendances
 npm install
-
-# 2. Configurer les identifiants du dashboard
-cp .env.example .env
-#    puis définir DASHBOARD_PASSWORD dans .env (jamais commité)
-
-# 3. Compiler le CSS Tailwind (si modifié)
-npm run build:css
-
-# 4. Lancer le serveur
+cp .env.example .env     # puis renseignez DASHBOARD_USER et DASHBOARD_PASSWORD
 npm run dev
 ```
 
-- **Site public :** http://localhost:3000
-- **Dashboard :** http://localhost:3000/dashboard.html (protégé par mot de passe)
+- Site : <http://localhost:3000>
+- Dashboard : <http://localhost:3000/dashboard.html> (identifiants du fichier `.env`)
 
-> ⚠️ Sans `DASHBOARD_PASSWORD` défini, le dashboard et la sauvegarde restent bloqués (503).
+Pour changer de port : `PORT=3217 node server.js` (ou la variable `PORT` dans `.env`).
 
-## 🗂 Structure
+### Variables d'environnement
+
+| Variable | Rôle |
+| --- | --- |
+| `DASHBOARD_USER` | Identifiant du dashboard (par défaut `admin`) |
+| `DASHBOARD_PASSWORD` | Mot de passe du dashboard. **Sans lui, le dashboard et la sauvegarde restent bloqués (503)** : il n'y a volontairement aucun mot de passe par défaut. |
+| `PORT` | Port du serveur (par défaut `3000`) |
+
+Le fichier `.env` n'est jamais commité.
+
+## Modifier le contenu
+
+1. Ouvrez le dashboard, modifiez les textes, projets, compétences, parcours ou le CV : l'aperçu et le site ouvert dans un autre onglet se mettent à jour en direct.
+2. Cliquez sur **Enregistrer** : le serveur réécrit `public/js/portfolio-data.js`.
+
+Les sections modifiables sont `hero`, `about`, `skills`, `timeline`, `projects`, `cv` et `contact`. Toute autre clé est refusée par le serveur.
+
+> ⚠️ Enregistrer depuis le dashboard **écrase le fichier de données réel**, y compris pendant des tests. Faites une copie de `portfolio-data.js` avant d'expérimenter, ou interceptez la requête `POST /api/save`.
+
+## Structure du projet
 
 ```
-├── public/                  # Fichiers servis (site public uniquement)
-│   ├── index.html
-│   ├── css/                 # Styles (Tailwind + CSS custom)
-│   ├── js/
-│   │   ├── app.js           # Rendu du site + logique
-│   │   ├── portfolio-data.js # Données du portfolio (générées par le dashboard)
-│   │   └── icons.js
-│   ├── images/
-│   ├── service-worker.js    # PWA hors-ligne
-│   └── manifest.json
-├── dashboard.html           # Interface admin (protégée)
-├── server.js                # Serveur Express + sécurité
-└── package.json
+Portofolio/
+├── server.js               Serveur Express : fichiers statiques, authentification, /api/save, /api/status
+├── dashboard.html          Dashboard d'administration (hors du dossier public)
+├── package.json
+├── .env.example            Modèle de configuration
+└── public/                 Seul dossier servi publiquement
+    ├── index.html
+    ├── manifest.json, service-worker.js
+    ├── images/
+    ├── css/
+    │   ├── tokens.css      Couleurs, typographies, espacements, thèmes
+    │   ├── components.css  Boutons, champs, cartes, boîtes de dialogue
+    │   ├── layout.css      Mise en page des sections
+    │   ├── os.css          Bureau JordanOS (fenêtres, éditeur, terminal, barre des tâches)
+    │   ├── print.css       Impression du CV
+    │   ├── dashboard-os.css  Habillage du dashboard
+    │   └── fonts/          Polices auto-hébergées
+    └── js/
+        ├── theme-init.js   Thème appliqué avant l'affichage
+        ├── portfolio-data.js  Données du site (réécrit par le dashboard)
+        ├── icons.js        Icônes Phosphor (fichier généré)
+        ├── app.js          Rendu des sections, i18n, formulaire, dialogues
+        └── os.js           Bureau JordanOS : fenêtres, terminal, palette
 ```
 
-## 🔧 Scripts
+## Scripts
 
-| Commande | Description |
-|---|---|
-| `npm run dev` | Lance le serveur Express |
-| `npm run build:css` | Compile Tailwind (minifié) |
-| `npm run watch:css` | Recompile Tailwind à chaque changement |
+| Commande | Effet |
+| --- | --- |
+| `npm run dev` | Compile le CSS Tailwind puis lance le serveur |
+| `npm start` | Lance le serveur sans recompiler le CSS |
+| `npm run build:css` | Compile `tailwind-src.css` en `tailwind-build.css` (utilisé par le dashboard uniquement) |
+| `npm run watch:css` | Recompile à chaque modification |
 
-## 🚀 Déploiement (site statique sur Vercel)
+Le site public n'utilise plus Tailwind : il s'appuie sur les fichiers `tokens`, `components`, `layout` et `os`.
 
-Le **dashboard admin reste local** (il n'est pas déployé). Seul le site public (`public/`) est mis en ligne, en statique sur Vercel.
+## Sécurité
 
-1. Connecte le repo `Dibangoup/Portofolio` sur [vercel.com](https://vercel.com).
-2. Vercel lit `vercel.json` → sert le dossier `public/` (aucun build requis).
-3. Si Vercel demande un framework, choisis **Other**.
+- **Politique CSP stricte** sur le site public : scripts et styles uniquement depuis le même domaine, sans style ni script en ligne. Le dashboard a sa propre politique.
+- **Authentification HTTP Basic côté serveur** pour `/dashboard.html` et `/api/save` (comparaison à temps constant), avec limitation à 20 échecs par 15 minutes.
+- **Protection CSRF** : la sauvegarde exige un en-tête personnalisé que seul un script de même origine peut poser.
+- **Validation des données** : clés de premier niveau autorisées uniquement, clés dangereuses (`__proto__`, `constructor`, `prototype`) retirées récursivement, corps limité à 10 Mo.
+- `helmet` pour les en-têtes HTTP, et un dossier `public/` isolé du code serveur.
 
-### Workflow d'édition
+## Déploiement (site statique sur Vercel)
 
-1. En local : `npm run dev` → édite le contenu via `http://localhost:3000/dashboard.html`.
-2. La sauvegarde écrit `public/js/portfolio-data.js`.
-3. `git add public/js/portfolio-data.js && git commit && git push` → Vercel redéploie automatiquement.
+Seul le site public (`public/`) est mis en ligne ; le **dashboard reste local** et n'est pas déployé.
 
-## 📄 Licence
+1. Connecter le dépôt `Dibangoup/Portofolio` sur [vercel.com](https://vercel.com).
+2. Vercel lit `vercel.json` et sert le dossier `public/` (aucun build requis). Si un framework est demandé, choisir **Other**.
+
+Pour mettre le contenu à jour :
+
+1. En local : `npm run dev`, puis modifier le contenu dans `http://localhost:3000/dashboard.html`.
+2. **Enregistrer** réécrit `public/js/portfolio-data.js`.
+3. `git add public/js/portfolio-data.js && git commit && git push` : Vercel redéploie automatiquement.
+
+## Technologies
+
+Node.js, Express, HTML/CSS/JavaScript sans framework, Tailwind CSS (dashboard), Phosphor Icons. Polices auto-hébergées : Bricolage Grotesque, Geist, Geist Mono et JetBrains Mono.
+
+## Historique des refontes
+
+Le dossier `docs/superpowers/` conserve les plans et spécifications des refontes précédentes (éditorial, « Le Journal », « Carte Céleste »). Le design actuel, « Atelier » avec la couche JordanOS, est la refonte la plus récente.
+
+## Auteur
+
+**Jordan DIBANGOUP**, étudiant en ingénierie du génie logiciel, Abidjan (Côte d'Ivoire).
+
+## Licence
 
 MIT
