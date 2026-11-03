@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.empty': "Aucun projet dans cette catégorie pour l'instant.",
             'projects.case': "Voir l'étude de cas",
             'projects.browser': 'Navigateur',
+            'projects.noPreview': 'Aperçu bientôt disponible',
             'projects.demo': 'Démo',
             'projects.code': 'Code',
             'case.context': 'Contexte',
@@ -142,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.empty': 'No project in this category yet.',
             'projects.case': 'View case study',
             'projects.browser': 'Browser',
+            'projects.noPreview': 'Preview coming soon',
             'projects.demo': 'Demo',
             'projects.code': 'Code',
             'case.context': 'Context',
@@ -407,9 +409,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="project-win-ctl"><span>–</span><span>×</span></span>
                   </div>
                   <div class="project-win-url" aria-hidden="true">https://jordan.os/projets/${escapeHtml(slugify(name))}</div>
-                  <div class="project-shot">
+                  ${proj.image ? `<div class="project-shot">
                     <img src="${escapeHtml(safeImg(proj.image))}" alt="" loading="lazy" width="1200" height="750" />
-                  </div>
+                  </div>` : `<div class="project-shot is-empty" aria-hidden="true">
+                    ${renderIcon('code')}<b>${escapeHtml(name)}</b><span class="mono">${escapeHtml(t('projects.noPreview'))}</span>
+                  </div>`}
                 </div>
                 <div class="project-body">
                   <div class="project-meta">

@@ -603,6 +603,37 @@
     transition: transform 0.7s var(--ease-out);
 }
 
+/* Projet sans capture : page d'attente sobre dans la fenêtre plutôt qu'une image cassée */
+.project-shot.is-empty {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.6rem;
+    padding: 1.5rem;
+    background: radial-gradient(120% 90% at 50% 0%, #1f2731, #12171c);
+    color: #e8eaed;
+    text-align: center;
+}
+
+.project-shot.is-empty .icon {
+    width: 40px;
+    height: 40px;
+    padding: 9px;
+    border: 1px solid #2f3842;
+    border-radius: 12px;
+    color: var(--term-cyan);
+}
+
+.project-shot.is-empty b {
+    font: 650 clamp(1.2rem, 2.4vw, 1.6rem) / 1.15 var(--font-display);
+    letter-spacing: -0.02em;
+}
+
+.project-shot.is-empty span {
+    color: #8b949e;
+    font-size: 0.78rem;
+}
+
 /* Zoom réservé à la souris : au toucher, le survol resterait « collé » après un tap */
 @media (hover: hover) and (pointer: fine) {
     .project:hover .project-shot img {
