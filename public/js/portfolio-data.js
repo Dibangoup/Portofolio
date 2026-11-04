@@ -138,7 +138,7 @@ const DEFAULT_PORTFOLIO_DATA = {
     {
       "period": "2023 - 2026",
       "role": "Licence en Génie Logiciel",
-      "organization": "ESATIC – Abidjan, Côte d'Ivoire",
+      "organization": "UTA – Abidjan, Côte d'Ivoire",
       "type": "formation",
       "description": "Spécialisation en génie logiciel, algorithmique avancée, structures de données, bases de données relationnelles et ingénierie logicielle."
     },
@@ -317,7 +317,7 @@ const DEFAULT_PORTFOLIO_DATA = {
       {
         "dates": "2023 - 2026",
         "degree": "Licence en Génie Logiciel",
-        "school": "ESATIC – Abidjan, Côte d'Ivoire"
+        "school": "UTA – Abidjan, Côte d'Ivoire"
       },
       {
         "dates": "2023",
