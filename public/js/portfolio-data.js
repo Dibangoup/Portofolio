@@ -144,8 +144,8 @@ const DEFAULT_PORTFOLIO_DATA = {
     },
     {
       "period": "2023",
-      "role": "Baccalauréat Scientifique (Mention Bien)",
-      "organization": "Lycée Classique – Abidjan",
+      "role": "Baccalauréat Scientifique (Mention Passable)",
+      "organization": "LME3A – Aboisso",
       "type": "formation",
       "description": "Spécialité Mathématiques et Sciences Physiques."
     }
@@ -321,8 +321,8 @@ const DEFAULT_PORTFOLIO_DATA = {
       },
       {
         "dates": "2023",
-        "degree": "Baccalauréat Scientifique (Mention Bien)",
-        "school": "Lycée Classique – Abidjan"
+        "degree": "Baccalauréat Scientifique (Mention Passable)",
+        "school": "LME3A – Aboisso"
       }
     ]
   },
