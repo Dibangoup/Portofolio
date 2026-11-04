@@ -3,37 +3,37 @@ const DEFAULT_PORTFOLIO_DATA = {
   "hero": {
     "name": "Jordan DIBANGOUP",
     "availability": "Disponible pour un stage",
-    "role": "Développeur Full-Stack & Génie Logiciel",
-    "title": "Concevoir l'Avenir, Une Ligne de Code à la Fois.",
-    "description": "Étudiant passionné en Génie Logiciel, IA & Data Science à l'ESATIC. Je combine rigueur d'ingénierie et sensibilité design pour bâtir des solutions logicielles performantes.",
+    "role": "Développeur Full-Stack",
+    "title": "Façonner l'avenir du numérique, avec l'intelligence artificielle comme alliée.",
+    "description": "Étudiant en Ingénierie du Génie Logiciel à l'Université de Technologie d'Abidjan (UTA), je suis passionné par l'intelligence artificielle, le développement logiciel et les nouvelles approches de création assistée par l'IA. J'allie rigueur technique, créativité et sensibilité au design pour concevoir des expériences numériques innovantes et des solutions logicielles performantes.",
     "image": "images/jordan-portrait.jpg",
     "badges": [
-      "Développeur Full-Stack",
-      "Génie Logiciel & IA"
+      "Développeur Web",
+      "Développer Mobile"
     ]
   },
   "about": {
     "title": "Créer avec Code & Innovation.",
     "paragraphs": [
-      "Actuellement étudiant en informatique plus précisément en Génie Logiciel à l'ESATIC (Abidjan), j'ai développé une passion profonde pour le développement full-stack, l'intelligence artificielle et l'ingénierie logicielle.",
-      "Je m'attache à réduire le fossé entre la rigueur de l'ingénierie logicielle et l'élégance d'un design visuel moderne et soigné. Pour moi, le code doit être aussi fluide, intuitif et robuste que le monde qui nous entoure. En combinant mes compétences techniques aux architectures modernes, je conçois des applications innovantes, scalables et centrées sur l'utilisateur."
+      "Actuellement étudiant en Ingénierie du Génie Logiciel à l'Université de Technologie d'Abidjan (UTA), je nourris une véritable passion pour le développement Full-Stack, l'intelligence artificielle et la conception de solutions logicielles innovantes. Curieux et tourné vers l'avenir, j'explore également les nouvelles approches de développement assisté par l'IA pour transformer des idées en applications concrètes, performantes et intuitives.",
+      "Je cherche à allier la rigueur de l'ingénierie logicielle à l'élégance d'un design moderne et soigné. Pour moi, une application ne doit pas seulement être fonctionnelle : elle doit être intuitive, fluide, esthétique et robuste. En combinant les architectures logicielles modernes, la créativité et les technologies émergentes, notamment l'intelligence artificielle, je conçois des solutions numériques innovantes, évolutives et centrées sur l'expérience utilisateur."
     ],
     "journey": {
-      "text1": "Passionné de nouvelles technologies depuis mon plus jeune âge, j'ai démarré le codage de petites applications avant de plonger dans l'écosystème web moderne avec React, Python et Node.js.",
-      "text2": "Aujourd'hui, je crée des produits soignés en m'assurant que chaque architecture, algorithme et interaction apporte une réelle plus-value et des performances optimales."
+      "text1": "C'est au cours de mon parcours universitaire en Ingénierie du Génie Logiciel (IGL) que j'ai découvert un véritable intérêt pour le développement informatique et les nouvelles technologies. Au fil de ma formation, cette découverte s'est transformée en une passion pour la conception de logiciels, le développement Full-Stack et l'intelligence artificielle. Depuis, je ne cesse d'explorer de nouvelles technologies et approches de développement pour enrichir mes compétences et donner vie à des idées innovantes.",
+      "text2": "Aujourd'hui, je m'investis dans la conception de solutions numériques alliant qualité, performance et expérience utilisateur. J'accorde une attention particulière à chaque aspect du développement, de l'architecture logicielle aux algorithmes, jusqu'aux interactions avec l'utilisateur, afin de créer des applications utiles, fiables et à forte valeur ajoutée."
     },
     "education": [
       {
         "dates": "2023 - 2026",
         "degree": "Licence en Génie Logiciel",
-        "school": "ESATIC – Abidjan, Côte d'Ivoire",
+        "school": "UTA – Abidjan, Côte d'Ivoire",
         "desc": "Formation approfondie en développement logiciel, architectures systèmes, bases de données, génie logiciel et méthodes agiles."
       },
       {
         "dates": "2023",
         "degree": "Baccalauréat Scientifique",
-        "school": "Lycée Classique – Abidjan",
-        "desc": "Mention Bien. Spécialité Mathématiques et Sciences Physiques."
+        "school": "LME3A – Aboisso",
+        "desc": "Mention Passable. Spécialité Mathématiques et Sciences Physiques."
       }
     ],
     "values": [
@@ -66,23 +66,18 @@ const DEFAULT_PORTFOLIO_DATA = {
       "items": [
         {
           "name": "HTML5 & CSS3 / Tailwind",
-          "percent": 90,
+          "percent": 70,
           "level": "Avancé"
         },
         {
           "name": "JavaScript (ES6+) & TypeScript",
-          "percent": 85,
-          "level": "Avancé"
+          "percent": 60,
+          "level": "Intermédiaire"
         },
         {
           "name": "React & Next.js",
-          "percent": 80,
-          "level": "Maîtrisé"
-        },
-        {
-          "name": "UI/UX Design (Figma)",
-          "percent": 75,
-          "level": "Opérationnel"
+          "percent": 55,
+          "level": "Intermédiaire"
         }
       ]
     },
@@ -92,23 +87,23 @@ const DEFAULT_PORTFOLIO_DATA = {
       "items": [
         {
           "name": "Python (Django / Flask)",
-          "percent": 80,
-          "level": "Maîtrisé"
+          "percent": 55,
+          "level": "Intermédiaire"
         },
         {
           "name": "Node.js & Express",
-          "percent": 75,
-          "level": "Opérationnel"
+          "percent": 15,
+          "level": "En pratique"
         },
         {
           "name": "SQL (PostgreSQL / MySQL)",
-          "percent": 78,
-          "level": "Maîtrisé"
+          "percent": 25,
+          "level": "Débutant"
         },
         {
           "name": "APIs REST & GraphQL",
-          "percent": 70,
-          "level": "Opérationnel"
+          "percent": 20,
+          "level": "En pratique"
         }
       ]
     },
@@ -118,42 +113,28 @@ const DEFAULT_PORTFOLIO_DATA = {
       "items": [
         {
           "name": "Git & GitHub / CI-CD",
-          "percent": 85,
+          "percent": 77,
           "level": "Avancé"
         },
         {
           "name": "Flutter & Dart",
-          "percent": 65,
-          "level": "Opérationnel"
+          "percent": 20,
+          "level": "En pratique"
         },
         {
           "name": "Docker & Environnements",
-          "percent": 60,
-          "level": "Opérationnel"
+          "percent": 20,
+          "level": "En pratique"
         },
         {
           "name": "IA & Machine Learning (Concepts & APIs)",
-          "percent": 60,
+          "percent": 20,
           "level": "En pratique"
         }
       ]
     }
   ],
   "timeline": [
-    {
-      "period": "2025 - Présent",
-      "role": "Développeur Full-Stack (Projets & Freelance)",
-      "organization": "Projets Indépendants & Académiques",
-      "type": "experience",
-      "description": "Conception d'architectures complètes (Django, React, Node.js), intégration d'APIs sécurisées et déploiements cloud."
-    },
-    {
-      "period": "Juin - Août 2025",
-      "role": "Développeur Web Stagiaire",
-      "organization": "Startup Tech – Abidjan",
-      "type": "experience",
-      "description": "Développement de composants frontend dynamiques en React, intégration d'APIs REST et participation aux revues de code en méthode Scrum."
-    },
     {
       "period": "2023 - 2026",
       "role": "Licence en Génie Logiciel",
