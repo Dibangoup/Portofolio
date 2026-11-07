@@ -265,66 +265,20 @@ const DEFAULT_PORTFOLIO_DATA = {
   ],
   "cv": {
     "identity": {
-      "name": "Jordan DIBANGOUP",
-      "role": "Développeur Full-Stack & Génie Logiciel",
-      "availability": "Disponible pour un stage ou une alternance"
+      "name": "",
+      "role": "",
+      "availability": ""
     },
     "contact": {
-      "email": "jdibangoup5@gmail.com",
-      "phone": "+225 07 12 48 50 23",
-      "location": "Abidjan, Côte d'Ivoire"
+      "email": "",
+      "phone": "",
+      "location": ""
     },
-    "skills": [
-      "React",
-      "Next.js",
-      "Python (Django/Flask)",
-      "Node.js / Express",
-      "JavaScript / TypeScript",
-      "PostgreSQL / MySQL",
-      "APIs REST & GraphQL",
-      "Git & GitHub",
-      "Docker",
-      "Flutter",
-      "Tailwind CSS",
-      "Figma UI/UX"
-    ],
-    "languages": [
-      "🇫🇷 Français (Maternelle)",
-      "🇬🇧 Anglais (Professionnel - B2)",
-      "🇪🇸 Espagnol (Notions - A2)"
-    ],
-    "experiences": [
-      {
-        "dates": "2025 - Présent",
-        "role": "Développeur Full-Stack (Projets & Freelance)",
-        "company": "Projets Indépendants",
-        "description": "Conception et déploiement d'applications web (React, Django, Node.js), création d'APIs RESTful et optimisation des performances front/back."
-      },
-      {
-        "dates": "Juin - Août 2025",
-        "role": "Développeur Web Stagiaire",
-        "company": "Startup Tech – Abidjan",
-        "description": "Développement de fonctionnalités frontend en React, intégration d'APIs REST, participation aux sprints agiles Scrum et revues de code."
-      },
-      {
-        "dates": "Jan - Mars 2025",
-        "role": "Freelance UI/UX Designer",
-        "company": "Clients Indépendants",
-        "description": "Conception de parcours utilisateurs, wireframes et prototypes interactifs Figma pour applications web et mobiles."
-      }
-    ],
-    "formations": [
-      {
-        "dates": "2023 - 2026",
-        "degree": "Licence en Génie Logiciel",
-        "school": "UTA – Abidjan, Côte d'Ivoire"
-      },
-      {
-        "dates": "2023",
-        "degree": "Baccalauréat Scientifique (Mention Passable)",
-        "school": "LME3A – Aboisso"
-      }
-    ]
+    "skills": [],
+    "languages": [],
+    "experiences": [],
+    "formations": [],
+    "pdfUrl": "/cv/cv-4c193a7cb001885f.pdf"
   },
   "contact": {
     "email": "jdibangoup5@gmail.com",
