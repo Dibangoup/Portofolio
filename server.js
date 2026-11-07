@@ -6,6 +6,7 @@ const path = require('path');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const { execFile } = require('child_process');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -190,6 +191,172 @@ app.get('/dashboard.html', authLimiter, requireDashboardAuth, dashboardCsp, (req
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
+// ---------------------------------------------------------------------------
+// CV en PDF + publication GitHub (utilisées par /api/save et /api/cv)
+// ---------------------------------------------------------------------------
+const ROOT_DIR = __dirname;
+const DATA_PATH = path.join(ROOT_DIR, 'public', 'js', 'portfolio-data.js');
+const DATA_FILE_REL = 'public/js/portfolio-data.js';
+const CV_DIR = path.join(ROOT_DIR, 'public', 'cv');
+const CV_DIR_REL = 'public/cv';
+const CV_NAME_RE = /^cv-[a-f0-9]{16}\.pdf$/;
+const CV_URL_RE = /^\/cv\/(cv-[a-f0-9]{16}\.pdf)$/;
+const CV_MAX_BYTES = 5 * 1024 * 1024;
+
+// Vérifie l'en-tête réel du fichier (pas seulement le Content-Type envoyé par le navigateur).
+function isPdfBuffer(buf) {
+  return Buffer.isBuffer(buf) && buf.length >= 5 && buf.subarray(0, 5).toString('latin1') === '%PDF-';
+}
+
+// Git est appelé sans shell (execFile + tableau d'arguments) : aucun texte venant du
+// dashboard n'est interprété par un shell.
+function runGit(args) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      cwd: ROOT_DIR,
+      windowsHide: true,
+      maxBuffer: 1024 * 1024,
+      // Une demande d'identifiants invisible ou un réseau bloqué ne doit pas geler la file Git
+      // (et donc toutes les sauvegardes suivantes) : échec au bout d'une minute, sans invite.
+      timeout: 60000,
+      env: { ...process.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' },
+    };
+    execFile('git', args, options, (err, stdout, stderr) => {
+      if (err) {
+        err.stderr = stderr;
+        return reject(err);
+      }
+      resolve(String(stdout).trim());
+    });
+  });
+}
+
+// Une seule opération Git à la fois : deux sauvegardes simultanées se disputeraient l'index.
+let gitQueue = Promise.resolve();
+function queueGit(task) {
+  const run = gitQueue.then(task);
+  gitQueue = run.catch(() => {});
+  return run;
+}
+
+// La première ligne d'un push refusé est « To https://github.com/... » : on cherche la vraie raison.
+function gitErrorLine(text) {
+  const lines = String(text || '').split('\n').map((l) => l.trim()).filter(Boolean);
+  return lines.find((l) => /rejected|fatal|error|denied/i.test(l)) || lines[0] || 'erreur inconnue';
+}
+
+// Commit + push des seuls chemins listés. Ne publie que si GIT_AUTO_PUBLISH=true, sur main,
+// et si rien d'autre n'est déjà préparé dans l'index.
+async function publishToGit(relPaths, message, git = runGit) {
+  if (process.env.GIT_AUTO_PUBLISH !== 'true') {
+    return { published: false, reason: 'Publication GitHub désactivée (GIT_AUTO_PUBLISH non défini sur true dans .env).' };
+  }
+
+  const tracked = await git(['ls-files', '--', ...relPaths]);
+  const targets = relPaths.filter((p) =>
+    fs.existsSync(path.join(ROOT_DIR, p)) ||
+    tracked.split('\n').some((f) => f === p || f.startsWith(p + '/'))
+  );
+  if (targets.length === 0) return { published: false, reason: 'Rien à publier.' };
+
+  const branch = await git(['rev-parse', '--abbrev-ref', 'HEAD']);
+  if (branch !== 'main') {
+    return { published: false, reason: `Branche courante « ${branch} » : la publication se fait uniquement depuis main.` };
+  }
+
+  const alreadyStaged = await git(['diff', '--cached', '--name-only']);
+  if (alreadyStaged) {
+    return { published: false, reason: 'Des fichiers sont déjà préparés dans Git : publication annulée pour ne pas les inclure.' };
+  }
+
+  // `git push origin main` enverrait aussi tout commit local pas encore poussé : on refuse
+  // plutôt que de publier à l'insu du propriétaire un travail sans rapport avec le dashboard.
+  const unpushed = await git(['rev-list', '--count', 'origin/main..HEAD']);
+  if (unpushed !== '0') {
+    return {
+      published: false,
+      reason: `${unpushed} commit(s) local(aux) pas encore poussé(s) sur main : publication annulée pour ne pas les publier à votre insu. Dans un terminal : « git pull --rebase --autostash » puis « git push », puis enregistrez à nouveau.`,
+    };
+  }
+
+  await git(['add', '-A', '--', ...targets]);
+  const changed = await git(['diff', '--cached', '--name-only']);
+  if (!changed) return { published: true, changed: false };
+
+  try {
+    await git(['commit', '-m', message]);
+  } catch (err) {
+    // Sans ce retour en arrière, les fichiers resteraient préparés : chaque sauvegarde suivante
+    // serait refusée, et le prochain commit manuel les embarquerait sans prévenir.
+    await git(['reset', '-q', '--', ...targets]).catch(() => {});
+    console.error('Commit échoué :', gitErrorLine(err.stderr));
+    return { published: false, reason: `Commit impossible : ${gitErrorLine(err.stderr)}` };
+  }
+
+  try {
+    await git(['push', 'origin', 'main']);
+  } catch (err) {
+    console.error('Push GitHub échoué :', gitErrorLine(err.stderr));
+    return {
+      published: false,
+      committed: true,
+      reason: `Commit créé en local, mais le push vers GitHub a échoué : ${gitErrorLine(err.stderr)}`,
+    };
+  }
+  return { published: true, changed: true };
+}
+
+// Supprime les anciens PDF du CV : un seul CV est conservé, celui référencé par les données.
+async function removeOrphanCvFiles(keepName) {
+  let entries = [];
+  try {
+    entries = await fs.promises.readdir(CV_DIR);
+  } catch (err) {
+    return; // pas de dossier : rien à nettoyer
+  }
+  await Promise.all(
+    entries
+      .filter((f) => CV_NAME_RE.test(f) && f !== keepName)
+      .map((f) => fs.promises.unlink(path.join(CV_DIR, f)))
+  );
+}
+
+// Envoi du PDF : corps brut limité, type application/pdf uniquement, en-tête %PDF- vérifié,
+// nom aléatoire. Le fichier n'est référencé par les données qu'à la sauvegarde suivante.
+const rawPdfParser = express.raw({ type: 'application/pdf', limit: CV_MAX_BYTES });
+app.post(
+  '/api/cv',
+  authLimiter,
+  requireDashboardAuth,
+  requireCustomHeader,
+  (req, res, next) => {
+    rawPdfParser(req, res, (err) => {
+      if (err) {
+        if (err.status === 413) return res.status(413).json({ error: 'Fichier trop lourd (5 Mo maximum).' });
+        return res.status(400).json({ error: 'Requête invalide.' });
+      }
+      next();
+    });
+  },
+  async (req, res) => {
+    if (!Buffer.isBuffer(req.body) || req.body.length === 0) {
+      return res.status(415).json({ error: 'Envoyez un fichier PDF.' });
+    }
+    if (!isPdfBuffer(req.body)) {
+      return res.status(400).json({ error: "Ce fichier n'est pas un PDF valide." });
+    }
+    const name = `cv-${crypto.randomBytes(8).toString('hex')}.pdf`;
+    try {
+      await fs.promises.mkdir(CV_DIR, { recursive: true });
+      await fs.promises.writeFile(path.join(CV_DIR, name), req.body, { flag: 'wx' });
+    } catch (err) {
+      console.error("Erreur lors de l'enregistrement du CV :", err);
+      return res.status(500).json({ error: "Impossible d'enregistrer le fichier" });
+    }
+    res.json({ url: `/cv/${name}` });
+  }
+);
+
 // Endpoint pour sauvegarder les données du portfolio sur le disque
 app.post('/api/save', authLimiter, requireDashboardAuth, requireCustomHeader, (req, res) => {
   const portfolioData = req.body;
@@ -203,6 +370,17 @@ app.post('/api/save', authLimiter, requireDashboardAuth, requireCustomHeader, (r
   }
   const cleanData = stripDangerousKeys(portfolioData);
 
+  const cvUrl = cleanData.cv?.pdfUrl ?? '';
+  // typeof : RegExp.test convertit un tableau en texte, ["/cv/cv-….pdf"] passerait sinon.
+  if (cvUrl !== '' && (typeof cvUrl !== 'string' || !CV_URL_RE.test(cvUrl))) {
+    return res.status(400).json({ error: 'Lien PDF invalide.' });
+  }
+  // Un onglet resté ouvert avec d'anciennes données, ou une version restaurée, peut référencer
+  // un PDF déjà remplacé : l'accepter publierait un lien cassé et supprimerait le CV actuel.
+  if (cvUrl && !fs.existsSync(path.join(CV_DIR, cvUrl.slice('/cv/'.length)))) {
+    return res.status(409).json({ error: "Le PDF du CV référencé n'existe plus : rechargez le dashboard ou renvoyez le PDF depuis l'onglet CV." });
+  }
+
   // Formatage en fichier JavaScript
   const fileContent = `// BASE DE DONNÉES DU PORTFOLIO - CENTRALISÉE ET MODIFIABLE EN TEMPS RÉEL
 const DEFAULT_PORTFOLIO_DATA = ${JSON.stringify(cleanData, null, 2)};
@@ -211,16 +389,26 @@ const DEFAULT_PORTFOLIO_DATA = ${JSON.stringify(cleanData, null, 2)};
 var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
 `;
 
-  const targetPath = path.join(__dirname, 'public', 'js', 'portfolio-data.js');
-
-  fs.writeFile(targetPath, fileContent, 'utf8', (err) => {
-    if (err) {
-      console.error("Erreur lors de l'écriture du fichier:", err);
-      return res.status(500).json({ error: "Impossible d'écrire sur le disque" });
+  queueGit(async () => {
+    await fs.promises.writeFile(DATA_PATH, fileContent, 'utf8');
+    // Nettoyage seulement quand un PDF est référencé : des données sans lien (onglet ouvert
+    // avant l'envoi du CV, par exemple) ne doivent jamais supprimer le CV en place.
+    if (cvUrl) await removeOrphanCvFiles(cvUrl.slice('/cv/'.length));
+    let publication;
+    try {
+      publication = await publishToGit([DATA_FILE_REL, CV_DIR_REL], 'chore(dashboard): mise à jour du portfolio');
+    } catch (err) {
+      console.error('Publication Git inattendue :', err);
+      publication = { published: false, reason: 'Erreur Git inattendue (voir le terminal).' };
     }
-    console.log("Fichier js/portfolio-data.js mis à jour avec succès via le serveur de dev !");
-    res.json({ success: true });
-  });
+    console.log('Fichier js/portfolio-data.js mis à jour via le serveur de dev.');
+    return publication;
+  })
+    .then((publication) => res.json({ success: true, ...publication }))
+    .catch((err) => {
+      console.error("Erreur lors de l'écriture du fichier:", err);
+      res.status(500).json({ error: "Impossible d'écrire sur le disque" });
+    });
 });
 
 // Servir les fichiers statiques du site — UNIQUEMENT depuis public/, qui ne contient que
@@ -237,14 +425,18 @@ app.get('/api/status', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Lancement du serveur
-app.listen(PORT, () => {
-  console.log(`\n=============================================================`);
-  console.log(`🚀 SERVEUR DE DEV LOCAL ACTIF`);
-  console.log(`👉 Portfolio  : http://localhost:${PORT}`);
-  console.log(`👉 Dashboard  : http://localhost:${PORT}/dashboard.html (protégé par mot de passe)`);
-  console.log(`=============================================================\n`);
-});
+// Lancement du serveur (pas lancé quand le fichier est importé par les tests)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n=============================================================`);
+    console.log(`🚀 SERVEUR DE DEV LOCAL ACTIF`);
+    console.log(`👉 Portfolio  : http://localhost:${PORT}`);
+    console.log(`👉 Dashboard  : http://localhost:${PORT}/dashboard.html (protégé par mot de passe)`);
+    console.log(`=============================================================\n`);
+  });
+}
+
+module.exports = { app, isPdfBuffer, publishToGit, CV_MAX_BYTES };
 
 
 

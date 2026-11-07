@@ -678,6 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2 id="cv-name">${escapeHtml(id.name)}</h2>
                 <p class="cv-role">${escapeHtml(id.role)}</p>
                 <p class="cv-availability">${escapeHtml(id.availability)}</p>
+                ${cv.pdfUrl ? `<a class="cv-download" href="${escapeHtml(cv.pdfUrl)}" download>Télécharger le CV (PDF)</a>` : ''}
               </header>
               <div class="cv-grid">
                 <div class="cv-col">

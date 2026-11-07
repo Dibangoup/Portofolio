@@ -331,6 +331,16 @@
                 </div>
                 <p class="text-xs text-[#9e9eb3] mb-6">Modifiez les informations détaillées affichées dans la modale interactive de CV.</p>
 
+                <div class="mb-8 p-4 rounded-xl border border-white/10 bg-white/[0.03]">
+                  <h3 class="text-sm font-semibold text-white mb-1">CV en PDF (bouton « Télécharger » sur le site)</h3>
+                  <p id="cv-pdf-status" class="text-xs text-[#9e9eb3] mb-3">Aucun PDF envoyé.</p>
+                  <div class="flex flex-wrap items-center gap-3">
+                    <input type="file" id="cv-pdf-input" accept="application/pdf,.pdf" class="text-xs text-[#9e9eb3]" />
+                    <button type="button" onclick="uploadCvPdf()" class="btn-secondary-admin text-xs py-1.5 px-3 rounded-lg">Envoyer le PDF</button>
+                  </div>
+                  <p class="text-[11px] text-[#9e9eb3] mt-3">PDF de 5 Mo maximum. Il est public : toute personne qui visite le site peut le télécharger.</p>
+                </div>
+
                 <form id="form-cv" class="space-y-6" onsubmit="event.preventDefault()">
                   <h3 class="text-sm font-semibold text-white border-b border-white/5 pb-2">1. Identité & Contact</h3>
                   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1605,6 +1615,46 @@
         renderProjectsEditor();
       }
 
+      // CV EN PDF : envoi au serveur, puis enregistrement (et publication GitHub si activée)
+      function renderCvPdfStatus() {
+        const el = document.getElementById('cv-pdf-status');
+        if (!el) return;
+        const url = PORTFOLIO_DATA.cv?.pdfUrl;
+        el.textContent = url ? `PDF actuel : ${url.split('/').pop()}` : 'Aucun PDF envoyé.';
+      }
+
+      async function uploadCvPdf() {
+        const input = document.getElementById('cv-pdf-input');
+        const file = input.files && input.files[0];
+        if (!file) {
+          showToast('Choisissez un fichier PDF.', 'error');
+          return;
+        }
+        if (file.type !== 'application/pdf' || file.size > 5 * 1024 * 1024) {
+          showToast('Le fichier doit être un PDF de 5 Mo maximum.', 'error');
+          return;
+        }
+        try {
+          const response = await fetch('/api/cv', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/pdf', 'X-Dashboard-Request': '1' },
+            body: file
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            showToast(result.error || "Envoi du PDF refusé.", 'error');
+            return;
+          }
+          PORTFOLIO_DATA.cv.pdfUrl = result.url;
+          input.value = '';
+          // Enregistre tout le contenu (y compris les modifications en attente) avec le nouveau lien.
+          await saveAllChanges();
+          renderCvPdfStatus();
+        } catch (err) {
+          showToast("Impossible d'envoyer le PDF : le serveur local est-il lancé ?", 'error');
+        }
+      }
+
       // CV FORM FILL & BUILDER
       function fillCVForm() {
         const cv = PORTFOLIO_DATA.cv;
@@ -1619,6 +1669,7 @@
 
         document.getElementById('cv-skills-input').value = cv.skills ? cv.skills.join(', ') : '';
         document.getElementById('cv-languages-input').value = cv.languages ? cv.languages.join(', ') : '';
+        renderCvPdfStatus();
 
         renderCVExperiences();
         renderCVFormations();
@@ -2009,8 +2060,20 @@ var PORTFOLIO_DATA = DEFAULT_PORTFOLIO_DATA;
             body: JSON.stringify(PORTFOLIO_DATA)
           });
           if (response.ok) {
-            showToast("Sauvegarde automatique sur le disque réussie ! 💾", "success");
+            const result = await response.json().catch(() => ({}));
+            if (result.published && result.changed) {
+              showToast("Enregistré et publié sur GitHub : Vercel met le site à jour ✓", "success");
+            } else if (result.published) {
+              showToast("Enregistré. Aucune modification à publier.", "success");
+            } else {
+              showToast("Enregistré sur votre ordinateur, mais pas publié : " + (result.reason || 'raison inconnue'), "info");
+            }
             return true;
+          }
+          if (response.status >= 400 && response.status < 500) {
+            const result = await response.json().catch(() => ({}));
+            showToast("Enregistrement refusé : " + (result.error || 'requête invalide'), "error");
+            return true; // erreur traitée : ne pas contourner la validation par l'écriture directe du fichier
           }
         } catch (err) {
           // Serveur inactif
