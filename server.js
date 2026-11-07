@@ -92,8 +92,10 @@ function requireDashboardAuth(req, res, next) {
   return res.status(401).send('Authentification requise pour accéder au dashboard.');
 }
 
-// Middleware pour parser le JSON
-app.use(express.json({ limit: '10mb' }));
+// Le JSON n'est plus lu globalement : seule /api/save en a besoin, et elle le lit APRÈS
+// l'authentification (voir plus bas), pour qu'un visiteur non connecté ne puisse pas faire
+// analyser 10 Mo de JSON au serveur.
+const parseSaveJson = express.json({ limit: '10mb' });
 // Limite les tentatives d'authentification pour rendre le brute-force du mot de passe
 // du dashboard impraticable, sans gêner un usage légitime (un seul admin).
 // skipSuccessfulRequests: seules les requêtes échouées (mauvais mot de passe, requête
@@ -358,7 +360,7 @@ app.post(
 );
 
 // Endpoint pour sauvegarder les données du portfolio sur le disque
-app.post('/api/save', authLimiter, requireDashboardAuth, requireCustomHeader, (req, res) => {
+app.post('/api/save', authLimiter, requireDashboardAuth, requireCustomHeader, parseSaveJson, (req, res) => {
   const portfolioData = req.body;
   if (!portfolioData) {
     return res.status(400).json({ error: 'Données manquantes' });
@@ -425,9 +427,20 @@ app.get('/api/status', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Lancement du serveur (pas lancé quand le fichier est importé par les tests)
+// Dernier filet : toute erreur non traitée (JSON mal formé, corps trop lourd…) reçoit un
+// message générique. Sans lui, Express renvoie la pile d'appels hors NODE_ENV=production.
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  const status = Number.isInteger(err.status) && err.status >= 400 && err.status < 500 ? err.status : 500;
+  if (status === 500) console.error('Erreur serveur :', err);
+  res.status(status).json({ error: status === 413 ? 'Requête trop lourde.' : status === 500 ? 'Erreur interne.' : 'Requête invalide.' });
+});
+
+// Lancement du serveur (pas lancé quand le fichier est importé par les tests).
+// 127.0.0.1 : le dashboard (qui peut pousser sur GitHub) n'est joignable que depuis cette
+// machine, pas depuis le réseau local (Wi-Fi partagé, etc.).
 if (require.main === module) {
-  app.listen(PORT, () => {
+  app.listen(PORT, '127.0.0.1', () => {
     console.log(`\n=============================================================`);
     console.log(`🚀 SERVEUR DE DEV LOCAL ACTIF`);
     console.log(`👉 Portfolio  : http://localhost:${PORT}`);

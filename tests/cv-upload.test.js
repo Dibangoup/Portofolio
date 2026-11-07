@@ -232,4 +232,45 @@ describe('routes CV', () => {
     const res = await saveExpectingNoWrite({ cv: { pdfUrl: '/cv/cv-0000000000000000.pdf' } });
     assert.equal(res.status, 409);
   });
+
+  test('POST /api/save sans authentification répond 401 avant de lire le corps', async () => {
+    // JSON volontairement invalide : s'il était lu avant l'authentification, on aurait un 400.
+    const res = await fetch(base + '/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Dashboard-Request': '1' },
+      body: '{pas du json',
+    });
+    assert.equal(res.status, 401);
+  });
+
+  test('un JSON mal formé reçoit un message générique, sans trace d’erreur', async () => {
+    const before = fs.readFileSync(DATA_FILE);
+    const res = await fetch(base + '/api/save', { method: 'POST', headers: saveHeaders, body: '{pas du json' });
+    const text = await res.text();
+    assert.equal(res.status, 400);
+    assert.deepEqual(JSON.parse(text), { error: 'Requête invalide.' });
+    assert.doesNotMatch(text, /SyntaxError|at .*\.js|node_modules/);
+    assert.deepEqual(fs.readFileSync(DATA_FILE), before);
+  });
+});
+
+describe('en-têtes de sécurité Vercel', () => {
+  test('vercel.json applique la même CSP que le serveur local (aucune divergence)', async () => {
+    const vercel = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'vercel.json'), 'utf8'));
+    const all = vercel.headers.find((h) => h.source === '/(.*)');
+    assert.ok(all, 'une règle /(.*) doit exister');
+    const get = (key) => all.headers.find((h) => h.key === key)?.value;
+
+    const server = app.listen(0, '127.0.0.1');
+    await new Promise((resolve) => server.once('listening', resolve));
+    try {
+      const res = await fetch(`http://127.0.0.1:${server.address().port}/`);
+      assert.equal(get('Content-Security-Policy'), res.headers.get('content-security-policy'));
+      assert.equal(get('X-Content-Type-Options'), 'nosniff');
+      assert.equal(get('X-Frame-Options'), res.headers.get('x-frame-options'));
+      assert.equal(get('Referrer-Policy'), res.headers.get('referrer-policy'));
+    } finally {
+      await new Promise((resolve) => server.close(resolve));
+    }
+  });
 });
