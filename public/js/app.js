@@ -108,11 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'footer.top': 'Haut de page',
             'footer.rights': 'Tous droits réservés.',
             'cv.print': 'Télécharger en PDF',
-            'cv.contact': 'Contact',
-            'cv.skills': 'Compétences clés',
-            'cv.languages': 'Langues',
-            'cv.experience': 'Expériences professionnelles',
-            'cv.education': 'Formations et diplômes',
+            'cv.title': 'Mon CV',
+            'cv.page': 'Page',
+            'cv.loading': 'Chargement du CV…',
+            'cv.unavailable': 'Le CV sera bientôt disponible.',
+            'cv.error': "Impossible d'afficher le CV ici.",
+            'cv.downloadInstead': 'Télécharger le PDF',
             'ui.close': 'Fermer',
             'ui.menu_open': 'Ouvrir le menu',
             'ui.menu_close': 'Fermer le menu',
@@ -179,11 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'footer.top': 'Back to top',
             'footer.rights': 'All rights reserved.',
             'cv.print': 'Download as PDF',
-            'cv.contact': 'Contact',
-            'cv.skills': 'Key skills',
-            'cv.languages': 'Languages',
-            'cv.experience': 'Professional experience',
-            'cv.education': 'Education',
+            'cv.title': 'My resume',
+            'cv.page': 'Page',
+            'cv.loading': 'Loading the resume…',
+            'cv.unavailable': 'The resume will be available soon.',
+            'cv.error': 'The resume cannot be displayed here.',
+            'cv.downloadInstead': 'Download the PDF',
             'ui.close': 'Close',
             'ui.menu_open': 'Open menu',
             'ui.menu_close': 'Close menu',
@@ -649,69 +651,58 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ======================================================================
-       9. CV INTERACTIF ET EXPORT PDF
+       9. CV : LE PDF ENVOYÉ DEPUIS LE DASHBOARD, AFFICHÉ PAGE PAR PAGE
        ====================================================================== */
     const cvModal = $('cv-modal');
+    let cvRenderedUrl = null;
 
     const renderCv = () => {
-        const cv = PORTFOLIO_DATA.cv;
-        if (!cv) return;
-        const id = cv.identity || {};
-        const contact = cv.contact || {};
+        const url = PORTFOLIO_DATA.cv?.pdfUrl || '';
+        const content = $('cv-modal-content');
+        const download = $('download-pdf-btn');
 
-        const entries = (list, mapFn) => list.map((x) => {
-            const e = mapFn(x);
-            return `
-              <div class="cv-entry">
-                <div class="cv-entry-top">
-                  <h4>${escapeHtml(e.title)}</h4>
-                  <span class="cv-entry-dates mono">${escapeHtml(e.dates)}</span>
-                </div>
-                ${e.org ? `<span class="cv-entry-org">${escapeHtml(e.org)}</span>` : ''}
-                ${e.desc ? `<p>${escapeHtml(e.desc)}</p>` : ''}
-              </div>`;
-        }).join('');
+        download.hidden = !url;
+        if (url) download.setAttribute('href', url);
 
-        $('cv-modal-content').innerHTML = `
-            <article class="cv-sheet">
-              <header class="cv-header">
-                <h2 id="cv-name">${escapeHtml(id.name)}</h2>
-                <p class="cv-role">${escapeHtml(id.role)}</p>
-                <p class="cv-availability">${escapeHtml(id.availability)}</p>
-                ${cv.pdfUrl ? `<a class="cv-download" href="${escapeHtml(cv.pdfUrl)}" download>Télécharger le CV (PDF)</a>` : ''}
-              </header>
-              <div class="cv-grid">
-                <div class="cv-col">
-                  <h3>${escapeHtml(t('cv.contact'))}</h3>
-                  <ul class="cv-list">
-                    ${contact.email ? `<li>${renderIcon('mail')} ${escapeHtml(contact.email)}</li>` : ''}
-                    ${contact.phone ? `<li>${renderIcon('phone')} ${escapeHtml(contact.phone)}</li>` : ''}
-                    ${contact.location ? `<li>${renderIcon('location')} ${escapeHtml(contact.location)}</li>` : ''}
-                  </ul>
-                  <h3>${escapeHtml(t('cv.skills'))}</h3>
-                  <div class="cv-skills">${(cv.skills || []).map((s) => `<span class="chip">${escapeHtml(s)}</span>`).join('')}</div>
-                  <h3>${escapeHtml(t('cv.languages'))}</h3>
-                  <ul class="cv-list">${(cv.languages || []).map((l) => `<li>${escapeHtml(l)}</li>`).join('')}</ul>
-                </div>
-                <div class="cv-col">
-                  <h3>${escapeHtml(t('cv.experience'))}</h3>
-                  <div class="cv-entries">${entries(cv.experiences || [], (e) => ({ title: e.role, dates: e.dates, org: e.company, desc: e.description }))}</div>
-                  <h3>${escapeHtml(t('cv.education'))}</h3>
-                  <div class="cv-entries">${entries(cv.formations || [], (f) => ({ title: f.degree, dates: f.dates, org: f.school }))}</div>
-                </div>
-              </div>
-            </article>`;
+        // Déjà affiché : on garde les pages rendues au lieu de retélécharger le PDF.
+        if (url && url === cvRenderedUrl && content.querySelector('canvas')) return;
+        cvRenderedUrl = null;
+
+        if (!url) {
+            content.innerHTML = `
+                <h2 id="cv-name" class="visually-hidden">${escapeHtml(t('cv.title'))}</h2>
+                <p class="cv-pdf-status">${escapeHtml(t('cv.unavailable'))}</p>`;
+            return;
+        }
+
+        content.innerHTML = `
+            <h2 id="cv-name" class="visually-hidden">${escapeHtml(t('cv.title'))}</h2>
+            <div class="cv-pdf-pages" id="cv-pdf-pages">
+              <p class="cv-pdf-status">${escapeHtml(t('cv.loading'))}</p>
+            </div>`;
+        const pages = $('cv-pdf-pages');
+
+        // Après l'ouverture du dialogue : la largeur réelle sert à dimensionner les pages.
+        requestAnimationFrame(() => {
+            window.CvViewer.render(pages, url, { label: t('cv.page') })
+                .then((count) => { if (count) cvRenderedUrl = url; })
+                .catch(() => {
+                    pages.innerHTML = `
+                        <p class="cv-pdf-status">${escapeHtml(t('cv.error'))}
+                          <a href="${escapeHtml(url)}" download>${escapeHtml(t('cv.downloadInstead'))}</a>
+                        </p>`;
+                });
+        });
     };
 
     const openCv = () => {
         // Le CV prend la place du menu : pas d'animation croisée entre deux dialogues
         closeDialog($('mobile-nav'), { instant: true });
-        renderCv();
         openDialog(cvModal);
+        renderCv();
     };
 
     document.querySelectorAll('[data-open-cv]').forEach((btn) => btn.addEventListener('click', openCv));
-    $('download-pdf-btn').addEventListener('click', () => window.print());
 
     /* ======================================================================
        10. RENDU GLOBAL

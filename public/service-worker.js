@@ -1,5 +1,5 @@
 // SERVICE WORKER - CACHE ET SUPPORT HORS-LIGNE (PWA)
-const CACHE_NAME = 'jordan-portfolio-v5-jordanos';
+const CACHE_NAME = 'jordan-portfolio-v6-cv-pdf';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -16,6 +16,7 @@ const ASSETS_TO_CACHE = [
   '/js/theme-init.js',
   '/js/portfolio-data.js',
   '/js/icons.js',
+  '/js/cv-viewer.js',
   '/js/app.js',
   '/js/os.js',
   '/images/favicon.svg',

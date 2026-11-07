@@ -18,6 +18,7 @@
     <script src="/js/portfolio-data.js"></script>
     <!-- Bibliothèque d'icônes SVG (partagée avec le site public, voir js/icons.js) -->
     <script src="/js/icons.js"></script>
+    <script src="/js/cv-viewer.js"></script>
   </head>
   <body class="dashboard-body min-h-screen relative pb-12">
     <!-- Glow effects background -->
@@ -326,22 +327,26 @@
               <!-- TAB 5: CURRICULUM VITAE -->
               <div id="tab-cv" class="admin-tab-content">
                 <div class="flex items-center justify-between mb-2">
-                  <h2 class="text-xl font-bold text-white">Curriculum Vitæ (Popup Interactif)</h2>
+                  <h2 class="text-xl font-bold text-white">Mon CV (PDF)</h2>
                   <span id="chip-cv" class="chip-status">-</span>
                 </div>
-                <p class="text-xs text-[#9e9eb3] mb-6">Modifiez les informations détaillées affichées dans la modale interactive de CV.</p>
+                <p class="text-xs text-[#9e9eb3] mb-6">Envoyez votre CV en PDF : il s'affiche tel quel dans la fenêtre « Mon CV » du site, avec un bouton de téléchargement.</p>
 
                 <div class="mb-8 p-4 rounded-xl border border-white/10 bg-white/[0.03]">
-                  <h3 class="text-sm font-semibold text-white mb-1">CV en PDF (bouton « Télécharger » sur le site)</h3>
+                  <h3 class="text-sm font-semibold text-white mb-1">CV en PDF</h3>
                   <p id="cv-pdf-status" class="text-xs text-[#9e9eb3] mb-3">Aucun PDF envoyé.</p>
                   <div class="flex flex-wrap items-center gap-3">
                     <input type="file" id="cv-pdf-input" accept="application/pdf,.pdf" class="text-xs text-[#9e9eb3]" />
                     <button type="button" onclick="uploadCvPdf()" class="btn-secondary-admin text-xs py-1.5 px-3 rounded-lg">Envoyer le PDF</button>
                   </div>
                   <p class="text-[11px] text-[#9e9eb3] mt-3">PDF de 5 Mo maximum. Il est public : toute personne qui visite le site peut le télécharger.</p>
+                  <div id="cv-pdf-preview" class="cv-pdf-pages mt-4 rounded-lg border border-white/10 p-3" style="display:none; max-height:75vh; overflow:auto; background:rgba(0,0,0,0.2)" aria-label="Aperçu du CV"></div>
                 </div>
 
                 <form id="form-cv" class="space-y-6" onsubmit="event.preventDefault()">
+                  <!-- Anciens champs du CV : masqués (le CV est désormais le PDF), mais toujours remplis
+                       et enregistrés pour ne rien perdre dans les données. -->
+                  <div style="display:none" aria-hidden="true">
                   <h3 class="text-sm font-semibold text-white border-b border-white/5 pb-2">1. Identité & Contact</h3>
                   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
@@ -372,19 +377,21 @@
                       <input type="text" id="cv-location" class="admin-input" />
                     </div>
                   </div>
+                  </div><!-- fin des anciens champs masqués (identité & contact) -->
 
-                  <h3 class="text-sm font-semibold text-white border-b border-white/5 pb-2 pt-4">2. Compétences & Langues (Séparées par des virgules)</h3>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <h3 class="text-sm font-semibold text-white border-b border-white/5 pb-2">Bandeau des technologies (page d'accueil)</h3>
+                  <div class="grid grid-cols-1 gap-6">
                     <div>
-                      <label class="block text-xs font-semibold text-[#9e9eb3] mb-2">Compétences clés</label>
+                      <label class="block text-xs font-semibold text-[#9e9eb3] mb-2">Technologies affichées dans le bandeau (séparées par des virgules)</label>
                       <textarea id="cv-skills-input" class="admin-textarea h-20" placeholder="React, Node.js, TypeScript..."></textarea>
                     </div>
-                    <div>
+                    <div style="display:none" aria-hidden="true">
                       <label class="block text-xs font-semibold text-[#9e9eb3] mb-2">Langues</label>
                       <textarea id="cv-languages-input" class="admin-textarea h-20" placeholder="🇫🇷 Français (Maternelle), 🇬🇧 Anglais..."></textarea>
                     </div>
                   </div>
 
+                  <div style="display:none" aria-hidden="true"><!-- anciens champs masqués : expériences et formations -->
                   <div class="border-t border-white/5 pt-6">
                     <div class="flex justify-between items-center mb-4">
                       <h3 class="text-sm font-semibold text-white">3. Expériences Professionnelles</h3>
@@ -408,6 +415,7 @@
                       <!-- Generated dynamically -->
                     </div>
                   </div>
+                  </div><!-- fin des anciens champs masqués (expériences et formations) -->
                 </form>
               </div>
 
@@ -804,10 +812,7 @@
           (PORTFOLIO_DATA.skills || []).some(c => (c.items || []).length > 0),
           (PORTFOLIO_DATA.projects || []).length > 0,
           (PORTFOLIO_DATA.projects || []).some(p => p.title && p.image && p.shortDescription),
-          !!PORTFOLIO_DATA.cv?.identity?.name,
-          !!PORTFOLIO_DATA.cv?.contact?.email,
-          (PORTFOLIO_DATA.cv?.experiences || []).length > 0,
-          (PORTFOLIO_DATA.cv?.formations || []).length > 0,
+          !!PORTFOLIO_DATA.cv?.pdfUrl,
           !!PORTFOLIO_DATA.contact?.email,
           !!(PORTFOLIO_DATA.contact?.github || PORTFOLIO_DATA.contact?.linkedin)
         ];
@@ -846,7 +851,7 @@
         setChip('chip-about', sectionStatus([a.title, a.paragraphs && a.paragraphs[0], a.paragraphs && a.paragraphs[1], (a.values || []).length > 0, (a.education || []).length > 0]));
         setChip('chip-skills', sectionStatus([(PORTFOLIO_DATA.skills || []).length > 0, (PORTFOLIO_DATA.skills || []).every(c => (c.items || []).length > 0)]));
         setChip('chip-projects', sectionStatus([(PORTFOLIO_DATA.projects || []).length > 0]));
-        setChip('chip-cv', sectionStatus([PORTFOLIO_DATA.cv?.identity?.name, PORTFOLIO_DATA.cv?.contact?.email, (PORTFOLIO_DATA.cv?.experiences || []).length > 0, (PORTFOLIO_DATA.cv?.formations || []).length > 0]));
+        setChip('chip-cv', sectionStatus([PORTFOLIO_DATA.cv?.pdfUrl]));
         setChip('chip-contact', sectionStatus([PORTFOLIO_DATA.contact?.email, PORTFOLIO_DATA.contact?.location, !!(PORTFOLIO_DATA.contact?.github || PORTFOLIO_DATA.contact?.linkedin)]));
       }
 
@@ -1616,11 +1621,31 @@
       }
 
       // CV EN PDF : envoi au serveur, puis enregistrement (et publication GitHub si activée)
+      let cvPreviewUrl = null;
       function renderCvPdfStatus() {
         const el = document.getElementById('cv-pdf-status');
         if (!el) return;
         const url = PORTFOLIO_DATA.cv?.pdfUrl;
         el.textContent = url ? `PDF actuel : ${url.split('/').pop()}` : 'Aucun PDF envoyé.';
+
+        // Aperçu : le même rendu que la fenêtre « Mon CV » du site (js/cv-viewer.js).
+        const preview = document.getElementById('cv-pdf-preview');
+        if (!preview || !window.CvViewer) return;
+        if (!url) {
+          preview.style.display = 'none';
+          preview.replaceChildren();
+          cvPreviewUrl = null;
+          return;
+        }
+        if (url === cvPreviewUrl) return;
+        cvPreviewUrl = url;
+        preview.style.display = 'grid';
+        preview.style.gap = '12px';
+        preview.textContent = "Chargement de l'aperçu…";
+        window.CvViewer.render(preview, url).catch(() => {
+          cvPreviewUrl = null;
+          preview.textContent = "Aperçu impossible : le fichier n'a pas pu être lu.";
+        });
       }
 
       async function uploadCvPdf() {

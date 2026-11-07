@@ -381,13 +381,13 @@
       </div>
     </dialog>
 
-    <!-- CV interactif, imprimable en PDF -->
+    <!-- CV : le PDF envoyé depuis le dashboard, affiché page par page (js/cv-viewer.js) -->
     <dialog class="cv-dialog" id="cv-modal" aria-labelledby="cv-name">
       <div class="cv-actions">
-        <button class="btn btn-primary btn-sm" type="button" id="download-pdf-btn">
+        <a class="btn btn-primary btn-sm" id="download-pdf-btn" href="#" download hidden>
           <span data-icon="download"></span>
           <span data-i18n="cv.print">Télécharger en PDF</span>
-        </button>
+        </a>
         <button class="icon-btn" type="button" id="close-cv-modal" data-close-dialog aria-label="Fermer">
           <span data-icon="close"></span>
         </button>
@@ -400,6 +400,7 @@
     <div class="toasts" id="toast-container" role="status" aria-live="polite"></div>
 
     <script src="js/icons.js"></script>
+    <script src="js/cv-viewer.js"></script>
     <script src="js/app.js"></script>
     <script src="js/os.js"></script>
   </body>
